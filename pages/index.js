@@ -13,9 +13,7 @@ export default function Home() {
 
       <main className={styles.main}>
       <Image src="/logo.png" alt="eBallan Logo" width={400} height={94} />
-        <h1 className={styles.title}>
-          Welcome to eBallan
-        </h1>
+      
 
         <p className={styles.description}>
           This page is down for maintenance
