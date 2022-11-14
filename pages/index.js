@@ -1,39 +1,48 @@
-import Head from 'next/head'
+import { FaCheckCircle, FaUser, FaUserPlus } from 'react-icons/fa'
+import Link from 'next/link'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>eBallan</title>
-        <meta name="description" content="Welcome to eBallan" />
-        <link rel="icon" href="/logo.png" />
-      </Head>
+    <div className='container'>
+      <div className='text-center'>
+        <Image src='/logo.png' alt='eBallan Logo' width={400} height={94} />
+      </div>
 
-      <main className={styles.main}>
-      <Image src="/logo.png" alt="eBallan Logo" width={400} height={94} />
-      
-
-        <p className={styles.description}>
-          This page is down for maintenance
-        </p>
-
-
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <div className='row mt-5 g-4'>
+        <div className='col-md-5 col-12 mx-auto'>
+          <div className='card shadow-lg'>
+            <FaUserPlus className='mb-1 card-img-top fs-1 custom-text-primary' />
+            <div className='card-body text-center'>
+              <h3 className='card-title display-6'>NEW PATIENT</h3>
+              <p className='card-text text-muted'>
+                Fadlan dooro hadii aad tahay bukaan cusub
+              </p>
+              <Link href='/new-patient'>
+                <a className='btn btn-primary form-control'>
+                  <FaCheckCircle className='mb-1' /> CLICK
+                </a>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className='col-md-5 col-12 mx-auto'>
+          <div className='card shadow-lg'>
+            <FaUser className='mb-1 card-img-top fs-1 custom-text-primary' />
+            <div className='card-body text-center'>
+              <h3 className='card-title display-6'>EXISTED PATIENT</h3>
+              <p className='card-text text-muted'>
+                Fadlan dooro hadii aadan ahay bukaan cusub
+              </p>
+              <Link href='/existing-patient'>
+                <a className='btn btn-primary form-control'>
+                  <FaCheckCircle className='mb-1' /> CLICK
+                </a>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
