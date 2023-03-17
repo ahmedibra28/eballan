@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+@import url('https://db.onlinewebfonts.com/c/63cf8985576a4aaa66f7c13c94dba716?family=Kollektif');
+
+body {
+  font-family: 'Kollektif', sans-serif !important;
+  font-style: normal !important;
+}
+.customF {
+  font-family: 'Monoton', cursive;
+}
+
+.headerBG {
+  /*  background: linear-gradient(
+      to right,
+      rgba(17, 0, 255, 0.692),
+      rgba(255, 255, 255, 0.223)
+    ),
+    url('https://img.freepik.com/free-vector/plane-fly-blue-sky-with-clouds_107791-9038.jpg?w=2000') no-repeat; */
+
+  background: url('/headerBG.png') no-repeat;
+  width: 100vw;
+  height: 70vh;
+  background-position: center;
+  background-size: cover;
+}
+
+.customBG {
+  background: linear-gradient(
+      to right,
+      rgba(17, 0, 255, 0.692),
+      rgba(255, 255, 255, 0.223)
+    ),
+    url('https://img.freepik.com/free-vector/plane-fly-blue-sky-with-clouds_107791-9038.jpg?w=2000')
+      no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.passenger-model:hover,
+.passenger-model:focus {
+  background-color: transparent !important;
+}
+
+.headerBox {
+  margin-top: -30px !important;
+}
