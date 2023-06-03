@@ -1,22 +1,81 @@
-import React from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import Steps from '../components/Steps'
 
 import {
   FaArrowCircleRight,
-  FaDollarSign,
   FaDotCircle,
-  FaInfoCircle,
   FaPassport,
   FaPhoneAlt,
   FaUser,
 } from 'react-icons/fa'
-import {
-  MdAirlineSeatLegroomExtra,
-  MdOutlineAirlineSeatReclineNormal,
-} from 'react-icons/md'
+import { MdOutlineAirlineSeatReclineNormal } from 'react-icons/md'
 import Image from 'next/image'
+import Link from 'next/link'
+import useFlightStore from '../zustand/flightStore'
+import { currency } from '../utils/currency'
+import moment from 'moment'
+import { useRouter } from 'next/router'
+import {
+  DynamicFormProps,
+  dynamicInputSelect,
+  inputDate,
+  inputText,
+  staticInputSelect,
+} from '../utils/dForms'
+import { useForm } from 'react-hook-form'
+import apiHook from '../api'
+import { FormView } from '../components'
 
 const Passenger = () => {
+  const router = useRouter()
+  const { passengers, flight, contact, updatePassenger } = useFlightStore(
+    (state) => state
+  )
+
+  const [tempPassengerInfo, setTempPassengerInfo] = useState(null)
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({})
+
+  useEffect(() => {
+    if (
+      passengers?.[0]?.adult?.length === 0 ||
+      passengers?.[0]?.child?.length === 0 ||
+      passengers?.[0]?.infant?.length === 0 ||
+      flight?.prices?.length === 0 ||
+      !contact.phone
+    ) {
+      router.push('/passenger')
+    }
+  }, [])
+
+  const getPassengerTitle = apiHook({
+    key: ['passenger-titles'],
+    method: 'GET',
+    url: `passenger/titles?airline=maandeeqair`,
+  })?.get
+
+  function getHoursBetween(startTime: string, endTime: string): string {
+    const start = new Date(`2022-01-01T${startTime}Z`)
+    const end = new Date(`2022-01-01T${endTime}Z`)
+    const diff = end.getTime() - start.getTime()
+    const hours = diff / (1000 * 60 * 60)
+
+    if (hours >= 1) {
+      const wholeHours = Math.floor(hours)
+      const minutes = Math.round((hours - wholeHours) * 60)
+      return `${wholeHours}:${minutes < 10 ? '0' : ''}${minutes} hour`
+    } else {
+      const minutes = Math.round(hours * 60)
+      return `${minutes} minutes`
+    }
+  }
+
   const steps = [
     {
       id: 1,
@@ -48,58 +107,226 @@ const Passenger = () => {
     },
   ]
 
+  const infoCard = (item: any, type: string) => {
+    return (
+      <div className="col-lg-6 col-12">
+        <div className="card border-0 shadow-sm">
+          <div className="card-body">
+            <p className="text-uppercase fw-bold">Passenger Details</p>
+
+            <h6>
+              <Image
+                src="https://www.worldometers.info//img/flags/small/tn_so-flag.gif"
+                width={20}
+                height={20}
+                style={{ objectFit: 'cover' }}
+                alt="flag"
+                className="rounded-pill"
+              />
+              <span className="text-muted ms-1">
+                Mr. {item?.firstName} {item?.secondName} {item?.lastName}
+              </span>
+            </h6>
+            <h6>
+              <FaPassport className="mb-1" />
+              <span className="text-muted"> {item?.passportNumber}</span>
+            </h6>
+            <h6>
+              <FaPhoneAlt className="mb-1" />
+              <span className="text-muted"> {contact?.phone}</span>
+            </h6>
+            <h6>
+              <FaUser className="mb-1" />
+              <span className="text-muted"> {type}</span>
+            </h6>
+            <h6>
+              <MdOutlineAirlineSeatReclineNormal className="mb-1 fs-5" />
+              <span className="text-muted"> Random Seat</span>
+            </h6>
+            <h6 className="text-end">
+              <span className="fw-bold">
+                {currency(
+                  flight?.prices?.find((item) => item?.passenger?.type === type)
+                    ?.fare +
+                    flight?.prices?.find(
+                      (item) => item?.passenger?.type === type
+                    )?.commission || 0
+                )}
+              </span>
+            </h6>
+            <button
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target={`#updatePassenger`}
+              onClick={() => {
+                setTempPassengerInfo(item)
+                editHandler(item)
+              }}
+              className="btn btn-primary btn-sm"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const form = [
+    <Fragment key={0}>
+      <div className="col-md-6 col-12">
+        {dynamicInputSelect({
+          register,
+          errors,
+          label: 'Passenger Title',
+          name: `passengerTitle`,
+          placeholder: 'Select passenger title',
+          value: 'description',
+          data: getPassengerTitle?.data,
+        } as DynamicFormProps)}
+      </div>
+      <div className="col-md-6 col-12">
+        {inputText({
+          register,
+          errors,
+          label: 'First Name',
+          name: `firstName`,
+          placeholder: 'Enter fist name',
+        } as DynamicFormProps)}
+      </div>
+      <div className="col-md-6 col-12">
+        {inputText({
+          register,
+          errors,
+          label: 'Second Name',
+          name: `secondName`,
+          placeholder: 'Enter second name',
+        } as DynamicFormProps)}
+      </div>
+      <div className="col-md-6 col-12">
+        {inputText({
+          register,
+          errors,
+          label: 'Last Name',
+          name: `lastName`,
+          placeholder: 'Enter last name',
+        } as DynamicFormProps)}
+      </div>
+      <div className="col-md-6 col-12">
+        {staticInputSelect({
+          register,
+          errors,
+          label: 'Nationality',
+          name: `nationality`,
+          placeholder: 'Select nationality',
+          data: [{ name: 'Somalia' }, { name: 'Ethiopia' }, { name: 'Kenya' }],
+        } as DynamicFormProps)}
+      </div>
+      <div className="col-md-6 col-12">
+        {staticInputSelect({
+          register,
+          errors,
+          label: 'Sex',
+          name: `sex`,
+          placeholder: 'Select sex',
+          data: [{ name: 'Male' }, { name: 'Female' }],
+        } as DynamicFormProps)}
+      </div>
+      <div className="col-md-6 col-12">
+        {inputDate({
+          register,
+          errors,
+          label: 'Date of Birth',
+          name: `dob`,
+          placeholder: 'Enter date of birth',
+        } as DynamicFormProps)}
+      </div>
+
+      <div className="col-lg-6 col-md-6 col-12">
+        {inputText({
+          register,
+          errors,
+          label: 'Passport Number',
+          name: `passportNumber`,
+          placeholder: 'Enter passport number',
+        } as DynamicFormProps)}
+      </div>
+
+      <div className="col-lg-6 col-md-6 col-12">
+        {inputDate({
+          register,
+          errors,
+          label: 'Passport Expiry Date',
+          name: `passportExpiryDate`,
+          placeholder: 'Enter passport expiry date',
+        } as DynamicFormProps)}
+      </div>
+    </Fragment>,
+  ]
+
+  const formCleanHandler = () => {
+    reset()
+    setTempPassengerInfo(null)
+  }
+
+  const editHandler = (item: any) => {
+    setValue('passengerTitle', item?.passengerTitle)
+    setValue('firstName', item?.firstName)
+    setValue('secondName', item?.secondName)
+    setValue('lastName', item?.lastName)
+    setValue('nationality', item?.nationality)
+    setValue('sex', item?.sex)
+    setValue('dob', item?.dob)
+    setValue('passportNumber', item?.passportNumber)
+    setValue('passportExpiryDate', item?.passportExpiryDate)
+  }
+
+  const submitHandler = (data: any) => {
+    if (tempPassengerInfo) {
+      // console.log({ ...data, id: tempPassengerInfo?.id })
+
+      updatePassenger({ ...data, id: tempPassengerInfo?.id })
+
+      formCleanHandler()
+    }
+  }
+
   return (
     <div className="py-2">
       <Steps steps={steps} />
+
+      <FormView
+        edit={true}
+        formCleanHandler={formCleanHandler}
+        form={form}
+        isLoadingUpdate={false}
+        isLoadingPost={false}
+        handleSubmit={handleSubmit}
+        submitHandler={submitHandler}
+        modal={'updatePassenger'}
+        label="Passenger Info"
+        modalSize="modal-md"
+      />
 
       <h6 className="fw-bold text-uppercase mt-4">Trip Summary</h6>
 
       <div className="row gy-3">
         <div className="col-lg-8 col-12">
-          <div className="row gy-3">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="col-lg-6 col-12">
-                <div className="card border-0 shadow-sm">
-                  <div className="card-body">
-                    <p className="text-uppercase fw-bold">Passenger Details</p>
+          <div className="row gy-3 mb-3">
+            {passengers?.[0]?.adult?.map((item, i) => (
+              <Fragment key={i}>{infoCard(item, 'Adult')}</Fragment>
+            ))}
+          </div>
 
-                    <h6>
-                      <Image
-                        src="https://www.worldometers.info//img/flags/small/tn_so-flag.gif"
-                        width={20}
-                        height={20}
-                        style={{ objectFit: 'cover' }}
-                        alt="flag"
-                        className="rounded-pill"
-                      />
-                      <span className="text-muted">
-                        {' '}
-                        Mr. Abdikani Abukar Samow
-                      </span>
-                    </h6>
-                    <h6>
-                      <FaPassport className="mb-1" />
-                      <span className="text-muted"> P00121212</span>
-                    </h6>
-                    <h6>
-                      <FaPhoneAlt className="mb-1" />
-                      <span className="text-muted"> +252 615 123 456</span>
-                    </h6>
-                    <h6>
-                      <FaUser className="mb-1" />
-                      <span className="text-muted"> Adult</span>
-                    </h6>
-                    <h6>
-                      <MdOutlineAirlineSeatReclineNormal className="mb-1 fs-5" />
-                      <span className="text-muted"> Random Seat</span>
-                    </h6>
-                    <h6 className="text-end">
-                      <FaDollarSign className="mb-1" />
-                      <span className="fw-bold"> $175.00</span>
-                    </h6>
-                  </div>
-                </div>
-              </div>
+          <div className="row gy-3 mb-3">
+            {passengers?.[0]?.child?.map((item, i) => (
+              <Fragment key={i}>{infoCard(item, 'Child')}</Fragment>
+            ))}
+          </div>
+
+          <div className="row gy-3 mb-3">
+            {passengers?.[0]?.infant?.map((item, i) => (
+              <Fragment key={i}>{infoCard(item, 'Infant')}</Fragment>
             ))}
           </div>
         </div>
@@ -108,8 +335,9 @@ const Passenger = () => {
           <div className="card border-0 shadow-sm">
             <div className="card-body">
               <p>
-                To go on trip from <strong>Mogadishu</strong> to
-                <strong> Dhobley</strong>
+                To go on trip from
+                <strong> {flight?.flight?.fromCityName}</strong> to
+                <strong> {flight?.flight?.toCityName}</strong>
               </p>
 
               <div className="row">
@@ -117,8 +345,12 @@ const Passenger = () => {
                   className="col-auto d-flex flex-column"
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  <span>15:20:00</span>
-                  <small className="text-muted">Thu, 09, 03</small>
+                  <span>{flight?.flight?.departureTime}</span>
+                  <small className="text-muted">
+                    {moment(flight?.flight?.departureDate).format(
+                      'ddd, DD MMM'
+                    )}
+                  </small>
                 </div>
                 <div className="col-auto my-auto">
                   <FaDotCircle />
@@ -127,9 +359,13 @@ const Passenger = () => {
                   className="col-auto d-flex flex-column"
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  <span> Mogadishu (MGQ)</span>
+                  <span>
+                    {' '}
+                    {flight?.flight?.fromCityName} (
+                    {flight?.flight?.fromCityCode})
+                  </span>
                   <small className="text-muted">
-                    Aden Adde International Airport
+                    {flight?.flight?.fromAirportName}
                   </small>
                 </div>
               </div>
@@ -151,7 +387,10 @@ const Passenger = () => {
                   className="col-auto"
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  1hr 20min
+                  {getHoursBetween(
+                    flight?.flight?.departureTime,
+                    flight?.flight?.arrivalTime
+                  )}
                 </div>
                 <div className="col-auto my-auto" style={{ marginLeft: 2 }}>
                   <FaDotCircle />
@@ -167,7 +406,7 @@ const Passenger = () => {
                     alt="airline"
                     style={{ objectFit: 'cover' }}
                   />
-                  <span> eBallan Airline</span>
+                  <span> {flight?.airline}</span>
                 </div>
               </div>
               <div className="row">
@@ -188,8 +427,10 @@ const Passenger = () => {
                   className="col-auto d-flex flex-column"
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  <span> 15:20:00</span>
-                  <small className="text-muted">Thu, 09, 03</small>
+                  <span> {flight?.flight?.arrivalTime}</span>
+                  <small className="text-muted">
+                    {moment(flight?.flight?.arrivalDate).format('ddd, DD MMM')}
+                  </small>
                 </div>
                 <div className="col-auto my-auto">
                   <FaDotCircle />
@@ -198,9 +439,11 @@ const Passenger = () => {
                   className="col-auto d-flex flex-column"
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  <span> Dhobley (DOB)</span>
+                  <span>
+                    {flight?.flight?.toCityName} ({flight?.flight?.toCityCode})
+                  </span>
                   <small className="text-muted">
-                    Aden Adde International Airport
+                    {flight?.flight?.toAirportName}
                   </small>
                 </div>
               </div>
@@ -210,18 +453,32 @@ const Passenger = () => {
           <div className="card border-0 shadow-sm mt-4">
             <div className="card-body">
               <p>
-                <span className="me-4">1x Passenger</span>
-                <span>$175.00</span>
+                <span className="me-4">
+                  {Number(passengers?.[0]?.adult?.length || 0) +
+                    Number(passengers?.[0]?.child?.length || 0) +
+                    Number(passengers?.[0]?.infant?.length || 0)}
+                  x Passenger
+                </span>
               </p>
               <p className="fw-bold">
                 <span className="me-4">Total</span>
-                <span>$175.00</span>
+                <span>
+                  {currency(
+                    flight?.prices?.reduce(
+                      (acc, item) => acc + item?.totalPrice,
+                      0
+                    )
+                  )}
+                </span>
               </p>
 
               <div className="text-end">
-                <button className="btn btn-warning text-light rounded-pill">
+                <Link
+                  href="/payment"
+                  className="btn btn-warning text-light rounded-pill"
+                >
                   Continue <FaArrowCircleRight className="mb-1" />
-                </button>
+                </Link>
               </div>
             </div>
           </div>

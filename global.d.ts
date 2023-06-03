@@ -27,6 +27,7 @@ declare global {
       id: string
       secret: string
       type: string
+      airline: string
     }
   }
   interface NextApiResponseExtended extends NextApiResponse {

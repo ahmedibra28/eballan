@@ -15,10 +15,51 @@ import {
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const Search = ({ showTitle = false }) => {
-  const [fromDate, setFromDate] = useState<Date>(new Date())
-  const [toDate, setToDate] = useState<Date>(new Date())
-
+const Search = ({
+  showTitle = false,
+  cities,
+  onSubmit,
+  fromDate,
+  toDate,
+  trip,
+  seatType,
+  noAdult,
+  noChild,
+  noInfant,
+  originCity,
+  destinationCity,
+  setFromDate,
+  setToDate,
+  setTrip,
+  setSeatType,
+  setNoAdult,
+  setNoChild,
+  setNoInfant,
+  setOriginCity,
+  setDestinationCity,
+}: {
+  cities?: any[]
+  showTitle?: boolean
+  onSubmit?: (data: any) => void
+  fromDate?: Date
+  toDate?: Date
+  trip?: string
+  seatType?: string
+  noAdult?: number
+  noChild?: number
+  noInfant?: number
+  originCity?: string
+  destinationCity?: string
+  setFromDate?: any
+  setToDate?: any
+  setTrip?: any
+  setSeatType?: any
+  setNoAdult?: any
+  setNoChild?: any
+  setNoInfant?: any
+  setOriginCity?: any
+  setDestinationCity?: any
+}) => {
   return (
     <>
       {showTitle && (
@@ -34,6 +75,9 @@ const Search = ({ showTitle = false }) => {
           <div className="d-flex flex-row text-light">
             {/* Trip direction */}
             <select
+              onChange={(e) => setTrip(e.target.value)}
+              value={trip}
+              name="trip"
               className="form-select w-auto bg-transparent text-light border-0 shadow-none"
               style={{
                 backgroundImage: "url('/chevron-down-solid.svg')",
@@ -48,6 +92,9 @@ const Search = ({ showTitle = false }) => {
 
             {/* Trip type */}
             <select
+              onChange={(e) => setSeatType(e.target.value)}
+              value={seatType}
+              name="seatType"
               className="form-select w-auto bg-transparent text-light ms-2 border-0 shadow-none"
               style={{
                 backgroundImage: "url('/chevron-down-solid.svg')",
@@ -72,7 +119,8 @@ const Search = ({ showTitle = false }) => {
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
             >
-              <FaUsers className="mb-1" /> <span className="mx-3">6</span>
+              <FaUsers className="mb-1" />{' '}
+              <span className="mx-3">{noAdult + noChild + noInfant}</span>
               <FaChevronDown className="mb-1" />
             </button>
 
@@ -95,9 +143,21 @@ const Search = ({ showTitle = false }) => {
                         <small className="italic fst-italic"> (Over 11)</small>
                       </div>
                       <div>
-                        <FaMinusCircle className="mb-1" />
-                        <span className="mx-2">6</span>
-                        <FaPlusCircle className="mb-1" />
+                        <button
+                          type="button"
+                          onClick={() => noAdult > 0 && setNoAdult(noAdult - 1)}
+                          className="btn btn-light"
+                        >
+                          <FaMinusCircle className="mb-1 text-primary" />
+                        </button>
+                        <span className="mx-2">{noAdult}</span>
+                        <button
+                          type="button"
+                          onClick={() => setNoAdult(noAdult + 1)}
+                          className="btn btn-light"
+                        >
+                          <FaPlusCircle className="mb-1 text-primary" />
+                        </button>
                       </div>
                     </div>
 
@@ -110,9 +170,21 @@ const Search = ({ showTitle = false }) => {
                         <small className="italic fst-italic"> (2 - 11)</small>
                       </div>
                       <div>
-                        <FaMinusCircle className="mb-1" />
-                        <span className="mx-2">6</span>
-                        <FaPlusCircle className="mb-1" />
+                        <button
+                          type="button"
+                          onClick={() => noChild > 0 && setNoChild(noChild - 1)}
+                          className="btn btn-light"
+                        >
+                          <FaMinusCircle className="mb-1 text-primary" />
+                        </button>
+                        <span className="mx-2">{noChild}</span>
+                        <button
+                          type="button"
+                          onClick={() => setNoChild(noChild + 1)}
+                          className="btn btn-light"
+                        >
+                          <FaPlusCircle className="mb-1 text-primary" />
+                        </button>
                       </div>
                     </div>
 
@@ -124,10 +196,25 @@ const Search = ({ showTitle = false }) => {
                         <span className="fw-bold"> Infants </span>
                         <small className="italic fst-italic"> (Under 2)</small>
                       </div>
+
                       <div>
-                        <FaMinusCircle className="mb-1" />
-                        <span className="mx-2">6</span>
-                        <FaPlusCircle className="mb-1" />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            noInfant > 0 && setNoInfant(noInfant - 1)
+                          }
+                          className="btn btn-light"
+                        >
+                          <FaMinusCircle className="mb-1 text-primary" />
+                        </button>
+                        <span className="mx-2">{noInfant}</span>
+                        <button
+                          type="button"
+                          onClick={() => setNoInfant(noInfant + 1)}
+                          className="btn btn-light"
+                        >
+                          <FaPlusCircle className="mb-1 text-primary" />
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -148,21 +235,25 @@ const Search = ({ showTitle = false }) => {
           <div className="row gy-3">
             <div className="col-lg-3 col-6 rounded-5 bg-white">
               <div className="input-group">
-                <span
-                  className="input-group-text bg-white rounded-5 border-0 shadow-none"
-                  id="fromDataList"
-                >
+                <span className="input-group-text bg-white rounded-5 border-0 shadow-none">
                   <FaMapMarkerAlt className="text-primary" />
                 </span>
-                <input
+                <select
                   className="form-control py-3 border-0 shadow-none"
-                  list="datalistOptions"
-                  id="fromDataList"
-                  placeholder="Type to search..."
-                />
-                <datalist id="datalistOptions">
-                  <option value="San Francisco" />
-                </datalist>
+                  placeholder="Select to city"
+                  name="originCity"
+                  onChange={(e) => setOriginCity(e.target.value)}
+                  value={originCity}
+                >
+                  <option value="">Select to origin city</option>
+                  {cities
+                    ?.filter((item) => destinationCity !== item.id?.toString())
+                    ?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                </select>
                 <span
                   className="input-group-text bg-white rounded-5 border-0 shadow-none"
                   id="fromDataList"
@@ -174,25 +265,33 @@ const Search = ({ showTitle = false }) => {
 
             <div className="col-lg-3 col-6 rounded-5 bg-white">
               <div className="input-group">
-                <span
-                  className="input-group-text bg-white rounded-5  border-0 shadow-none"
-                  id="toDataList"
-                >
+                <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
                   <FaMapMarkerAlt className="text-primary" />
                 </span>
-                <input
+                <select
                   className="form-control py-3 border-0 shadow-none bg-transparent"
-                  list="datalistOptions"
-                  id="toDataList"
                   placeholder="Type to search..."
-                />
-                <datalist id="datalistOptions">
-                  <option value="San Francisco" />
-                </datalist>
+                  name="destinationCity"
+                  onChange={(e) => setDestinationCity(e.target.value)}
+                  value={destinationCity}
+                >
+                  <option value="">Select to destination city</option>
+                  {cities
+                    ?.filter((item) => originCity !== item.id?.toString())
+                    ?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
 
-            <div className="col-lg-2 col-6 rounded-5 bg-white">
+            <div
+              className={`${
+                trip === 'Return' ? 'col-lg-2' : 'col-lg-3'
+              } col-6 rounded-5 bg-white`}
+            >
               <div className="d-flex">
                 <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
                   <FaCalendarAlt className="text-primary" />
@@ -207,22 +306,45 @@ const Search = ({ showTitle = false }) => {
               </div>
             </div>
 
-            <div className="col-lg-2 col-6 rounded-5 bg-white">
-              <div className="d-flex">
-                <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
-                  <FaCalendarAlt className="text-primary" />
-                </span>
-                <DatePicker
-                  selected={toDate}
-                  onChange={(date: Date) => setToDate(date)}
-                  minDate={new Date()}
-                  showDisabledMonthNavigation
-                  className="form-control py-3 border-0 shadow-none bg-transparent"
-                />
+            {trip === 'Return' && (
+              <div className="col-lg-2 col-6 rounded-5 bg-white">
+                <div className="d-flex">
+                  <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
+                    <FaCalendarAlt className="text-primary" />
+                  </span>
+                  <DatePicker
+                    selected={toDate}
+                    onChange={(date: Date) => setToDate(date)}
+                    minDate={new Date()}
+                    showDisabledMonthNavigation
+                    className="form-control py-3 border-0 shadow-none bg-transparent"
+                  />
+                </div>
               </div>
-            </div>
-            <div className="col-lg-2 col-12 text-end rounded-5 bg-white">
-              <button className="btn btn-white py-3 w-100 bg-transparent border-0 text-primary">
+            )}
+
+            <div
+              className={`${
+                trip === 'Return' ? 'col-lg-2 col-12' : 'col-lg-3 col-6'
+              } text-end rounded-5 bg-white`}
+            >
+              <button
+                type="button"
+                onClick={() =>
+                  onSubmit({
+                    fromDate,
+                    toDate,
+                    trip,
+                    originCity,
+                    destinationCity,
+                    seatType,
+                    noAdult,
+                    noChild,
+                    noInfant,
+                  })
+                }
+                className="btn btn-white py-3 w-100 bg-transparent border-0 text-primary"
+              >
                 <FaSearch className="mb-1" /> Search
               </button>
             </div>

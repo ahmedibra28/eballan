@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3000/api'
+let baseUrl = 'http://localhost:3000/api'
+
+if (process.env.NODE_ENV === 'production') {
+  baseUrl = 'http://localhost:3000/api'
+}
 
 export const userInfo = () => {
   return {
@@ -18,11 +22,12 @@ export const config = () => {
   return {
     headers: {
       Authorization: `Bearer ${userInfo()?.userInfo?.token}`,
+      'x-db-key': userInfo()?.userInfo?.clientCode,
     },
   }
 }
 
-const axiosApi = async (method: string, url: string, obj = {}) => {
+const api = async (method: string, url: string, obj = {}) => {
   try {
     switch (method) {
       case 'GET':
@@ -50,4 +55,4 @@ const axiosApi = async (method: string, url: string, obj = {}) => {
   }
 }
 
-export default axiosApi
+export default api
