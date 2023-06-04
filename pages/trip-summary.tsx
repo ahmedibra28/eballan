@@ -124,7 +124,8 @@ const Passenger = () => {
                 className="rounded-pill"
               />
               <span className="text-muted ms-1">
-                Mr. {item?.firstName} {item?.secondName} {item?.lastName}
+                {item?.passengerTitle}. {item?.firstName} {item?.secondName}{' '}
+                {item?.lastName}
               </span>
             </h6>
             <h6>
@@ -457,7 +458,7 @@ const Passenger = () => {
                   {Number(passengers?.[0]?.adult?.length || 0) +
                     Number(passengers?.[0]?.child?.length || 0) +
                     Number(passengers?.[0]?.infant?.length || 0)}
-                  x Passenger
+                  x Passengers
                 </span>
               </p>
               <p className="fw-bold">

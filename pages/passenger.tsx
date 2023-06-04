@@ -109,6 +109,7 @@ const Passenger = () => {
     const types = ['Adult', 'Child', 'Infant']
 
     const newData = reformatData(types)
+
     setPassengers(newData as any)
     setContact({
       email: data.email,

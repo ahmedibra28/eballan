@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Steps from '../components/Steps'
 import Image from 'next/image'
 import { FaPhoneAlt } from 'react-icons/fa'
+import useFlightStore from '../zustand/flightStore'
+import { useRouter } from 'next/router'
+import { currency } from '../utils/currency'
+import apiHook from '../api'
+import { Message } from '../components'
+import useSearchFlightStore from '../zustand/searchFlightStore'
 
 const Payment = () => {
   const steps = [
@@ -34,9 +40,59 @@ const Payment = () => {
       link: '/payment',
     },
   ]
+
+  const router = useRouter()
+  const [phone, setPhone] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState('hormuud')
+
+  const { passengers, flight, contact } = useFlightStore((state) => state)
+
+  useEffect(() => {
+    if (flight?.prices?.length === 0 || !contact.phone) {
+      router.push('/passenger')
+    }
+  }, [])
+
+  const confirmBooking = apiHook({
+    key: ['confirm-booking'],
+    method: 'POST',
+    url: `confirm-booking`,
+  })?.post
+
+  const handleBooking = () => {
+    confirmBooking?.mutateAsync({
+      passengers,
+      flight,
+      contact,
+      payment: {
+        phone,
+        paymentMethod,
+      },
+    })
+    console.log({
+      passengers,
+      flight,
+      contact,
+      payment: {
+        phone,
+        paymentMethod,
+      },
+    })
+  }
+
+  useEffect(() => {
+    if (confirmBooking?.isSuccess) {
+      router.push('/')
+    }
+  }, [confirmBooking?.isSuccess])
+
   return (
     <div className="py-2">
       <Steps steps={steps} />
+
+      {confirmBooking?.isError && (
+        <Message variant="danger" value={confirmBooking?.error} />
+      )}
 
       <h6 className="fw-bold text-uppercase mt-4">Payment</h6>
 
@@ -49,9 +105,11 @@ const Payment = () => {
               <div className="row gy-3 mt-2 ">
                 {['hormuud', 'somtel', 'somnet', 'mastercard'].map((item) => (
                   <div key={item} className="col-auto">
-                    <div
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMethod(item)}
                       className={`card ${
-                        item === 'hormuud'
+                        item === paymentMethod
                           ? 'border border-warning border-3'
                           : 'border border-6 border-light'
                       } shadow-sm`}
@@ -68,7 +126,7 @@ const Payment = () => {
                           {item}
                         </small>
                       </div>
-                    </div>
+                    </button>
                   </div>
                 ))}
               </div>
@@ -86,12 +144,23 @@ const Payment = () => {
               <table className="my-3">
                 <tbody>
                   <tr>
-                    <td className="">1x Passenger</td>
-                    <td className="text-end ps-3">$175.00</td>
+                    <td className="">
+                      {Number(passengers?.[0]?.adult?.length || 0) +
+                        Number(passengers?.[0]?.child?.length || 0) +
+                        Number(passengers?.[0]?.infant?.length || 0)}
+                      x Passengers
+                    </td>
                   </tr>
                   <tr>
                     <td className="me-4 fw-bold">Total</td>
-                    <td className="fw-bold text-end">$175.00</td>
+                    <td className="fw-bold text-end">
+                      {currency(
+                        flight?.prices?.reduce(
+                          (acc, item) => acc + item?.totalPrice,
+                          0
+                        )
+                      )}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -101,18 +170,27 @@ const Payment = () => {
                   <FaPhoneAlt className="text-light" />
                 </span>
                 <input
-                  type="text"
+                  onChange={(e) => setPhone(e.target.value)}
+                  value={phone}
+                  type="number"
                   className="form-control rounded-0"
                   placeholder='Enter the phone number you used to pay with "Hormuud"'
                 />
               </div>
 
               <div className="d-flex justify-content-between mt-4">
-                <button className="btn btn btn-outline-danger rounded-pill btn-sm px-4">
+                <button
+                  onClick={() => router.push('/')}
+                  className="btn btn btn-outline-danger rounded-pill btn-sm px-4"
+                >
                   Cancel
                 </button>
-                <button className="btn btn-primary rounded-pill btn-sm px-4">
-                  Pay Now
+                <button
+                  disabled={Boolean(!phone) || confirmBooking?.isLoading}
+                  onClick={() => handleBooking()}
+                  className="btn btn-primary rounded-pill btn-sm px-4"
+                >
+                  {confirmBooking?.isLoading ? 'Loading...' : 'Pay Now'}
                 </button>
               </div>
             </div>

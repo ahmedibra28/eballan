@@ -65,6 +65,7 @@ handler.post(
             baggageWeight: item.flightPricings[0].baggageWeight,
             handCarryWeight: item.flightPricings[0].handCarryWeight,
             totalPrice: item.flightPricings[0].totalFare * noAdult,
+            ...item.flightPricings[0],
           },
           {
             flightId: item.flightPricings[4].flightId,
@@ -77,6 +78,7 @@ handler.post(
             baggageWeight: item.flightPricings[4].baggageWeight,
             handCarryWeight: item.flightPricings[4].handCarryWeight,
             totalPrice: item.flightPricings[4].totalFare * noChild,
+            ...item.flightPricings[4],
           },
           {
             flightId: item.flightPricings[8].flightId,
@@ -89,6 +91,7 @@ handler.post(
             baggageWeight: item.flightPricings[8].baggageWeight,
             handCarryWeight: item.flightPricings[8].handCarryWeight,
             totalPrice: item.flightPricings[8].totalFare * noInfant,
+            ...item.flightPricings[8],
           },
         ]
 
@@ -102,6 +105,10 @@ handler.post(
       const newResult = data?.map((item: any) =>
         filteredData(item, 'Maandeeq Air')
       )
+
+      // console.log('------------')
+
+      // console.log(JSON.stringify(newResult))
 
       return res.json(newResult)
     } catch (error: any) {
