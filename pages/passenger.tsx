@@ -35,6 +35,7 @@ const Passenger = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({})
 
@@ -73,6 +74,12 @@ const Passenger = () => {
     key: ['passenger-titles'],
     method: 'GET',
     url: `passenger/titles?airline=maandeeqair`,
+  })?.get
+
+  const getCountries = apiHook({
+    key: ['countries'],
+    method: 'GET',
+    url: `countries?airline=maandeeqair`,
   })?.get
 
   const submitHandler = (data: any) => {
@@ -166,17 +173,14 @@ const Passenger = () => {
           } as DynamicFormProps)}
         </div>
         <div className="col-lg-4 col-md-6 col-12">
-          {staticInputSelect({
+          {dynamicInputSelect({
             register,
             errors,
             label: 'Nationality',
             name: `nationality${passengerType}${number}`,
             placeholder: 'Select nationality',
-            data: [
-              { name: 'Somalia' },
-              { name: 'Ethiopia' },
-              { name: 'Kenya' },
-            ],
+            data: getCountries?.data,
+            value: 'friendlyName',
           } as DynamicFormProps)}
         </div>
         <div className="col-lg-4 col-md-6 col-12">

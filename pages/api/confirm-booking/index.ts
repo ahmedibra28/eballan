@@ -2,6 +2,8 @@ import axios from 'axios'
 import nc from 'next-connect'
 import { AVAILABLE_AIRLINES, login } from '../../../utils/help'
 import moment from 'moment'
+import Reservation from '../../../models/Reservation'
+import LoginInfo from '../../../models/LoginInfo'
 
 const handler = nc()
 
@@ -133,8 +135,6 @@ handler.post(
           ?.flat(),
       }
 
-      console.log(JSON.stringify(bodyData))
-
       const airline = body.flight.airline?.replace(' ', '')?.toLowerCase()
 
       if (!AVAILABLE_AIRLINES.includes(airline as string)) {
@@ -143,7 +143,26 @@ handler.post(
 
       if (!req.body) return res.status(400).json({ error: 'Invalid body' })
 
-      const auth = await login(airline)
+      let auth: any
+
+      // create a login session
+      const loginObj = await LoginInfo.findOne({
+        accessTokenExpiry: { $gt: Date.now() },
+      })
+
+      if (!loginObj) {
+        const newLogin = await login(airline)
+        console.log('outside')
+        auth = newLogin
+        await LoginInfo.create({
+          accessToken: newLogin.accessToken,
+          refreshToken: newLogin.refreshToken,
+          accessTokenExpiry: Date.now() + 60 * (60 * 1000),
+        })
+      }
+      if (loginObj) {
+        auth = loginObj
+      }
 
       const { data } = await axios.post(
         `${BASE_URL}/${airline}/ReservationApi/api/bookings/AddConfirmBooking`,
@@ -157,6 +176,64 @@ handler.post(
           },
         }
       )
+
+      // save to database
+      const filteredData = (item: any, airline: string) => {
+        const prices = [
+          {
+            commission: item?.flight?.prices[0].commission,
+            fare: item?.flight?.prices[0].fare,
+            passengerType: item?.flight?.prices[0].passengerType?.type,
+          },
+          {
+            commission: item?.flight?.prices[1].commission,
+            fare: item?.flight?.prices[1].fare,
+            passengerType: item?.flight?.prices[1].passengerType?.type,
+          },
+          {
+            commission: item?.flight?.prices[2].commission,
+            fare: item?.flight?.prices[2].fare,
+            passengerType: item?.flight?.prices[2].passengerType?.type,
+          },
+        ]
+
+        const flight = {
+          departureDate:
+            item?.flight?.flight?.departureDate?.slice(0, 10) +
+            ' ' +
+            item?.flight?.flight?.departureTime,
+          fromCityName: item?.flight?.flight?.fromCityName,
+          fromCityCode: item?.flight?.flight?.fromCityCode,
+          fromAirportName: item?.flight?.flight?.fromAirportName,
+          fromCountryName: item?.flight?.flight?.fromCountryName,
+          arrivalDate:
+            item?.flight?.flight?.arrivalDate?.slice(0, 10) +
+            ' ' +
+            item?.flight?.flight?.arrivalTime,
+          toCityName: item?.flight?.flight?.toCityName,
+          toCityCode: item?.flight?.flight?.toCityCode,
+          toAirportName: item?.flight?.flight?.toAirportName,
+          toCountryName: item?.flight?.flight?.toCountryName,
+          airline,
+          reservationId: data?.reservationId,
+          pnrNumber: data?.pnrNumber,
+        }
+
+        return { prices, flight }
+      }
+
+      const createObject = {
+        passengers: {
+          adult: body?.passengers?.[0]?.adult || [],
+          child: body?.passengers?.[0]?.child || [],
+          infant: body?.passengers?.[0]?.infant || [],
+        },
+        ...filteredData(body, 'Maandeeq Air'),
+        contact: body?.contact,
+        payment: body?.payment,
+      }
+
+      await Reservation.create(createObject)
 
       return res.json(data)
     } catch (error: any) {

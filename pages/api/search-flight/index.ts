@@ -1,6 +1,7 @@
 import axios from 'axios'
 import nc from 'next-connect'
 import { AVAILABLE_AIRLINES, login } from '../../../utils/help'
+import LoginInfo from '../../../models/LoginInfo'
 
 const handler = nc()
 
@@ -40,7 +41,25 @@ handler.post(
         timeZoneOffset: '+03:00',
       }
 
-      const auth = await login(airline)
+      let auth: any
+
+      // create a login session
+      const loginObj = await LoginInfo.findOne({
+        accessTokenExpiry: { $gt: Date.now() },
+      })
+
+      if (!loginObj) {
+        const newLogin = await login(airline)
+        auth = newLogin
+        await LoginInfo.create({
+          accessToken: newLogin.accessToken,
+          refreshToken: newLogin.refreshToken,
+          accessTokenExpiry: Date.now() + 60 * (60 * 1000),
+        })
+      }
+      if (loginObj) {
+        auth = loginObj
+      }
 
       const { data } = await axios.post(
         `${BASE_URL}/${airline}/ReservationApi/api/flights/search`,
@@ -95,8 +114,6 @@ handler.post(
           },
         ]
 
-        // const totalPrice = prices?.reduce((acc, cur) => acc + (cur.fare + cur.commission))
-
         delete item.flightPricings
 
         return { prices, flight: item, airline }
@@ -105,10 +122,6 @@ handler.post(
       const newResult = data?.map((item: any) =>
         filteredData(item, 'Maandeeq Air')
       )
-
-      // console.log('------------')
-
-      // console.log(JSON.stringify(newResult))
 
       return res.json(newResult)
     } catch (error: any) {
