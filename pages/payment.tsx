@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import { currency } from '../utils/currency'
 import apiHook from '../api'
 import { Message } from '../components'
-import useSearchFlightStore from '../zustand/searchFlightStore'
 
 const Payment = () => {
   const steps = [
@@ -54,9 +53,9 @@ const Payment = () => {
   }, [])
 
   const confirmBooking = apiHook({
-    key: ['confirm-booking'],
+    key: ['reservations'],
     method: 'POST',
-    url: `confirm-booking`,
+    url: `reservations`,
   })?.post
 
   const handleBooking = () => {

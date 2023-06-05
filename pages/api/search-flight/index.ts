@@ -1,19 +1,18 @@
 import axios from 'axios'
 import nc from 'next-connect'
-import { AVAILABLE_AIRLINES, login } from '../../../utils/help'
-import LoginInfo from '../../../models/LoginInfo'
+import { login } from '../../../utils/help'
 
 const handler = nc()
 
 handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     try {
-      const { airline } = req.query
+      // const { airline } = req.query
       const { BASE_URL } = process.env
 
-      if (!AVAILABLE_AIRLINES.includes(airline as string)) {
-        return res.status(400).json({ error: 'Invalid airline' })
-      }
+      // if (!AVAILABLE_AIRLINES.includes(airline as string)) {
+      //   return res.status(400).json({ error: 'Invalid airline' })
+      // }
 
       if (!req.body) return res.status(400).json({ error: 'Invalid body' })
 
@@ -29,7 +28,7 @@ handler.post(
         // seatType,
       } = req.body
 
-      const newBody = {
+      const oneWayBody = {
         departureDate: fromDate?.slice(0, 10),
         arrivalDate: toDate?.slice(0, 10),
         adultNum: noAdult,
@@ -41,76 +40,89 @@ handler.post(
         timeZoneOffset: '+03:00',
       }
 
-      let auth: any
+      // const roundBody = {
+      //   departureDate: fromDate?.slice(0, 10),
+      //   arrivalDate: toDate?.slice(0, 10),
+      //   adultNum: noAdult,
+      //   childNum: noChild,
+      //   infantNum: noInfant,
+      //   requiredSeats: noAdult + noChild + noInfant,
+      //   fromCityId: Number(destinationCity),
+      //   toCityId: Number(originCity),
+      //   timeZoneOffset: '+03:00',
+      // }
 
-      // create a login session
-      const loginObj = await LoginInfo.findOne({
-        accessTokenExpiry: { $gt: Date.now() },
-      })
+      const authMaandeeqAir = await login('maandeeqair')
+      const authHalla = await login('halla')
 
-      if (!loginObj) {
-        const newLogin = await login(airline)
-        auth = newLogin
-        await LoginInfo.create({
-          accessToken: newLogin.accessToken,
-          refreshToken: newLogin.refreshToken,
-          accessTokenExpiry: Date.now() + 60 * (60 * 1000),
-        })
-      }
-      if (loginObj) {
-        auth = loginObj
-      }
-
-      const { data } = await axios.post(
-        `${BASE_URL}/${airline}/ReservationApi/api/flights/search`,
-        newBody,
+      const { data: maandeeqair } = await axios.post(
+        `${BASE_URL}/maandeeqair/ReservationApi/api/flights/search`,
+        oneWayBody,
         {
           headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
+            Authorization: `Bearer ${authMaandeeqAir.accessToken}`,
+          },
+        }
+      )
+
+      const { data: halla } = await axios.post(
+        `${BASE_URL}/halla/ReservationApi/api/flights/search`,
+        oneWayBody,
+        {
+          headers: {
+            Authorization: `Bearer ${authHalla.accessToken}`,
           },
         }
       )
 
       const filteredData = (item: any, airline: string) => {
+        const adultPrice = item?.flightPricings?.find(
+          (i: any) => i?.passengerType?.type === 'Adult'
+        )
+        const childPrice = item?.flightPricings?.find(
+          (i: any) => i?.passengerType?.type === 'Child'
+        )
+
+        const infantPrice = item?.flightPricings?.find(
+          (i: any) => i?.passengerType?.type === 'Infant'
+        )
+
         const prices = [
           {
-            flightId: item.flightPricings[0].flightId,
-            passenger: item.flightPricings[0].passengerType,
-            commission: item.flightPricings[0].commission,
-            fare: item.flightPricings[0].fare,
-            numberOfSeats: item.flightPricings[0].numberOfSeats,
-            numberOfSeatsAvailable:
-              item.flightPricings[0].numberOfSeatsAvailable,
-            baggageWeight: item.flightPricings[0].baggageWeight,
-            handCarryWeight: item.flightPricings[0].handCarryWeight,
-            totalPrice: item.flightPricings[0].totalFare * noAdult,
-            ...item.flightPricings[0],
+            flightId: adultPrice?.flightId,
+            passenger: adultPrice?.passengerType,
+            commission: adultPrice?.commission,
+            fare: adultPrice?.fare,
+            numberOfSeats: adultPrice?.numberOfSeats,
+            numberOfSeatsAvailable: adultPrice?.numberOfSeatsAvailable,
+            baggageWeight: adultPrice?.baggageWeight,
+            handCarryWeight: adultPrice?.handCarryWeight,
+            totalPrice: adultPrice?.totalFare * noAdult,
+            ...adultPrice,
           },
           {
-            flightId: item.flightPricings[4].flightId,
-            passenger: item.flightPricings[4].passengerType,
-            commission: item.flightPricings[4].commission,
-            fare: item.flightPricings[4].fare,
-            numberOfSeats: item.flightPricings[4].numberOfSeats,
-            numberOfSeatsAvailable:
-              item.flightPricings[4].numberOfSeatsAvailable,
-            baggageWeight: item.flightPricings[4].baggageWeight,
-            handCarryWeight: item.flightPricings[4].handCarryWeight,
-            totalPrice: item.flightPricings[4].totalFare * noChild,
-            ...item.flightPricings[4],
+            flightId: childPrice?.flightId,
+            passenger: childPrice?.passengerType,
+            commission: childPrice?.commission,
+            fare: childPrice?.fare,
+            numberOfSeats: childPrice?.numberOfSeats,
+            numberOfSeatsAvailable: childPrice?.numberOfSeatsAvailable,
+            baggageWeight: childPrice?.baggageWeight,
+            handCarryWeight: childPrice?.handCarryWeight,
+            totalPrice: childPrice?.totalFare * noChild,
+            ...childPrice,
           },
           {
-            flightId: item.flightPricings[8].flightId,
-            passenger: item.flightPricings[8].passengerType,
-            commission: item.flightPricings[8].commission,
-            fare: item.flightPricings[8].fare,
-            numberOfSeats: item.flightPricings[8].numberOfSeats,
-            numberOfSeatsAvailable:
-              item.flightPricings[8].numberOfSeatsAvailable,
-            baggageWeight: item.flightPricings[8].baggageWeight,
-            handCarryWeight: item.flightPricings[8].handCarryWeight,
-            totalPrice: item.flightPricings[8].totalFare * noInfant,
-            ...item.flightPricings[8],
+            flightId: infantPrice?.flightId,
+            passenger: infantPrice?.passengerType,
+            commission: infantPrice?.commission,
+            fare: infantPrice?.fare,
+            numberOfSeats: infantPrice?.numberOfSeats,
+            numberOfSeatsAvailable: infantPrice?.numberOfSeatsAvailable,
+            baggageWeight: infantPrice?.baggageWeight,
+            handCarryWeight: infantPrice?.handCarryWeight,
+            totalPrice: infantPrice?.totalFare * noInfant,
+            ...infantPrice,
           },
         ]
 
@@ -119,11 +131,17 @@ handler.post(
         return { prices, flight: item, airline }
       }
 
-      const newResult = data?.map((item: any) =>
+      const newResultMaandeeqAir = maandeeqair?.map((item: any) =>
         filteredData(item, 'Maandeeq Air')
       )
 
-      return res.json(newResult)
+      const newResultHalla = halla?.map((item: any) =>
+        filteredData(item, 'Halla')
+      )
+
+      const data = [...newResultMaandeeqAir, ...newResultHalla]
+
+      return res.json(data)
     } catch (error: any) {
       res.status(500).json({ error: error.response.data || error.message })
     }

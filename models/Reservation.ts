@@ -55,6 +55,7 @@ export interface IReservation {
   flight: Flight
   contact: Contact
   payment: Payment
+  status: 'booked' | 'canceled'
   createdAt?: Date
 }
 
@@ -130,6 +131,11 @@ const reservationSchema = new Schema<IReservation>(
     payment: {
       phone: String,
       paymentMethod: String,
+    },
+    status: {
+      type: String,
+      enum: ['booked', 'canceled'],
+      default: 'booked',
     },
   },
   { timestamps: true }

@@ -38,7 +38,11 @@ const Result = ({ item }: { item: any }) => {
           <div className="col-lg-6 col-12 border border-bottom-0 border-top-0 my-auto">
             <div className="d-flex justify-content-around align-items-center">
               <div className="text-center">
-                <span className="fw-bold"> {item?.flight?.departureTime}</span>{' '}
+                <span className="fw-bold">
+                  {item?.flight?.departureDate?.slice(0, 10)}
+                </span>
+                <br />
+                <span className="fw-bold">{item?.flight?.departureTime}</span>
                 <br />
                 <span className="">{item?.flight?.fromCityCode}</span>
               </div>
@@ -48,6 +52,10 @@ const Result = ({ item }: { item: any }) => {
                 <FaArrowRight className="ms-3" />
               </div>
               <div className="text-center">
+                <span className="fw-bold">
+                  {item?.flight?.arrivalDate?.slice(0, 10)}
+                </span>
+                <br />
                 <span className="fw-bold"> {item?.flight?.arrivalTime}</span>
                 <br />
                 <span className="">{item?.flight?.toCityCode}</span>

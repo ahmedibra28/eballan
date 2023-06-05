@@ -5,6 +5,7 @@ export interface ILoginInfo {
   accessToken: string
   accessTokenExpiry: Date
   refreshToken: string
+  airline: string
   createdAt?: Date
 }
 
@@ -13,6 +14,7 @@ const loginInfoSchema = new Schema<ILoginInfo>(
     accessToken: { type: String, required: true },
     accessTokenExpiry: { type: Date, required: true },
     refreshToken: { type: String, required: true },
+    airline: { type: String, required: true },
   },
   { timestamps: true }
 )

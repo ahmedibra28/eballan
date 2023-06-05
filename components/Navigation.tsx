@@ -28,7 +28,7 @@ const Navigation = () => {
           <li className="nav-item">
             <Link
               href="/auth/login"
-              className="nav-link btn btn-warning px-3 rounded-0"
+              className="nav-link text-light btn btn-warning px-3 rounded-0"
               aria-current="page"
             >
               <FaSignInAlt className="mb-1" /> Login
@@ -87,7 +87,7 @@ const Navigation = () => {
                 <li key={index} className="nav-item">
                   <Link
                     href={menu.path}
-                    className="nav-link"
+                    className="nav-link text-light"
                     aria-current="page"
                   >
                     {menu.name}
@@ -100,7 +100,7 @@ const Navigation = () => {
             (item: IClientPermission, index: number) => (
               <li key={index} className="nav-item dropdown">
                 <a
-                  className="nav-link dropdown-toggle"
+                  className="nav-link text-light dropdown-toggle"
                   href="#"
                   id="navbarDropdownMenuLink"
                   role="button"
@@ -135,7 +135,7 @@ const Navigation = () => {
           <li className="nav-item">
             <Link
               href="/auth/login"
-              className="nav-link"
+              className="nav-link text-light"
               aria-current="page"
               onClick={logoutHandler}
             >

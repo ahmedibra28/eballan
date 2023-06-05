@@ -28,6 +28,8 @@ declare global {
       secret: string
       type: string
       airline: string
+      startDate: string
+      endDate: string
     }
   }
   interface NextApiResponseExtended extends NextApiResponse {

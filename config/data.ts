@@ -35,6 +35,7 @@ const sort = {
   hidden: 0,
   profile: 1,
   admin: 2,
+  normal: 3,
 }
 
 const clientPermissions = [
@@ -101,6 +102,16 @@ const clientPermissions = [
     menu: 'admin',
     sort: sort.admin,
     description: 'User Profiles page',
+  },
+
+  // Reservation
+  {
+    _id: '637e0261fadbdf65bba856be',
+    name: 'Reservation',
+    path: '/reservations',
+    menu: 'normal',
+    sort: sort.normal,
+    description: 'Reservations page',
   },
 ]
 
@@ -282,6 +293,36 @@ const permissions = [
     description: 'Client Permission',
     route: '/api/auth/client-permissions/:id',
     name: 'ClientPermissions',
+    method: 'DELETE',
+  },
+
+  //   Reservation
+  {
+    _id: '647ddae3f15497446e0d9e0d',
+    description: 'Reservations',
+    route: '/api/reservations',
+    name: 'Reservations',
+    method: 'GET',
+  },
+  {
+    _id: '647ddae3f15497446e0d9e0e',
+    description: 'Reservation',
+    route: '/api/reservations',
+    name: 'Reservations',
+    method: 'POST',
+  },
+  {
+    _id: '647ddae3f15497446e0d9e0f',
+    description: 'Reservation',
+    route: '/api/reservations/:id',
+    name: 'Reservations',
+    method: 'PUT',
+  },
+  {
+    _id: '647ddae3f15497446e0d9e10',
+    description: 'Reservation',
+    route: '/api/reservations/:id',
+    name: 'Reservations',
     method: 'DELETE',
   },
 ]

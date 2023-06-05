@@ -1,11 +1,60 @@
-import axios from 'axios'
 import nc from 'next-connect'
+import Reservation from '../../../models/Reservation'
+import { isAuth } from '../../../utils/auth'
+import db from '../../../config/db'
 import { AVAILABLE_AIRLINES, login } from '../../../utils/help'
 import moment from 'moment'
-import Reservation from '../../../models/Reservation'
-import LoginInfo from '../../../models/LoginInfo'
+import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 
 const handler = nc()
+handler.use(isAuth)
+handler.get(
+  async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
+    await db()
+    try {
+      const { startDate, endDate } = req.query
+
+      const s = moment(startDate).startOf('day').format()
+      const e = moment(endDate).endOf('day').format()
+
+      const q =
+        startDate && endDate
+          ? {
+              createdAt: {
+                $gte: s,
+                $lte: e,
+              },
+            }
+          : {}
+
+      let query = Reservation.find(q)
+
+      const page = parseInt(req.query.page) || 1
+      const pageSize = parseInt(req.query.limit) || 25
+      const skip = (page - 1) * pageSize
+      const total = await Reservation.countDocuments(q)
+
+      const pages = Math.ceil(total / pageSize)
+
+      query = query.skip(skip).limit(pageSize).sort({ createdAt: -1 }).lean()
+
+      const result = await query
+
+      res.status(200).json({
+        startIndex: skip + 1,
+        endIndex: skip + result.length,
+        count: result.length,
+        page,
+        pages,
+        total,
+        data: result,
+      })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+)
 
 handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
@@ -143,26 +192,7 @@ handler.post(
 
       if (!req.body) return res.status(400).json({ error: 'Invalid body' })
 
-      let auth: any
-
-      // create a login session
-      const loginObj = await LoginInfo.findOne({
-        accessTokenExpiry: { $gt: Date.now() },
-      })
-
-      if (!loginObj) {
-        const newLogin = await login(airline)
-        console.log('outside')
-        auth = newLogin
-        await LoginInfo.create({
-          accessToken: newLogin.accessToken,
-          refreshToken: newLogin.refreshToken,
-          accessTokenExpiry: Date.now() + 60 * (60 * 1000),
-        })
-      }
-      if (loginObj) {
-        auth = loginObj
-      }
+      const auth = await login(airline)
 
       const { data } = await axios.post(
         `${BASE_URL}/${airline}/ReservationApi/api/bookings/AddConfirmBooking`,
@@ -170,7 +200,7 @@ handler.post(
         {
           headers: {
             Authorization: `Bearer ${auth.accessToken}`,
-            uuid: '9633873a-232c-40dc-af1b-c8f0e06c3e88',
+            uuid: uuidv4(),
             scheme: 'https',
             platform: 1,
           },
@@ -228,12 +258,12 @@ handler.post(
           child: body?.passengers?.[0]?.child || [],
           infant: body?.passengers?.[0]?.infant || [],
         },
-        ...filteredData(body, 'Maandeeq Air'),
+        ...filteredData(body, airline),
         contact: body?.contact,
         payment: body?.payment,
       }
 
-      await Reservation.create(createObject)
+      await Reservation.create({ ...createObject, status: 'booked' })
 
       return res.json(data)
     } catch (error: any) {

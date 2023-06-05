@@ -30,7 +30,7 @@ const Header = () => {
   const searchFlightApi = apiHook({
     key: ['search-flight'],
     method: 'POST',
-    url: `search-flight?airline=maandeeqair`,
+    url: `search-flight`,
   })?.post
 
   const { updateSearchFlight } = useSearchFlightStore((state) => state)
