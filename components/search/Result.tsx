@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
-import { FaArrowRight, FaShareAlt } from 'react-icons/fa'
+import { FaArrowLeft, FaArrowRight, FaShareAlt } from 'react-icons/fa'
 import { currency } from '../../utils/currency'
 import useFlightStore from '../../zustand/flightStore'
 import { useRouter } from 'next/router'
@@ -70,6 +70,46 @@ const Result = ({ item }: { item: any }) => {
                 <br />
               </div>
             </div>
+
+            {item?.arrival && (
+              <div className="d-flex justify-content-around align-items-center mt-3">
+                <div className="text-center">
+                  <span className="fw-bold">
+                    {item?.arrival?.arrivalDate?.slice(0, 10)}
+                  </span>
+                  <br />
+                  <span className="fw-bold"> {item?.arrival?.arrivalTime}</span>
+                  <br />
+                  <span className="">{item?.arrival?.toCityCode}</span>
+                </div>
+
+                <div className="text-center">
+                  <FaArrowLeft className="me-3" />
+                  <span className="">Direct</span>
+                  <FaArrowLeft className="ms-3" />
+                </div>
+                <div className="text-center">
+                  <span className="fw-bold">
+                    {item?.arrival?.departureDate?.slice(0, 10)}
+                  </span>
+                  <br />
+                  <span className="fw-bold">
+                    {item?.arrival?.departureTime}
+                  </span>
+                  <br />
+                  <span className="">{item?.arrival?.fromCityCode}</span>
+                </div>
+                <div className="text-center">
+                  <span className="fw-light">
+                    {getHoursBetween(
+                      item?.arrival?.departureTime,
+                      item?.arrival?.arrivalTime
+                    )}
+                  </span>
+                  <br />
+                </div>
+              </div>
+            )}
           </div>
           <div className="col-lg-3 col-12 text-center">
             <FaShareAlt className="text-warning float-end" /> <br />

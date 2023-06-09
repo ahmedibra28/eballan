@@ -1,4 +1,5 @@
 import { Schema, model, models } from 'mongoose'
+import User from './User'
 
 interface Passenger {
   passengerTitle: string
@@ -57,10 +58,12 @@ export interface IReservation {
   payment: Payment
   status: 'booked' | 'canceled'
   createdAt?: Date
+  user?: Schema.Types.ObjectId
 }
 
 const reservationSchema = new Schema<IReservation>(
   {
+    user: { type: Schema.Types.ObjectId, ref: User, required: true },
     passengers: {
       adult: [
         {

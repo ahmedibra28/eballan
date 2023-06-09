@@ -5,6 +5,7 @@ export const sendEmail = (options: {
   subject: string
   text: string
   webName: string
+  pdf?: any
 }) => {
   const smtpTransparent = nodemailer.createTransport({
     host: process.env.SMTP_SERVER,
@@ -20,6 +21,15 @@ export const sendEmail = (options: {
     from: `${options?.webName} <${process.env.SMTP_USER}>`,
     to: options.to,
     subject: options.subject,
+    ...(options.pdf && {
+      attachments: [
+        {
+          filename: 'reservation.pdf',
+          content: options.pdf,
+          contentType: 'application/pdf',
+        },
+      ],
+    }),
     html: options.text,
   }
 

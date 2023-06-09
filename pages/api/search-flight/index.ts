@@ -40,17 +40,17 @@ handler.post(
         timeZoneOffset: '+03:00',
       }
 
-      // const roundBody = {
-      //   departureDate: fromDate?.slice(0, 10),
-      //   arrivalDate: toDate?.slice(0, 10),
-      //   adultNum: noAdult,
-      //   childNum: noChild,
-      //   infantNum: noInfant,
-      //   requiredSeats: noAdult + noChild + noInfant,
-      //   fromCityId: Number(destinationCity),
-      //   toCityId: Number(originCity),
-      //   timeZoneOffset: '+03:00',
-      // }
+      const roundBody = {
+        departureDate: toDate?.slice(0, 10),
+        arrivalDate: toDate?.slice(0, 10),
+        adultNum: noAdult,
+        childNum: noChild,
+        infantNum: noInfant,
+        requiredSeats: noAdult + noChild + noInfant,
+        fromCityId: Number(destinationCity),
+        toCityId: Number(originCity),
+        timeZoneOffset: '+03:00',
+      }
 
       const authMaandeeqAir = await login('maandeeqair')
       const authHalla = await login('halla')
@@ -65,6 +65,30 @@ handler.post(
         }
       )
 
+      let returnValueMaandeeqAir: any = null
+      if (req.body?.trip === 'Return') {
+        const { data: maandeeqair2 } = await axios.post(
+          `${BASE_URL}/maandeeqair/ReservationApi/api/flights/search`,
+          roundBody,
+          {
+            headers: {
+              Authorization: `Bearer ${authMaandeeqAir.accessToken}`,
+            },
+          }
+        )
+
+        if (maandeeqair2?.length > 0) {
+          returnValueMaandeeqAir = {
+            departureDate: maandeeqair2?.[0]?.departureDate,
+            departureTime: maandeeqair2?.[0]?.departureTime,
+            arrivalDate: maandeeqair2?.[0]?.arrivalDate,
+            arrivalTime: maandeeqair2?.[0]?.arrivalTime,
+            toCityCode: maandeeqair2?.[0]?.toCityCode,
+            fromCityCode: maandeeqair2?.[0]?.fromCityCode,
+          }
+        }
+      }
+
       const { data: halla } = await axios.post(
         `${BASE_URL}/halla/ReservationApi/api/flights/search`,
         oneWayBody,
@@ -74,6 +98,36 @@ handler.post(
           },
         }
       )
+
+      let returnValueHalla: any = null
+
+      if (req.body?.trip === 'Return') {
+        const { data: halla2 } = await axios.post(
+          `${BASE_URL}/halla/ReservationApi/api/flights/search`,
+          roundBody,
+          {
+            headers: {
+              Authorization: `Bearer ${authHalla.accessToken}`,
+            },
+          }
+        )
+
+        if (halla2?.length > 0) {
+          returnValueHalla = {
+            departureDate: halla2?.[0]?.departureDate,
+            departureTime: halla2?.[0]?.departureTime,
+            arrivalDate: halla2?.[0]?.arrivalDate,
+            arrivalTime: halla2?.[0]?.arrivalTime,
+            toCityCode: halla2?.[0]?.toCityCode,
+            fromCityCode: halla2?.[0]?.fromCityCode,
+          }
+        }
+      }
+
+      // console.log({
+      //   returnValueMaandeeqAir,
+      //   returnValueHalla,
+      // })
 
       const filteredData = (item: any, airline: string) => {
         const adultPrice = item?.flightPricings?.find(
@@ -128,7 +182,14 @@ handler.post(
 
         delete item.flightPricings
 
-        return { prices, flight: item, airline }
+        const arrival =
+          airline === 'Maandeeq Air'
+            ? returnValueMaandeeqAir
+            : airline === 'Halla'
+            ? returnValueHalla
+            : null
+
+        return { prices, flight: item, airline, arrival }
       }
 
       const newResultMaandeeqAir = maandeeqair?.map((item: any) =>

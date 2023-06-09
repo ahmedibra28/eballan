@@ -6,6 +6,18 @@ import { AVAILABLE_AIRLINES, login } from '../../../utils/help'
 import moment from 'moment'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import { eReservation } from '../../../utils/eReservation'
+import { sendEmail } from '../../../utils/nodemailer'
+import puppeteer from 'puppeteer'
+
+async function generatePDF(html: any) {
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
+  await page.setContent(html, { waitUntil: 'networkidle0' })
+  const pdf = await page.pdf()
+  await browser.close()
+  return pdf
+}
 
 const handler = nc()
 handler.use(isAuth)
@@ -18,6 +30,8 @@ handler.get(
       const s = moment(startDate).startOf('day').format()
       const e = moment(endDate).endOf('day').format()
 
+      const { role } = req.user
+
       const q =
         startDate && endDate
           ? {
@@ -25,8 +39,9 @@ handler.get(
                 $gte: s,
                 $lte: e,
               },
+              ...(role !== 'SUPER_ADMIN' && { user: req.user._id }),
             }
-          : {}
+          : { ...(role !== 'SUPER_ADMIN' && { user: req.user._id }) }
 
       let query = Reservation.find(q)
 
@@ -55,6 +70,34 @@ handler.get(
     }
   }
 )
+
+// handler.get(
+//   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
+//     try {
+//       const msg = eReservation({
+//         message: `Your booking has been confirmed. Your PNR is ${1222} and your reservation ID is ${4433}.`,
+//       })
+
+//       const pdf = await generatePDF(msg)
+//       const result = sendEmail({
+//         to: 'ahmaat19@gmail.com',
+//         subject: `Your booking has been confirmed`,
+//         text: msg,
+//         webName: `eBallan - Your booking has been confirmed`,
+//         pdf,
+//       })
+
+//       if (await result)
+//         return res.status(200).json({
+//           message: `Thank you for contacting me, I'll be in touch very soon.`,
+//         })
+
+//       return res.json('success')
+//     } catch (error: any) {
+//       res.status(500).json({ error: error.response.data || error.message })
+//     }
+//   }
+// )
 
 handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
@@ -263,7 +306,29 @@ handler.post(
         payment: body?.payment,
       }
 
-      await Reservation.create({ ...createObject, status: 'booked' })
+      await Reservation.create({
+        ...createObject,
+        status: 'booked',
+        user: req.user?._id,
+      })
+
+      const msg = eReservation({
+        message: `Your booking has been confirmed. Your PNR is ${data?.pnrNumber} and your reservation ID is ${data?.reservationId}.`,
+      })
+
+      const pdf = await generatePDF(msg)
+      const result = sendEmail({
+        to: body.contact.email,
+        subject: `Reservation Confirmation - ${data?.reservationId}`,
+        text: msg,
+        webName: `eBallan - ${airline?.toUpperCase()}`,
+        pdf,
+      })
+
+      if (await result)
+        return res.status(200).json({
+          message: `Thank you for booking with us. Your booking has been confirmed. Your PNR is ${data?.pnrNumber} and your reservation ID is ${data?.reservationId}.`,
+        })
 
       return res.json(data)
     } catch (error: any) {
@@ -273,9 +338,3 @@ handler.post(
 )
 
 export default handler
-
-// Cancellation Done by GET
-
-// https://siliconsom.com/SRS/maandeeqair/ReservationApi/api/bookings/VoidReservation/80343
-
-// {"pnrNumber":"AKUX10","reservationId":80343,"message":"Credit Limit Exceeded : 80.00000 - Total Amount : 140","data":null}

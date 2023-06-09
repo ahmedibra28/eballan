@@ -50,6 +50,7 @@ export const login = async (airline: string) => {
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
       accessTokenExpiry: Date.now() + 60 * (60 * 1000),
+      airline,
     })
   }
 }

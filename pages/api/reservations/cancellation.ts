@@ -1,7 +1,6 @@
 import nc from 'next-connect'
 import Reservation from '../../../models/Reservation'
 import db from '../../../config/db'
-import { isAuth } from '../../../utils/auth'
 import LoginInfo from '../../../models/LoginInfo'
 import { login } from '../../../utils/help'
 import axios from 'axios'
@@ -9,23 +8,18 @@ import { v4 as uuidv4 } from 'uuid'
 
 const handler = nc()
 
-handler.use(isAuth)
-
-handler.delete(
+handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     await db()
     try {
-      const { id } = req.query
-      const { role } = req.user
+      const { reservationId } = req.body
 
       const object = await Reservation.findOne({
         status: 'booked',
-        _id: id,
-        ...(role !== 'SUPER_ADMIN' && {
-          user: req.user._id,
-          'flight.departureDate': { $gt: Date.now() + 2 * 24 * 60 * 60 * 1000 },
-        }),
+        'flight.reservationId': reservationId,
+        'flight.departureDate': { $gt: Date.now() + 2 * 24 * 60 * 60 * 1000 },
       })
+
       if (!object)
         return res.status(400).json({ error: `Reservation not found` })
 
@@ -67,7 +61,7 @@ handler.delete(
       await Reservation.findOneAndUpdate(
         {
           _id: object._id,
-          ...(role !== 'SUPER_ADMIN' && { user: req.user._id }),
+          'flight.reservationId': reservationId,
         },
         {
           status: 'canceled',

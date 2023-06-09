@@ -1,8 +1,7 @@
 import React, { useState, useEffect, FormEvent, Fragment } from 'react'
 import dynamic from 'next/dynamic'
-import withAuth from '../HoC/withAuth'
+import withAuth from '../../HoC/withAuth'
 import { confirmAlert } from 'react-confirm-alert'
-import { useForm } from 'react-hook-form'
 import {
   Spinner,
   Pagination,
@@ -10,19 +9,13 @@ import {
   Confirm,
   Search,
   Meta,
-} from '../components'
-import {
-  DynamicFormProps,
-  inputText,
-  inputTextArea,
-  staticInputSelect,
-} from '../utils/dForms'
-import FormView from '../components/FormView'
-import { FaPenAlt, FaTrash } from 'react-icons/fa'
+} from '../../components'
+
+import { FaTrash } from 'react-icons/fa'
 import moment from 'moment'
-import apiHook from '../api'
-import { IReservation } from '../models/Reservation'
-import { currency } from '../utils/currency'
+import apiHook from '../../api'
+import { IReservation } from '../../models/Reservation'
+import { currency } from '../../utils/currency'
 
 const Reservations = () => {
   const [page, setPage] = useState(1)
