@@ -60,8 +60,10 @@ const SearchResult = () => {
   useEffect(() => {
     if (searchFlightApi?.isSuccess) {
       setError('')
+      // @ts-ignore
       updateSearchFlight({ result: searchFlightApi?.data })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchFlightApi?.isSuccess])
 
   useEffect(() => {
@@ -74,6 +76,7 @@ const SearchResult = () => {
     setNoInfant(searchFlight?.noInfant || 0)
     setOriginCity(searchFlight?.originCity || '')
     setDestinationCity(searchFlight?.destinationCity || '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

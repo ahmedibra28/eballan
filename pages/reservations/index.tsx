@@ -14,7 +14,6 @@ import {
 import { FaTrash } from 'react-icons/fa'
 import moment from 'moment'
 import apiHook from '../../api'
-import { IReservation } from '../../models/Reservation'
 import { currency } from '../../utils/currency'
 
 const Reservations = () => {
@@ -62,7 +61,6 @@ const Reservations = () => {
 
   const name = 'Reservations List'
   const label = 'Reservation'
-  const modal = 'reservation'
 
   return (
     <>
@@ -117,7 +115,7 @@ const Reservations = () => {
               </tr>
             </thead>
             <tbody>
-              {getApi?.data?.data?.map((item: IReservation, i: number) => (
+              {getApi?.data?.data?.map((item: any, i: number) => (
                 <tr key={i}>
                   <td>
                     {[

@@ -50,6 +50,7 @@ const Payment = () => {
     if (flight?.prices?.length === 0 || !contact.phone) {
       router.push('/passenger')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const confirmBooking = apiHook({
@@ -83,6 +84,7 @@ const Payment = () => {
     if (confirmBooking?.isSuccess) {
       router.push('/')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [confirmBooking?.isSuccess])
 
   return (

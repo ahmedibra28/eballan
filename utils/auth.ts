@@ -37,14 +37,21 @@ export const isAuth = async (
           },
         })
         .populate('user', ['-password', '-createdAt', '-updatedAt'])
+        .lean()
 
       const {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         user,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         role: { type },
       } = userRole
 
       req.user = { ...user, type }
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const permissions = userRole?.role?.permission?.map(
         (per: IPermission) => ({
           route: per?.route,

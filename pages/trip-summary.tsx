@@ -6,6 +6,7 @@ import {
   FaDotCircle,
   FaPassport,
   FaPhoneAlt,
+  FaSignInAlt,
   FaUser,
 } from 'react-icons/fa'
 import { MdOutlineAirlineSeatReclineNormal } from 'react-icons/md'
@@ -25,6 +26,7 @@ import {
 import { useForm } from 'react-hook-form'
 import apiHook from '../api'
 import { FormView } from '../components'
+import { userInfo } from '../api/api'
 
 const Passenger = () => {
   const router = useRouter()
@@ -52,6 +54,7 @@ const Passenger = () => {
     ) {
       router.push('/passenger')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getPassengerTitle = apiHook({
@@ -286,6 +289,7 @@ const Passenger = () => {
     if (tempPassengerInfo) {
       // console.log({ ...data, id: tempPassengerInfo?.id })
 
+      // @ts-ignore
       updatePassenger({ ...data, id: tempPassengerInfo?.id })
 
       formCleanHandler()
@@ -473,12 +477,21 @@ const Passenger = () => {
                 </span>
               </p>
 
-              <div className="text-end">
+              <div className="d-flex justify-content-between">
+                {!userInfo().userInfo && (
+                  <Link
+                    href="/auth/login?next=/trip-summary"
+                    className="btn btn-primary text-light rounded-pill"
+                  >
+                    Login <FaSignInAlt className="mb-1" />
+                  </Link>
+                )}
                 <Link
                   href="/payment"
                   className="btn btn-warning text-light rounded-pill"
                 >
-                  Continue <FaArrowCircleRight className="mb-1" />
+                  Continue {!userInfo().userInfo && 'as guest'}{' '}
+                  <FaArrowCircleRight className="mb-1" />
                 </Link>
               </div>
             </div>

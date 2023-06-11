@@ -39,6 +39,8 @@ handler.post(
             .status(404)
             .json({ error: 'This user does not have associated role' })
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         const routes = roleObj?.role?.clientPermission?.map(
           (a: { menu: string; name: string; path: string; sort: number }) => ({
             menu: a?.menu,
@@ -53,6 +55,8 @@ handler.post(
           email: user.email,
           blocked: user.blocked,
           confirmed: user.confirmed,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           role: roleObj.role.type,
           routes: routes,
           token: generateToken(user._id),

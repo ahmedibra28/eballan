@@ -30,12 +30,12 @@ const Passenger = () => {
     if (!searchFlight?.destinationCity || !searchFlight?.originCity) {
       router.push('/')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({})
 
@@ -93,8 +93,11 @@ const Passenger = () => {
           const obj = {}
 
           for (const key in data) {
+            // @ts-ignore
             if (key.includes(type) && key.includes(i)) {
+              // @ts-ignore
               const newKey = key.replace(type, '').replace(i, '')
+              // @ts-ignore
               obj[newKey] = data[key]
               // obj['id'] = uuidv4()
             }
@@ -106,6 +109,7 @@ const Passenger = () => {
         }
 
         if (typeData.length > 0) {
+          // @ts-ignore
           reformattedData[type.toLowerCase()] = typeData
         }
       })
@@ -234,10 +238,12 @@ const Passenger = () => {
           <Fragment key={item}>{passengerForm('Adult', item)}</Fragment>
         ))}
 
+        {/* @ts-ignore */}
         {useNumberToArray(searchFlight?.noChild).map((item) => (
           <Fragment key={item}>{passengerForm('Child', item)}</Fragment>
         ))}
 
+        {/*  @ts-ignore */}
         {useNumberToArray(searchFlight?.noInfant).map((item) => (
           <Fragment key={item}>{passengerForm('Infant', item)}</Fragment>
         ))}

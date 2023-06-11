@@ -61,9 +61,11 @@ const Header = () => {
   useEffect(() => {
     if (searchFlightApi?.isSuccess) {
       setError('')
+      // @ts-ignore
       updateSearchFlight({ result: searchFlightApi?.data })
       router.push('/search-results')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchFlightApi?.isSuccess])
 
   return (

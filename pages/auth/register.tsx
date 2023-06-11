@@ -6,21 +6,27 @@ import { useForm } from 'react-hook-form'
 import Head from 'next/head'
 import apiHook from '../../api'
 import { userInfo } from '../../api/api'
-import { DynamicFormProps, inputEmail, inputPassword } from '../../utils/dForms'
+import {
+  DynamicFormProps,
+  inputEmail,
+  inputPassword,
+  inputText,
+} from '../../utils/dForms'
 
-const Login = () => {
+const Register = () => {
   const router = useRouter()
   const pathName = router.query.next || '/'
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm()
 
   const postApi = apiHook({
-    key: ['login'],
+    key: ['register'],
     method: 'POST',
-    url: `auth/login`,
+    url: `auth/register`,
   })?.post
 
   useEffect(() => {
@@ -36,7 +42,11 @@ const Login = () => {
     userInfo() && userInfo().userInfo && router.push('/')
   }, [router])
 
-  const submitHandler = async (data: { email?: string; password?: string }) => {
+  const submitHandler = async (data: {
+    name: string
+    email?: string
+    password?: string
+  }) => {
     postApi?.mutateAsync(data)
   }
 
@@ -49,7 +59,17 @@ const Login = () => {
       <h3 className="fw-light font-monospace text-center">Sign In</h3>
       {postApi?.isError && <Message variant="danger" value={postApi?.error} />}
 
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/* @ts-ignore */}
       <form onSubmit={handleSubmit(submitHandler)}>
+        {inputText({
+          register,
+          errors,
+          label: 'Name',
+          name: 'name',
+          placeholder: 'Name',
+        } as DynamicFormProps)}
+
         {inputEmail({
           register,
           errors,
@@ -64,6 +84,16 @@ const Login = () => {
           name: 'password',
           placeholder: 'Password',
         } as DynamicFormProps)}
+        {inputPassword({
+          register,
+          errors,
+          validate: true,
+          minLength: true,
+          watch,
+          label: 'Confirm Password',
+          name: 'confirmPassword',
+          placeholder: 'Confirm Password',
+        } as DynamicFormProps)}
         <button
           type="submit"
           className="btn btn-primary form-control "
@@ -72,26 +102,18 @@ const Login = () => {
           {postApi?.isLoading ? (
             <span className="spinner-border spinner-border-sm" />
           ) : (
-            'Sign In'
+            'Register'
           )}
         </button>
       </form>
       <div className="row pt-3">
         <div className="col">
+          You have already an account?
           <Link
-            href="/auth/forgot-password"
+            href={`/auth/login?next=${pathName}`}
             className="ps-1 text-decoration-none"
           >
-            Forgot Password?
-          </Link>
-        </div>
-        <div className="col">
-          Do&apos;not have an account?
-          <Link
-            href={`/auth/register?next=${pathName}`}
-            className="ps-1 text-decoration-none"
-          >
-            Sign Up
+            Login
           </Link>
         </div>
       </div>
@@ -99,4 +121,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register

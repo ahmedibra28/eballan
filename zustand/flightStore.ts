@@ -53,12 +53,13 @@ const useFlightStore = create<FlightStore>((set) => ({
     }))
   },
   setPassengers: (passengers: Passenger[]) => {
+    // @ts-ignore
     set(() => ({
       passengers: passengers,
     }))
   },
   setContact: (contact: { email: string; phone: string }) => {
-    set((state) => ({
+    set(() => ({
       contact,
     }))
   },

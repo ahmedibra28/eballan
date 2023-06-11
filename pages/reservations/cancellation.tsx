@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import Head from 'next/head'
 import apiHook from '../../api'
-import { userInfo } from '../../api/api'
 import { DynamicFormProps, inputText } from '../../utils/dForms'
 
 const Cancellation = () => {
