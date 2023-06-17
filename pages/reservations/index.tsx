@@ -141,6 +141,12 @@ const Reservations = () => {
                         item?.prices[1].fare *
                           (item?.passengers?.child?.length || 0) +
                         item?.prices[2].fare *
+                          (item?.passengers?.infant?.length || 0) +
+                        item?.prices[0].commission *
+                          (item?.passengers?.adult?.length || 0) +
+                        item?.prices[1].commission *
+                          (item?.passengers?.child?.length || 0) +
+                        item?.prices[2].commission *
                           (item?.passengers?.infant?.length || 0)
                     )}
                   </td>

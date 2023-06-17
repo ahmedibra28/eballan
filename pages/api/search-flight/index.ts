@@ -1,12 +1,14 @@
 import axios from 'axios'
 import nc from 'next-connect'
 import { login } from '../../../utils/help'
+import db from '../../../config/db'
 
 const handler = nc()
 
 handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     try {
+      await db()
       // const { airline } = req.query
       const { BASE_URL } = process.env
 

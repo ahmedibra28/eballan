@@ -102,6 +102,7 @@ handler.get(
 handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     try {
+      await db()
       const { BASE_URL } = process.env
 
       const body = req.body

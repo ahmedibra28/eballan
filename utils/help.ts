@@ -1,5 +1,6 @@
 import axios from 'axios'
 import LoginInfo from '../models/LoginInfo'
+import db from '../config/db'
 
 export const AVAILABLE_AIRLINES = ['maandeeqair', 'halla']
 
@@ -22,6 +23,8 @@ const auth: Auth = {
 
 export const login = async (airline: string) => {
   const { BASE_URL } = process.env
+
+  await db()
 
   const loginObj = await LoginInfo.findOne({
     accessTokenExpiry: { $gt: Date.now() },
