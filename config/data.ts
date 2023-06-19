@@ -325,6 +325,13 @@ const permissions = [
     name: 'Reservations',
     method: 'DELETE',
   },
+  {
+    _id: '647ddae3f15497446e0d9e00',
+    description: 'Reservation PDF',
+    route: '/api/reservations/pdf',
+    name: 'Reservations',
+    method: 'POST',
+  },
 ]
 
 export { roles, users, profile, permissions, clientPermissions }

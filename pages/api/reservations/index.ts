@@ -8,16 +8,7 @@ import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { eReservation } from '../../../utils/eReservation'
 import { sendEmail } from '../../../utils/nodemailer'
-import puppeteer from 'puppeteer'
-
-async function generatePDF(html: any) {
-  const browser = await puppeteer.launch()
-  const page = await browser.newPage()
-  await page.setContent(html, { waitUntil: 'networkidle0' })
-  const pdf = await page.pdf()
-  await browser.close()
-  return pdf
-}
+import generatePDF from '../../../utils/generatePDF'
 
 const handler = nc()
 handler.use(isAuth)
@@ -30,25 +21,25 @@ handler.get(
       const s = moment(startDate).startOf('day').format()
       const e = moment(endDate).endOf('day').format()
 
-      const { role } = req.user
+      const { type } = req.user
 
-      const q =
+      const queryBuilder =
         startDate && endDate
           ? {
               createdAt: {
                 $gte: s,
                 $lte: e,
               },
-              ...(role !== 'SUPER_ADMIN' && { user: req.user._id }),
+              ...(type !== 'SUPER_ADMIN' && { user: req.user._id }),
             }
-          : { ...(role !== 'SUPER_ADMIN' && { user: req.user._id }) }
+          : { ...(type !== 'SUPER_ADMIN' && { user: req.user._id }) }
 
-      let query = Reservation.find(q)
+      let query = Reservation.find(queryBuilder)
 
       const page = parseInt(req.query.page) || 1
       const pageSize = parseInt(req.query.limit) || 25
       const skip = (page - 1) * pageSize
-      const total = await Reservation.countDocuments(q)
+      const total = await Reservation.countDocuments(queryBuilder)
 
       const pages = Math.ceil(total / pageSize)
 

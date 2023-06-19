@@ -27,11 +27,20 @@ const Navigation = () => {
         <ul className="navbar-nav ms-auto">
           <li className="nav-item">
             <Link
+              href="/reservations/ticket-pdf"
+              className="nav-link text-light btn btn-warning px-3 rounded-0"
+              aria-current="page"
+            >
+              Ticket
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
               href="/reservations/cancellation"
               className="nav-link text-light btn btn-warning px-3 rounded-0"
               aria-current="page"
             >
-              Reservation Cancellation
+              Cancellation
             </Link>
           </li>
           <li className="nav-item">

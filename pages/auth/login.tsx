@@ -33,7 +33,8 @@ const Login = () => {
   }, [postApi?.isSuccess])
 
   useEffect(() => {
-    userInfo() && userInfo().userInfo && router.push('/')
+    userInfo() && userInfo().userInfo && router.push(pathName as string)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router])
 
   const submitHandler = async (data: { email?: string; password?: string }) => {

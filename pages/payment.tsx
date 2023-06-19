@@ -82,7 +82,7 @@ const Payment = () => {
 
   useEffect(() => {
     if (confirmBooking?.isSuccess) {
-      router.push('/')
+      router.push('/success')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [confirmBooking?.isSuccess])
@@ -175,7 +175,7 @@ const Payment = () => {
                   value={phone}
                   type="number"
                   className="form-control rounded-0"
-                  placeholder='Enter the phone number you used to pay with "Hormuud"'
+                  placeholder={`Enter the phone number you used to pay with ${paymentMethod}`}
                 />
               </div>
 

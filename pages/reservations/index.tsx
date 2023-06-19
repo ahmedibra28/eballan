@@ -11,7 +11,7 @@ import {
   Meta,
 } from '../../components'
 
-import { FaTrash } from 'react-icons/fa'
+import { FaFilePdf, FaTrash } from 'react-icons/fa'
 import moment from 'moment'
 import apiHook from '../../api'
 import { currency } from '../../utils/currency'
@@ -25,6 +25,12 @@ const Reservations = () => {
     method: 'GET',
     url: `reservations?page=${page}&q=${q}&limit=${25}`,
   })?.get
+
+  const pdfApi = apiHook({
+    key: ['reservations'],
+    method: 'POST',
+    url: `reservations/pdf`,
+  })?.post
 
   const deleteApi = apiHook({
     key: ['reservations'],
@@ -62,6 +68,15 @@ const Reservations = () => {
   const name = 'Reservations List'
   const label = 'Reservation'
 
+  const rowDesign = (item: any) => {
+    return `${
+      moment(item?.flight?.departureDate).format('YYY-MM-DD') >=
+      moment().format('YYY-MM-DD')
+        ? 'text-danger'
+        : ''
+    }`
+  }
+
   return (
     <>
       <Meta title="Reservations" />
@@ -75,6 +90,14 @@ const Reservations = () => {
       {deleteApi?.isError && (
         <Message variant="danger" value={deleteApi?.error} />
       )}
+
+      {pdfApi?.isSuccess && (
+        <Message
+          variant="success"
+          value={`${label} pdf has been generated and sent your email successfully.`}
+        />
+      )}
+      {pdfApi?.isError && <Message variant="danger" value={pdfApi?.error} />}
 
       <div className="ms-auto text-end">
         <Pagination data={getApi?.data} setPage={setPage} />
@@ -116,7 +139,7 @@ const Reservations = () => {
             </thead>
             <tbody>
               {getApi?.data?.data?.map((item: any, i: number) => (
-                <tr key={i}>
+                <tr key={i} className="text-danger">
                   <td>
                     {[
                       ...item?.passengers?.adult,
@@ -131,10 +154,14 @@ const Reservations = () => {
                       </Fragment>
                     ))}
                   </td>
-                  <td>{item?.flight?.airline}</td>
-                  <td>{item?.flight?.fromCityName}</td>
-                  <td>{item?.flight?.toCityName}</td>
-                  <td>
+                  <td className={rowDesign(item)}>{item?.flight?.airline}</td>
+                  <td className={rowDesign(item)}>
+                    {item?.flight?.fromCityName}
+                  </td>
+                  <td className={rowDesign(item)}>
+                    {item?.flight?.toCityName}
+                  </td>
+                  <td className={rowDesign(item)}>
                     {currency(
                       item?.prices[0].fare *
                         (item?.passengers?.adult?.length || 0) +
@@ -162,9 +189,24 @@ const Reservations = () => {
                     )}
                   </td>
 
-                  <td>{moment(item?.flight?.departureDate).format('lll')}</td>
+                  <td className={rowDesign(item)}>
+                    {moment(item?.flight?.departureDate).format('lll')}
+                  </td>
                   <td>
                     <div className="btn-group">
+                      <button
+                        className="btn btn-success btn-sm ms-1 rounded"
+                        onClick={() => pdfApi?.mutateAsync({ _id: item._id })}
+                        disabled={pdfApi?.isLoading}
+                      >
+                        {pdfApi?.isLoading ? (
+                          <span className="spinner-border spinner-border-sm" />
+                        ) : (
+                          <span>
+                            <FaFilePdf /> Generate
+                          </span>
+                        )}
+                      </button>
                       <button
                         className="btn btn-danger btn-sm ms-1 rounded-pill"
                         onClick={() => deleteHandler(item._id)}
