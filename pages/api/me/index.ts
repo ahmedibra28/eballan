@@ -1,6 +1,7 @@
 import axios from 'axios'
 import nc from 'next-connect'
-import { AVAILABLE_AIRLINES, login } from '../../../utils/help'
+import Airline from '../../../models/Airline'
+import { login } from '../../../utils/help'
 
 const handler = nc()
 
@@ -10,11 +11,15 @@ handler.get(
       const { airline } = req.query
       const { BASE_URL } = process.env
 
-      if (!AVAILABLE_AIRLINES.includes(airline as string)) {
+      const airlineQuery = await Airline.findOne({ api: airline })
+      if (!airlineQuery)
         return res.status(400).json({ error: 'Invalid airline' })
-      }
 
-      const auth = await login(airline)
+      const auth = await login(
+        airlineQuery.api,
+        airlineQuery.username,
+        airlineQuery.password
+      )
 
       const { data } = await axios.get(
         `${BASE_URL}/${airline}/ReservationApi/api/users/basic`,

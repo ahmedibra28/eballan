@@ -1,11 +1,10 @@
 import nc from 'next-connect'
-import db from '../../../../config/db'
-import Permission from '../../../../models/Permission'
-import Role from '../../../../models/Role'
-import { isAuth } from '../../../../utils/auth'
+import db from '../../../config/db'
+import Airline from '../../../models/Airline'
+import { isAuth } from '../../../utils/auth'
 
-const schemaName = Permission
-const schemaNameString = 'Permission'
+const schemaName = Airline
+const schemaNameString = 'Airline'
 
 const handler = nc()
 
@@ -15,17 +14,32 @@ handler.put(
     await db()
     try {
       const { id } = req.query
-      const { name, description, method, route, auth } = req.body
+      const {
+        name,
+        api,
+        adultCommission,
+        childCommission,
+        infantCommission,
+        logo,
+        username,
+        password,
+        status,
+      } = req.body
 
       const object = await schemaName.findById(id)
       if (!object)
         return res.status(400).json({ error: `${schemaNameString} not found` })
 
       object.name = name
-      object.description = description
-      object.method = method
-      object.route = route
-      object.auth = auth
+      object.api = api
+      object.adultCommission = adultCommission
+      object.childCommission = childCommission
+      object.infantCommission = infantCommission
+      object.logo = logo ? logo : object.logo
+      object.username = username
+      object.password = password
+
+      object.status = status
       await object.save()
       res.status(200).json({ message: `${schemaNameString} updated` })
     } catch (error: any) {
@@ -42,18 +56,6 @@ handler.delete(
       const object = await schemaName.findById(id)
       if (!object)
         return res.status(400).json({ error: `${schemaNameString} not found` })
-
-      const rolesObject = await Role.find({
-        permission: object._id,
-      })
-
-      if (rolesObject.length > 0) {
-        rolesObject.forEach(async (role) => {
-          role.permission.filter((item: string) => item.toString() !== id)
-            .length
-          await role.save()
-        })
-      }
 
       await object.deleteOne()
       res.status(200).json({ message: `${schemaNameString} removed` })

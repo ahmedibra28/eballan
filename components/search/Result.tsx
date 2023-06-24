@@ -30,10 +30,10 @@ const Result = ({ item }: { item: any }) => {
       <div className="card-body">
         <div className="row">
           <div className="col-lg-3 col-12 my-auto text-center">
-            <Image src="/favicon.png" alt="airplane" width={50} height={50} />{' '}
+            <Image src={item?.db?.logo} alt="airplane" width={50} height={50} />{' '}
             <br />
             <br />
-            <span className="fw-bold text-uppercase">{item.airline}</span>
+            <span className="fw-bold text-uppercase">{item.db?.name}</span>
           </div>
           <div className="col-lg-6 col-12 border border-bottom-0 border-top-0 my-auto">
             <div className="d-flex justify-content-around align-items-center">

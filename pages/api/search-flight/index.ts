@@ -2,6 +2,7 @@ import axios from 'axios'
 import nc from 'next-connect'
 import { login } from '../../../utils/help'
 import db from '../../../config/db'
+import Airline from '../../../models/Airline'
 
 const handler = nc()
 
@@ -11,12 +12,11 @@ handler.post(
       await db()
       // const { airline } = req.query
       const { BASE_URL } = process.env
-
-      // if (!AVAILABLE_AIRLINES.includes(airline as string)) {
-      //   return res.status(400).json({ error: 'Invalid airline' })
-      // }
-
       if (!req.body) return res.status(400).json({ error: 'Invalid body' })
+
+      // get the airlines from the database
+      const airlines = await Airline.find({ status: 'active' }).lean()
+      if (!airlines) return res.status(400).json({ error: 'No airlines found' })
 
       const {
         fromDate,
@@ -42,96 +42,40 @@ handler.post(
         timeZoneOffset: '+03:00',
       }
 
-      const roundBody = {
-        departureDate: toDate?.slice(0, 10),
-        arrivalDate: toDate?.slice(0, 10),
-        adultNum: noAdult,
-        childNum: noChild,
-        infantNum: noInfant,
-        requiredSeats: noAdult + noChild + noInfant,
-        fromCityId: Number(destinationCity),
-        toCityId: Number(originCity),
-        timeZoneOffset: '+03:00',
-      }
-
-      const authMaandeeqAir = await login('maandeeqair')
-      const authHalla = await login('halla')
-
-      const { data: maandeeqair } = await axios.post(
-        `${BASE_URL}/maandeeqair/ReservationApi/api/flights/search`,
-        oneWayBody,
-        {
-          headers: {
-            Authorization: `Bearer ${authMaandeeqAir.accessToken}`,
-          },
-        }
+      const loginData = await Promise.all(
+        airlines.map(async (item: any) => {
+          const data = await login(item.api, item.username, item.password)
+          return {
+            ...item,
+            accessToken: data?.accessToken,
+          }
+        })
       )
 
-      let returnValueMaandeeqAir: any = null
-      if (req.body?.trip === 'Return') {
-        const { data: maandeeqair2 } = await axios.post(
-          `${BASE_URL}/maandeeqair/ReservationApi/api/flights/search`,
-          roundBody,
-          {
-            headers: {
-              Authorization: `Bearer ${authMaandeeqAir.accessToken}`,
-            },
+      const flights = await Promise.all(
+        loginData?.map(async (item: any) => {
+          const { data } = await axios.post(
+            `${BASE_URL}/${item.api}/ReservationApi/api/flights/search`,
+            oneWayBody,
+            {
+              headers: {
+                Authorization: `Bearer ${item.accessToken}`,
+              },
+            }
+          )
+          return {
+            name: item.name,
+            api: item.api,
+            adultCommission: item.adultCommission,
+            childCommission: item.childCommission,
+            infantCommission: item.infantCommission,
+            logo: item.logo,
+            data,
           }
-        )
-
-        if (maandeeqair2?.length > 0) {
-          returnValueMaandeeqAir = {
-            departureDate: maandeeqair2?.[0]?.departureDate,
-            departureTime: maandeeqair2?.[0]?.departureTime,
-            arrivalDate: maandeeqair2?.[0]?.arrivalDate,
-            arrivalTime: maandeeqair2?.[0]?.arrivalTime,
-            toCityCode: maandeeqair2?.[0]?.toCityCode,
-            fromCityCode: maandeeqair2?.[0]?.fromCityCode,
-          }
-        }
-      }
-
-      const { data: halla } = await axios.post(
-        `${BASE_URL}/halla/ReservationApi/api/flights/search`,
-        oneWayBody,
-        {
-          headers: {
-            Authorization: `Bearer ${authHalla.accessToken}`,
-          },
-        }
+        })
       )
 
-      let returnValueHalla: any = null
-
-      if (req.body?.trip === 'Return') {
-        const { data: halla2 } = await axios.post(
-          `${BASE_URL}/halla/ReservationApi/api/flights/search`,
-          roundBody,
-          {
-            headers: {
-              Authorization: `Bearer ${authHalla.accessToken}`,
-            },
-          }
-        )
-
-        if (halla2?.length > 0) {
-          returnValueHalla = {
-            departureDate: halla2?.[0]?.departureDate,
-            departureTime: halla2?.[0]?.departureTime,
-            arrivalDate: halla2?.[0]?.arrivalDate,
-            arrivalTime: halla2?.[0]?.arrivalTime,
-            toCityCode: halla2?.[0]?.toCityCode,
-            fromCityCode: halla2?.[0]?.fromCityCode,
-          }
-        }
-      }
-
-      // console.log({
-      //   returnValueMaandeeqAir,
-      //   returnValueHalla,
-      // })
-
-      const filteredData = (item: any, airline: string) => {
+      const filteredData = (item: any, airline: string, db: any) => {
         const adultPrice = item?.flightPricings?.find(
           (i: any) => i?.passengerType?.type === 'Adult'
         )
@@ -153,7 +97,12 @@ handler.post(
             numberOfSeatsAvailable: adultPrice?.numberOfSeatsAvailable,
             baggageWeight: adultPrice?.baggageWeight,
             handCarryWeight: adultPrice?.handCarryWeight,
-            totalPrice: adultPrice?.totalFare * noAdult,
+            dbCommission: db.adultCommission,
+            totalPrice:
+              (adultPrice?.totalFare -
+                adultPrice?.commission +
+                db.adultCommission) *
+              noAdult,
             ...adultPrice,
           },
           {
@@ -165,7 +114,12 @@ handler.post(
             numberOfSeatsAvailable: childPrice?.numberOfSeatsAvailable,
             baggageWeight: childPrice?.baggageWeight,
             handCarryWeight: childPrice?.handCarryWeight,
-            totalPrice: childPrice?.totalFare * noChild,
+            dbCommission: db.childCommission,
+            totalPrice:
+              (childPrice?.totalFare -
+                childPrice?.commission +
+                db.childCommission) *
+              noChild,
             ...childPrice,
           },
           {
@@ -177,34 +131,37 @@ handler.post(
             numberOfSeatsAvailable: infantPrice?.numberOfSeatsAvailable,
             baggageWeight: infantPrice?.baggageWeight,
             handCarryWeight: infantPrice?.handCarryWeight,
-            totalPrice: infantPrice?.totalFare * noInfant,
+            dbCommission: db.infantCommission,
+            totalPrice:
+              (infantPrice?.totalFare -
+                infantPrice?.commission +
+                db.infantCommission) *
+              noInfant,
             ...infantPrice,
           },
         ]
 
         delete item.flightPricings
 
-        const arrival =
-          airline === 'Maandeeq Air'
-            ? returnValueMaandeeqAir
-            : airline === 'Halla'
-            ? returnValueHalla
-            : null
-
-        return { prices, flight: item, airline, arrival }
+        return { prices, flight: item, airline, db }
       }
 
-      const newResultMaandeeqAir = maandeeqair?.map((item: any) =>
-        filteredData(item, 'Maandeeq Air')
-      )
+      const data = flights?.map((item: any) => {
+        const newResult = item?.data?.map((i: any) =>
+          filteredData(i, item.api, {
+            api: item.api,
+            logo: item.logo,
+            adultCommission: item.adultCommission,
+            childCommission: item.childCommission,
+            infantCommission: item.infantCommission,
+            name: item.name,
+          })
+        )
 
-      const newResultHalla = halla?.map((item: any) =>
-        filteredData(item, 'Halla')
-      )
+        return newResult
+      })
 
-      const data = [...newResultMaandeeqAir, ...newResultHalla]
-
-      return res.json(data)
+      return res.json(data?.flat())
     } catch (error: any) {
       res.status(500).json({ error: error.response.data || error.message })
     }

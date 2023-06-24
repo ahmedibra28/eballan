@@ -25,24 +25,38 @@ const Navigation = () => {
     return (
       <>
         <ul className="navbar-nav ms-auto">
-          <li className="nav-item">
-            <Link
-              href="/reservations/ticket-pdf"
-              className="nav-link text-light btn btn-warning px-3 rounded-0"
-              aria-current="page"
+          <li className="nav-item dropdown">
+            <a
+              className="nav-link dropdown-toggle text-light"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              Ticket
-            </Link>
+              Bookings
+            </a>
+            <ul className="dropdown-menu bg-primary">
+              <li className="nav-item text-light">
+                <Link
+                  href="/reservations/ticket-pdf"
+                  className="dropdown-item text-light btn btn-warning px-3 rounded-0"
+                  aria-current="page"
+                >
+                  My Ticket
+                </Link>
+              </li>
+              <li className="nav-item text-light">
+                <Link
+                  href="/reservations/cancellation"
+                  className="dropdown-item text-light btn btn-warning px-3 rounded-0"
+                  aria-current="page"
+                >
+                  Cancellation
+                </Link>
+              </li>
+            </ul>
           </li>
-          <li className="nav-item">
-            <Link
-              href="/reservations/cancellation"
-              className="nav-link text-light btn btn-warning px-3 rounded-0"
-              aria-current="page"
-            >
-              Cancellation
-            </Link>
-          </li>
+
           <li className="nav-item">
             <Link
               href="/auth/login"

@@ -85,7 +85,7 @@ handler.delete(
         })
       }
 
-      await object.remove()
+      await object.deleteOne()
       res.status(200).send(`${schemaNameString} removed`)
     } catch (error: any) {
       res.status(500).json({ error: error.message })

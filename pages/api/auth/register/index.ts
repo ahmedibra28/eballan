@@ -31,7 +31,7 @@ handler.post(
 
       await UserRole.create({
         user: object._id,
-        role: '5e0af1c63b6482125c1b44cb',
+        role: '5e0af1c63b6482125c1b44cb', // Authenticated Role
       })
 
       const roleObj = await UserRole.findOne({ user: object?._id })

@@ -152,9 +152,19 @@ const Passenger = () => {
                 {currency(
                   flight?.prices?.find((item) => item?.passenger?.type === type)
                     ?.fare +
-                    flight?.prices?.find(
-                      (item) => item?.passenger?.type === type
-                    )?.commission || 0
+                    (type === 'Adult'
+                      ? flight?.prices?.find(
+                          (item) => item?.passenger?.type === type
+                        )?.dbCommission || 0
+                      : type === 'Child'
+                      ? flight?.prices?.find(
+                          (item) => item?.passenger?.type === type
+                        )?.dbCommission || 0
+                      : (type === 'Infant' &&
+                          flight?.prices?.find(
+                            (item) => item?.passenger?.type === type
+                          )?.dbCommission) ||
+                        0)
                 )}
               </span>
             </h6>

@@ -2,13 +2,16 @@ import nc from 'next-connect'
 import Reservation from '../../../models/Reservation'
 import { isAuth } from '../../../utils/auth'
 import db from '../../../config/db'
-import { AVAILABLE_AIRLINES, login } from '../../../utils/help'
 import moment from 'moment'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { eReservation } from '../../../utils/eReservation'
 import { sendEmail } from '../../../utils/nodemailer'
 import generatePDF from '../../../utils/generatePDF'
+import Airline from '../../../models/Airline'
+import { login } from '../../../utils/help'
+import { useEVCPayment } from '../../../hook/useEVCPayment'
+import { currency } from '../../../utils/currency'
 
 const handler = nc()
 handler.use(isAuth)
@@ -97,6 +100,35 @@ handler.post(
       const { BASE_URL } = process.env
 
       const body = req.body
+
+      // handle EVC payment
+      const totalPrice =
+        body?.flight?.prices?.reduce(
+          (acc: any, item: any) => acc + item?.totalPrice,
+          0
+        ) || 0
+
+      if (totalPrice < 1)
+        return res.status(400).json({ error: 'Invalid amount' })
+
+      const { MERCHANT_U_ID, API_USER_ID, API_KEY, MERCHANT_ACCOUNT_NO } =
+        process.env
+
+      const paymentInfo = await useEVCPayment({
+        merchantUId: MERCHANT_U_ID,
+        apiUserId: API_USER_ID,
+        apiKey: API_KEY,
+        customerMobileNumber: `252${body.payment.phone}`,
+        description: `${body.payment.phone} has paid ${currency(
+          totalPrice
+        )} for flight reservation`,
+        amount: totalPrice,
+        withdrawTo: 'MERCHANT',
+        withdrawNumber: MERCHANT_ACCOUNT_NO,
+      })
+
+      if (paymentInfo.responseCode !== '2001')
+        return res.status(401).json({ error: `Payment failed` })
 
       const bodyData = {
         id: null,
@@ -221,13 +253,17 @@ handler.post(
 
       const airline = body.flight.airline?.replace(' ', '')?.toLowerCase()
 
-      if (!AVAILABLE_AIRLINES.includes(airline as string)) {
-        return res.status(400).json({ error: 'Invalid airline' })
-      }
-
       if (!req.body) return res.status(400).json({ error: 'Invalid body' })
 
-      const auth = await login(airline)
+      const airlineQuery = await Airline.findOne({ api: airline })
+      if (!airlineQuery)
+        return res.status(400).json({ error: 'Invalid airline' })
+
+      const auth = await login(
+        airlineQuery.api,
+        airlineQuery.username,
+        airlineQuery.password
+      )
 
       const { data } = await axios.post(
         `${BASE_URL}/${airline}/ReservationApi/api/bookings/AddConfirmBooking`,

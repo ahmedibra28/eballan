@@ -12,6 +12,13 @@ const roles = [
     description: 'Default role given to authenticated user.',
     type: 'AUTHENTICATED',
   },
+  {
+    _id: '5e0af1c63b6482125c1b55cb',
+    name: 'Agent',
+    description:
+      'Agent can access and manage all features and settings of agent.',
+    type: 'AGENT',
+  },
 ]
 
 const users = {
@@ -112,6 +119,16 @@ const clientPermissions = [
     menu: 'normal',
     sort: sort.normal,
     description: 'Reservations page',
+  },
+
+  // Airline
+  {
+    _id: '6495854a746cfa58830bdee6',
+    name: 'Airline',
+    path: '/airlines',
+    menu: 'normal',
+    sort: sort.normal,
+    description: 'Airlines page',
   },
 ]
 
@@ -331,6 +348,36 @@ const permissions = [
     route: '/api/reservations/pdf',
     name: 'Reservations',
     method: 'POST',
+  },
+
+  //   Airline
+  {
+    _id: '649584d1746cfa58830bdee2',
+    description: 'Airlines',
+    route: '/api/airlines',
+    name: 'Airlines',
+    method: 'GET',
+  },
+  {
+    _id: '649584d1746cfa58830bdee3',
+    description: 'Airline',
+    route: '/api/airlines',
+    name: 'Airlines',
+    method: 'POST',
+  },
+  {
+    _id: '649584d1746cfa58830bdee4',
+    description: 'Airline',
+    route: '/api/airlines/:id',
+    name: 'Airlines',
+    method: 'PUT',
+  },
+  {
+    _id: '649584d1746cfa58830bdee5',
+    description: 'Airline',
+    route: '/api/airlines/:id',
+    name: 'Airlines',
+    method: 'DELETE',
   },
 ]
 

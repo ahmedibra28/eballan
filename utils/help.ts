@@ -2,26 +2,11 @@ import axios from 'axios'
 import LoginInfo from '../models/LoginInfo'
 import db from '../config/db'
 
-export const AVAILABLE_AIRLINES = ['maandeeqair', 'halla']
-
-type Auth = {
-  [key: string]: {
-    username: string
-    password: string
-  }
-}
-const auth: Auth = {
-  maandeeqair: {
-    username: 'eballan',
-    password: 'eBallan2022',
-  },
-  halla: {
-    username: 'Eballanmgq',
-    password: 'eBallan2022',
-  },
-}
-
-export const login = async (airline: string) => {
+export const login = async (
+  airline: string,
+  username: string,
+  password: string
+) => {
   const { BASE_URL } = process.env
 
   await db()
@@ -39,8 +24,8 @@ export const login = async (airline: string) => {
     const { data } = await axios.post(
       `${BASE_URL}/${airline}/Core/api/login`,
       {
-        username: auth[airline].username,
-        password: auth[airline].password,
+        username,
+        password,
       },
       {
         headers: {

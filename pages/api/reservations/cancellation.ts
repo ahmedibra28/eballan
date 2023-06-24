@@ -5,6 +5,7 @@ import LoginInfo from '../../../models/LoginInfo'
 import { login } from '../../../utils/help'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import Airline from '../../../models/Airline'
 
 const handler = nc()
 
@@ -32,7 +33,16 @@ handler.post(
       const airline = object.flight.airline?.replace(' ', '')?.toLowerCase()
 
       if (!loginObj) {
-        const newLogin = await login(airline)
+        const airlineQuery = await Airline.findOne({ api: airline })
+        if (!airlineQuery)
+          return res.status(400).json({ error: 'Invalid airline' })
+
+        const newLogin = await login(
+          airlineQuery.api,
+          airlineQuery.username,
+          airlineQuery.password
+        )
+
         auth = newLogin
         await LoginInfo.create({
           accessToken: newLogin.accessToken,

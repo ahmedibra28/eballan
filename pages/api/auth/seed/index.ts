@@ -23,39 +23,10 @@ handler.get(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     await db()
     try {
-      const { secret } = req.query
+      const { secret, option } = req.query as any
 
-      if (!secret || secret !== 'js')
-        return res.status(401).json({ error: 'Unauthorized' })
-
-      // Delete all existing data
-      await User.deleteMany({})
-      await Profile.deleteMany({})
-      await Role.deleteMany({})
-      await Permission.deleteMany({})
-      await UserRole.deleteMany({})
-      await ClientPermission.deleteMany({})
-
-      // Create users
-      const userObject = await User.create({
-        _id: users._id,
-        name: users.name,
-        email: users.email,
-        password: users.password,
-        confirmed: true,
-        blocked: false,
-      })
-
-      // Create profiles for users
-      await Profile.create({
-        _id: profile._id,
-        user: userObject._id,
-        name: userObject.name,
-        address: profile.address,
-        mobile: profile.mobile,
-        bio: profile.bio,
-        image: `https://ui-avatars.com/api/?uppercase=true&name=${userObject.name}&background=random&color=random&size=128`,
-      })
+      if (!secret || secret !== 'ts')
+        return res.status(401).json({ error: 'Invalid secret' })
 
       // Check duplicate permissions
       permissions.map((p) => {
@@ -64,52 +35,115 @@ handler.get(
             (p2) => p2.method === p.method && p2.route === p.route
           )
           if (duplicate.length > 1) {
-            return res.status(500).json({
-              error: `Duplicate permission: ${p.method} ${p.route}`,
-            })
+            return res
+              .status(500)
+              .json({ error: `Duplicate permission: ${p.method} ${p.route}` })
           }
         }
       })
 
-      // Create permissions
-      const permissionsObj = Promise.all(
-        permissions?.map(async (obj) => await Permission.create(obj))
-      )
-      const permissionsObjects = await permissionsObj
+      // Delete all existing data
+      if (option === 'reset') {
+        await Promise.all([
+          User.deleteMany({}),
+          Profile.deleteMany({}),
+          Role.deleteMany({}),
+          Permission.deleteMany({}),
+          UserRole.deleteMany({}),
+          ClientPermission.deleteMany({}),
+        ])
+      }
 
-      // Create client permissions
-      const clientPermissionsObj = Promise.all(
-        clientPermissions?.map(
-          async (obj) => await ClientPermission.create(obj)
-        )
-      )
-      const clientPermissionsObjects = await clientPermissionsObj
+      // Create users
+      let userObject = await User.findById(users._id)
+      if (userObject) {
+        userObject.name = users.name
+        userObject.email = users.email
+        userObject.password = users.password
+        userObject.confirmed = true
+        userObject.blocked = false
+      } else {
+        userObject = await User.create({
+          _id: users._id,
+          name: users.name,
+          email: users.email,
+          password: users.password,
+          confirmed: true,
+          blocked: false,
+        })
+      }
 
-      // Create roles
-      const roleObj = Promise.all(
-        roles?.map(async (obj) => await Role.create(obj))
+      // Create profiles for users
+      await Profile.findOneAndUpdate(
+        { _id: profile._id },
+        {
+          _id: profile._id,
+          user: userObject._id,
+          name: userObject.name,
+          address: profile.address,
+          mobile: profile.mobile,
+          bio: profile.bio,
+          image: `https://ui-avatars.com/api/?uppercase=true&name=${userObject.name}&background=random&color=random&size=128`,
+        },
+        { new: true, upsert: true }
       )
-      const roleObjects = await roleObj
+
+      const [permissionsObj, clientPermissionsObj, roleObj] = await Promise.all(
+        [
+          // Create permissions
+          await Promise.all(
+            permissions?.map(
+              async (obj) =>
+                await Permission.findOneAndUpdate({ _id: obj._id }, obj, {
+                  new: true,
+                  upsert: true,
+                })
+            )
+          ),
+          // Create client permissions
+          await Promise.all(
+            clientPermissions?.map(
+              async (obj) =>
+                await ClientPermission.findOneAndUpdate({ _id: obj._id }, obj, {
+                  new: true,
+                  upsert: true,
+                })
+            )
+          ),
+          // Create roles
+          await Promise.all(
+            roles?.map(
+              async (obj) =>
+                await Role.findOneAndUpdate({ _id: obj._id }, obj, {
+                  new: true,
+                  upsert: true,
+                })
+            )
+          ),
+        ]
+      )
 
       // Create user roles
-      await UserRole.create({
-        user: users._id,
-        role: roles[0]._id,
-      })
-
-      // Find super admin role
-      const superAdminRole = roleObjects.find((r) => r.type === 'SUPER_ADMIN')
-
-      // Create permissions for super admin role
-      superAdminRole.permission = permissionsObjects.map((p) => p._id)
-
-      // create client permissions for super admin role
-      superAdminRole.clientPermission = clientPermissionsObjects.map(
-        (p) => p._id
+      await UserRole.findOneAndUpdate(
+        { user: users._id },
+        {
+          user: users._id,
+          role: roles[0]._id,
+        },
+        {
+          new: true,
+          upsert: true,
+        }
       )
 
-      // Update super admin role
-      await superAdminRole.save()
+      // Find super admin role
+      const superAdminRole = roleObj.find((r) => r.type === 'SUPER_ADMIN')
+
+      // Create permissions for super admin role
+      superAdminRole.permission = permissionsObj.map((p) => p._id)
+
+      // create client permissions for super admin role
+      superAdminRole.clientPermission = clientPermissionsObj.map((p) => p._id)
 
       res.status(200).json({
         message: 'Database seeded successfully',

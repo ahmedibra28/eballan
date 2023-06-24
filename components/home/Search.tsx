@@ -70,7 +70,7 @@ const Search = ({
         </div>
       )}
 
-      <div className="border py-5 w-100 text-light rounded-0 position-relative my-3">
+      <div className="border border-3  py-5 w-100 text-light rounded-0 position-relative my-3">
         <div className="container">
           <div className="d-flex flex-row text-light">
             {/* Trip direction */}

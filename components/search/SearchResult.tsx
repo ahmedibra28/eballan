@@ -89,7 +89,7 @@ const SearchResult = () => {
         <Message variant="danger" value={searchFlightApi?.error} />
       )}
 
-      <div className="bg-warning mt-2 container-fluid w-100 mx-auto text-center">
+      <div className="bg-primary mt-2 container-fluid w-100 mx-auto text-center">
         <div className="d-flex flex-column justify-content-center align-items-center h-100">
           <Search
             cities={getCitiesApi?.data}

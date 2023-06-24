@@ -6,6 +6,7 @@ import LoginInfo from '../../../models/LoginInfo'
 import { login } from '../../../utils/help'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import Airline from '../../../models/Airline'
 
 const handler = nc()
 
@@ -16,12 +17,12 @@ handler.delete(
     await db()
     try {
       const { id } = req.query
-      const { role } = req.user
+      const { type } = req.user
 
       const object = await Reservation.findOne({
         status: 'booked',
         _id: id,
-        ...(role !== 'SUPER_ADMIN' && {
+        ...(type !== 'SUPER_ADMIN' && {
           user: req.user._id,
           'flight.departureDate': { $gt: Date.now() + 2 * 24 * 60 * 60 * 1000 },
         }),
@@ -38,7 +39,16 @@ handler.delete(
       const airline = object.flight.airline?.replace(' ', '')?.toLowerCase()
 
       if (!loginObj) {
-        const newLogin = await login(airline)
+        const airlineQuery = await Airline.findOne({ api: airline })
+        if (!airlineQuery)
+          return res.status(400).json({ error: 'Invalid airline' })
+
+        const newLogin = await login(
+          airlineQuery.api,
+          airlineQuery.username,
+          airlineQuery.password
+        )
+
         auth = newLogin
         await LoginInfo.create({
           accessToken: newLogin.accessToken,
@@ -67,7 +77,7 @@ handler.delete(
       await Reservation.findOneAndUpdate(
         {
           _id: object._id,
-          ...(role !== 'SUPER_ADMIN' && { user: req.user._id }),
+          ...(type !== 'SUPER_ADMIN' && { user: req.user._id }),
         },
         {
           status: 'canceled',
