@@ -43,6 +43,7 @@ const sort = {
   profile: 1,
   admin: 2,
   normal: 3,
+  report: 4,
 }
 
 const clientPermissions = [
@@ -53,6 +54,14 @@ const clientPermissions = [
     menu: 'hidden',
     sort: sort.hidden,
     description: 'Home page',
+  },
+  {
+    _id: '637e0261fadbdf655ba856b6',
+    name: 'Dashboard',
+    path: '/reports/dashboard',
+    menu: 'report',
+    sort: sort.report,
+    description: 'Dashboard page',
   },
   {
     _id: '637e0261fadbdf65bba856b7',
@@ -378,6 +387,15 @@ const permissions = [
     route: '/api/airlines/:id',
     name: 'Airlines',
     method: 'DELETE',
+  },
+
+  //   Report
+  {
+    _id: '649584d1746cfa58833bdee3',
+    description: 'Dashboard Report',
+    route: '/api/reports/dashboard',
+    name: 'Report',
+    method: 'GET',
   },
 ]
 

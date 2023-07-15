@@ -14,84 +14,6 @@ import { useEVCPayment } from '../../../hook/useEVCPayment'
 import { currency } from '../../../utils/currency'
 
 const handler = nc()
-handler.use(isAuth)
-handler.get(
-  async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
-    await db()
-    try {
-      const { startDate, endDate } = req.query
-
-      const s = moment(startDate).startOf('day').format()
-      const e = moment(endDate).endOf('day').format()
-
-      const { type } = req.user
-
-      const queryBuilder =
-        startDate && endDate
-          ? {
-              createdAt: {
-                $gte: s,
-                $lte: e,
-              },
-              ...(type !== 'SUPER_ADMIN' && { user: req.user._id }),
-            }
-          : { ...(type !== 'SUPER_ADMIN' && { user: req.user._id }) }
-
-      let query = Reservation.find(queryBuilder)
-
-      const page = parseInt(req.query.page) || 1
-      const pageSize = parseInt(req.query.limit) || 25
-      const skip = (page - 1) * pageSize
-      const total = await Reservation.countDocuments(queryBuilder)
-
-      const pages = Math.ceil(total / pageSize)
-
-      query = query.skip(skip).limit(pageSize).sort({ createdAt: -1 }).lean()
-
-      const result = await query
-
-      res.status(200).json({
-        startIndex: skip + 1,
-        endIndex: skip + result.length,
-        count: result.length,
-        page,
-        pages,
-        total,
-        data: result,
-      })
-    } catch (error: any) {
-      res.status(500).json({ error: error.message })
-    }
-  }
-)
-
-// handler.get(
-//   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
-//     try {
-//       const msg = eReservation({
-//         message: `Your booking has been confirmed. Your PNR is ${1222} and your reservation ID is ${4433}.`,
-//       })
-
-//       const pdf = await generatePDF(msg)
-//       const result = sendEmail({
-//         to: 'ahmaat19@gmail.com',
-//         subject: `Your booking has been confirmed`,
-//         text: msg,
-//         webName: `eBallan - Your booking has been confirmed`,
-//         pdf,
-//       })
-
-//       if (await result)
-//         return res.status(200).json({
-//           message: `Thank you for contacting me, I'll be in touch very soon.`,
-//         })
-
-//       return res.json('success')
-//     } catch (error: any) {
-//       res.status(500).json({ error: error.response.data || error.message })
-//     }
-//   }
-// )
 
 handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
@@ -282,17 +204,17 @@ handler.post(
       const filteredData = (item: any, airline: string) => {
         const prices = [
           {
-            commission: item?.flight?.prices[0].commission,
+            commission: item?.flight?.prices[0].dbCommission,
             fare: item?.flight?.prices[0].fare,
             passengerType: item?.flight?.prices[0].passengerType?.type,
           },
           {
-            commission: item?.flight?.prices[1].commission,
+            commission: item?.flight?.prices[1].dbCommission,
             fare: item?.flight?.prices[1].fare,
             passengerType: item?.flight?.prices[1].passengerType?.type,
           },
           {
-            commission: item?.flight?.prices[2].commission,
+            commission: item?.flight?.prices[2].dbCommission,
             fare: item?.flight?.prices[2].fare,
             passengerType: item?.flight?.prices[2].passengerType?.type,
           },
@@ -364,5 +286,84 @@ handler.post(
     }
   }
 )
+
+handler.use(isAuth)
+handler.get(
+  async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
+    await db()
+    try {
+      const { startDate, endDate } = req.query
+
+      const s = moment(startDate).startOf('day').format()
+      const e = moment(endDate).endOf('day').format()
+
+      const { type } = req.user
+
+      const queryBuilder =
+        startDate && endDate
+          ? {
+              createdAt: {
+                $gte: s,
+                $lte: e,
+              },
+              ...(type !== 'SUPER_ADMIN' && { user: req.user._id }),
+            }
+          : { ...(type !== 'SUPER_ADMIN' && { user: req.user._id }) }
+
+      let query = Reservation.find(queryBuilder)
+
+      const page = parseInt(req.query.page) || 1
+      const pageSize = parseInt(req.query.limit) || 25
+      const skip = (page - 1) * pageSize
+      const total = await Reservation.countDocuments(queryBuilder)
+
+      const pages = Math.ceil(total / pageSize)
+
+      query = query.skip(skip).limit(pageSize).sort({ createdAt: -1 }).lean()
+
+      const result = await query
+
+      res.status(200).json({
+        startIndex: skip + 1,
+        endIndex: skip + result.length,
+        count: result.length,
+        page,
+        pages,
+        total,
+        data: result,
+      })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+)
+
+// handler.get(
+//   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
+//     try {
+//       const msg = eReservation({
+//         message: `Your booking has been confirmed. Your PNR is ${1222} and your reservation ID is ${4433}.`,
+//       })
+
+//       const pdf = await generatePDF(msg)
+//       const result = sendEmail({
+//         to: 'ahmaat19@gmail.com',
+//         subject: `Your booking has been confirmed`,
+//         text: msg,
+//         webName: `eBallan - Your booking has been confirmed`,
+//         pdf,
+//       })
+
+//       if (await result)
+//         return res.status(200).json({
+//           message: `Thank you for contacting me, I'll be in touch very soon.`,
+//         })
+
+//       return res.json('success')
+//     } catch (error: any) {
+//       res.status(500).json({ error: error.response.data || error.message })
+//     }
+//   }
+// )
 
 export default handler
