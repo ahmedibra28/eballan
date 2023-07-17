@@ -137,7 +137,7 @@ const reservationSchema = new Schema<IReservation>(
     },
     status: {
       type: String,
-      enum: ['booked', 'canceled'],
+      enum: ['booked', 'canceled', 'completed'],
       default: 'booked',
     },
   },
