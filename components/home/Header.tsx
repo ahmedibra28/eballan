@@ -6,6 +6,7 @@ import useSearchFlightStore from '../../zustand/searchFlightStore'
 import Message from '../Message'
 import Spinner from '../Spinner'
 import { useRouter } from 'next/router'
+import Image from 'next/image'
 
 const Header = () => {
   const router = useRouter()
@@ -70,6 +71,16 @@ const Header = () => {
 
   return (
     <div className="bg-primary headerBox pt-1">
+      <div className="w-100">
+        <Image
+          src="/ad.png"
+          alt="Flight discount advertisement"
+          className="w-100 img-fluid"
+          width={995}
+          height={360}
+        />
+      </div>
+
       {error && <Message variant="danger" value={error} />}
 
       {searchFlightApi?.isLoading && <Spinner />}

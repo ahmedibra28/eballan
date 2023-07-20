@@ -5,10 +5,9 @@ import UserRole from '../../../models/UserRole'
 import Airline from '../../../models/Airline'
 import Reservation from '../../../models/Reservation'
 import { currency } from '../../../utils/currency'
-import userRoles from '../../admin/user-roles'
 
 const handler = nc()
-// handler.use(isAuth)
+handler.use(isAuth)
 handler.get(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     await db()
@@ -37,12 +36,6 @@ handler.get(
             'role.type': 'AGENT',
           },
         },
-        // {
-        //   $project: {
-        //     'user.name': 1,
-        //     'role.type': 1,
-        //   },
-        // },
         {
           $count: 'count',
         },
@@ -456,7 +449,7 @@ handler.get(
         ),
         totalRevenueByAirline: totalRevenueByAirline?.reduce(
           (acc: any, cur: any) => {
-            acc[cur._id.airline] = currency(cur.totalRevenue || 0)
+            acc[cur._id.airline] = cur.totalRevenue || 0
             return acc
           },
           {}
@@ -466,12 +459,17 @@ handler.get(
           (item: any) => {
             return {
               month: item._id,
-              revenue: currency(item.totalRevenue),
+              revenue: item.totalRevenue,
             }
           }
         ),
         refundedTicketForLastFiveMonths,
-        topAgents: topAgents.filter((agent: any) => agent),
+        topAgents: topAgents
+          .filter((agent: any) => agent)
+          ?.map((item) => ({
+            ...item,
+            totalRevenue: currency(item.totalRevenue),
+          })),
       })
     } catch (error: any) {
       res.status(500).json({ error: error.message })
