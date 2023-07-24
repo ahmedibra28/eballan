@@ -11,10 +11,11 @@ import {
   Meta,
 } from '../../components'
 
-import { FaFilePdf, FaTrash } from 'react-icons/fa'
+import { FaFilePdf, FaInfoCircle, FaTrash } from 'react-icons/fa'
 import moment from 'moment'
 import apiHook from '../../api'
 import { currency } from '../../utils/currency'
+import Link from 'next/link'
 
 const Reservations = () => {
   const [page, setPage] = useState(1)
@@ -194,6 +195,14 @@ const Reservations = () => {
                   </td>
                   <td>
                     <div className="btn-group">
+                      <Link
+                        href={`/reservations/${item?._id}`}
+                        className="btn btn-primary btn-sm ms-1 rounded"
+                      >
+                        <span>
+                          <FaInfoCircle /> View
+                        </span>
+                      </Link>
                       <button
                         className="btn btn-success btn-sm ms-1 rounded"
                         onClick={() => pdfApi?.mutateAsync({ _id: item._id })}

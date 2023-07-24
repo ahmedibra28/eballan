@@ -64,6 +64,14 @@ const clientPermissions = [
     description: 'Dashboard page',
   },
   {
+    _id: '637e0261fadbdf656ba856b6',
+    name: 'Agent Summary',
+    path: '/reports/agents/summary',
+    menu: 'report',
+    sort: sort.report,
+    description: 'Agent summary page',
+  },
+  {
     _id: '637e0261fadbdf65bba856b7',
     name: 'Users',
     path: '/admin/users',
@@ -128,6 +136,14 @@ const clientPermissions = [
     menu: 'normal',
     sort: sort.normal,
     description: 'Reservations page',
+  },
+  {
+    _id: '637e0261fadbdf65bbb856be',
+    name: 'Reservation',
+    path: '/reservations/[id]',
+    menu: 'hidden',
+    sort: sort.hidden,
+    description: 'Reservation details page',
   },
 
   // Airline
@@ -331,6 +347,13 @@ const permissions = [
     method: 'GET',
   },
   {
+    _id: '647ddae5f15497446e0d9e0d',
+    description: 'Reservations details',
+    route: '/api/reservations/:id',
+    name: 'Reservations',
+    method: 'GET',
+  },
+  {
     _id: '647ddae3f15497446e0d9e0e',
     description: 'Reservation',
     route: '/api/reservations',
@@ -394,6 +417,13 @@ const permissions = [
     _id: '649584d1746cfa58833bdee3',
     description: 'Dashboard Report',
     route: '/api/reports/dashboard',
+    name: 'Report',
+    method: 'GET',
+  },
+  {
+    _id: '649584d1746cfa58833bdee4',
+    description: 'Agent Summary Report',
+    route: '/api/reports/agents/summary',
     name: 'Report',
     method: 'GET',
   },

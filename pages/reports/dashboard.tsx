@@ -4,6 +4,7 @@ import moment from 'moment'
 import BarChart from '../../components/charts/BarChart'
 import LineChart from '../../components/charts/LineChart'
 import apiHook from '../../api'
+import Link from 'next/link'
 
 type DashboardReport = {
   agents: number
@@ -107,9 +108,9 @@ const Dashboard = () => {
     },
   ]
 
-  const labels = Array.from({ length: 6 }, (_, i) =>
-    moment().subtract(i, 'months').format('MMM YY')
-  )
+  // const labels = Array.from({ length: 6 }, (_, i) =>
+  //   moment().subtract(i, 'months').format('MMM YY')
+  // )
 
   const topDestinationsData = {
     labels: data?.topDestinations.map((destination) => destination._id),
@@ -173,24 +174,32 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="col-lg-6 col-12">
-        <h5 className="fw-bold">Revenue by Agent</h5>
-        <ol className="list-group list-group-numbered border-0">
-          {revenueByAgentData?.map((agent, i: number) => (
-            <li
-              key={i}
-              className="list-group-item d-flex justify-content-between align-items-start bg-transparent border border-top-0 border-end-0 border-start-0"
-            >
-              <div className="ms-2 me-auto">
-                <div className="fw-bold">{agent?.name}</div>
-              </div>
-              <span className="badge bg-primary rounded-pill px-3 my-auto py-2">
-                {agent?.amount}
-              </span>
-            </li>
-          ))}
-        </ol>
-      </div>
+      {revenueByAgentData?.length > 0 && (
+        <div className="col-lg-6 col-12">
+          <h5 className="fw-bold">Revenue by Agent</h5>
+          <ol className="list-group list-group-numbered border-0">
+            {revenueByAgentData?.map((agent, i: number) => (
+              <li
+                key={i}
+                className="list-group-item d-flex justify-content-between align-items-start bg-transparent border border-top-0 border-end-0 border-start-0"
+              >
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">{agent?.name}</div>
+                </div>
+                <span className="badge bg-primary rounded-pill px-3 my-auto py-2">
+                  {agent?.amount}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <Link
+            className="text-muted btn btn-outline-light btn-sm"
+            href="/reports/agents/summary"
+          >
+            See more...
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

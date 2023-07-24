@@ -12,6 +12,29 @@ const handler = nc()
 
 handler.use(isAuth)
 
+handler.get(
+  async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
+    await db()
+    try {
+      const { id } = req.query
+      const { type } = req.user
+
+      const object = await Reservation.findOne({
+        _id: id,
+        ...(type !== 'SUPER_ADMIN' && {
+          user: req.user._id,
+        }),
+      })
+      if (!object)
+        return res.status(400).json({ error: `Reservation not found` })
+
+      return res.json(object)
+    } catch (error: any) {
+      res.status(500).json({ error: error.message })
+    }
+  }
+)
+
 handler.delete(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     await db()
