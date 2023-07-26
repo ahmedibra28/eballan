@@ -64,6 +64,14 @@ const clientPermissions = [
     description: 'Dashboard page',
   },
   {
+    _id: '637e0261fafbdf655ba856b6',
+    name: 'Dashboard',
+    path: '/reports/agents/dashboard',
+    menu: 'report',
+    sort: sort.report,
+    description: 'Agent dashboard page',
+  },
+  {
     _id: '637e0261fadbdf656ba856b6',
     name: 'Agent Summary',
     path: '/reports/agents/summary',
@@ -417,6 +425,13 @@ const permissions = [
     _id: '649584d1746cfa58833bdee3',
     description: 'Dashboard Report',
     route: '/api/reports/dashboard',
+    name: 'Report',
+    method: 'GET',
+  },
+  {
+    _id: '649584d1446cfa58833bdee3',
+    description: 'Agent dashboard Report',
+    route: '/api/reports/agents/dashboard',
     name: 'Report',
     method: 'GET',
   },

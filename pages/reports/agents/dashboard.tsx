@@ -1,7 +1,7 @@
 import React from 'react'
-import BarChart from '../../components/charts/BarChart'
-import LineChart from '../../components/charts/LineChart'
-import apiHook from '../../api'
+import BarChart from '../../../components/charts/BarChart'
+import LineChart from '../../../components/charts/LineChart'
+import apiHook from '../../../api'
 import Link from 'next/link'
 
 type DashboardReport = {
@@ -49,21 +49,6 @@ const Dashboard = () => {
   const data = getApi?.data as DashboardReport
 
   const numbers = [
-    {
-      title: 'Users',
-      value: data?.users,
-      isMoney: false,
-    },
-    {
-      title: 'Agents',
-      value: data?.agents,
-      isMoney: false,
-    },
-    {
-      title: 'Active airlines',
-      value: data?.airlines,
-      isMoney: false,
-    },
     {
       title: 'Reservations',
       value: data?.reservations,
@@ -116,30 +101,6 @@ const Dashboard = () => {
     title: 'Top 5 Destinations',
   }
 
-  const revenueByAirlineData = {
-    labels: data ? Object?.keys(data?.totalRevenueByAirline) : [],
-    data: data ? Object?.values(data?.totalRevenueByAirline) : [],
-    title: 'Total Revenue by Airline',
-  }
-
-  const revenueByAgentData = data?.topAgents?.map((agent) => ({
-    _id: agent._id,
-    name: agent.name,
-    amount: agent.totalRevenue,
-  }))
-
-  const revenueGrowthData = {
-    labels: data?.revenueGrowthForLastFiveMonths?.map((item) => item.month),
-    data: data?.revenueGrowthForLastFiveMonths?.map((item) => item.revenue),
-    title: 'Revenue Growth',
-  }
-
-  const refundedTicketsData = {
-    labels: data?.refundedTicketForLastFiveMonths?.map((item) => item._id),
-    data: data?.refundedTicketForLastFiveMonths?.map((item) => item.count),
-    title: 'Refunded Tickets',
-  }
-
   return (
     <div className="row gy-3">
       {numbers.map((number, i: number) => (
@@ -157,47 +118,6 @@ const Dashboard = () => {
       <div className="col-lg-6 col-12">
         <BarChart dataValue={topDestinationsData} bgColor="rgb(255, 82, 162)" />
       </div>
-      <div className="col-lg-6 col-12">
-        <BarChart dataValue={revenueByAirlineData} />
-      </div>
-
-      <div className="col-lg-6 col-12">
-        <LineChart dataValue={revenueGrowthData} bgColor="rgb(63, 46, 62)" />
-      </div>
-
-      <div className="col-lg-6 col-12">
-        <LineChart
-          dataValue={refundedTicketsData}
-          bgColor="rgb(150, 129, 235)"
-        />
-      </div>
-
-      {revenueByAgentData?.length > 0 && (
-        <div className="col-lg-6 col-12">
-          <h5 className="fw-bold">Revenue by Agent</h5>
-          <ol className="list-group list-group-numbered border-0">
-            {revenueByAgentData?.map((agent, i: number) => (
-              <li
-                key={i}
-                className="list-group-item d-flex justify-content-between align-items-start bg-transparent border border-top-0 border-end-0 border-start-0"
-              >
-                <div className="ms-2 me-auto">
-                  <div className="fw-bold">{agent?.name}</div>
-                </div>
-                <span className="badge bg-primary rounded-pill px-3 my-auto py-2">
-                  {agent?.amount}
-                </span>
-              </li>
-            ))}
-          </ol>
-          <Link
-            className="text-muted btn btn-outline-light btn-sm"
-            href="/reports/agents/summary"
-          >
-            See more...
-          </Link>
-        </div>
-      )}
     </div>
   )
 }
