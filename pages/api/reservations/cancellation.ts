@@ -6,6 +6,7 @@ import { login } from '../../../utils/help'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import Airline from '../../../models/Airline'
+import { sendEmail } from '../../../utils/nodemailer'
 
 const handler = nc()
 
@@ -68,7 +69,7 @@ handler.post(
         }
       )
 
-      await Reservation.findOneAndUpdate(
+      const reservation = await Reservation.findOneAndUpdate(
         {
           _id: object._id,
           'flight.reservationId': reservationId,
@@ -77,6 +78,21 @@ handler.post(
           status: 'canceled',
         }
       )
+
+      if (!reservation)
+        return res.status(400).json({ error: 'Reservation not found' })
+
+      const result = sendEmail({
+        to: reservation.contact.email,
+        subject: `Reservation Confirmation - ${reservation?.flight?.reservationId}`,
+        text: `Your booking has been cancelled.`,
+        webName: `eBallan - ${reservation.flight?.airline?.toUpperCase()}`,
+      })
+
+      if (await result)
+        return res.status(200).json({
+          message: `Your booking has been cancelled.`,
+        })
 
       res.status(200).json({ message: `Reservation removed` })
     } catch (error: any) {
