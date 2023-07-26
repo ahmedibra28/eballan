@@ -45,13 +45,7 @@ const Passenger = () => {
   } = useForm({})
 
   useEffect(() => {
-    if (
-      passengers?.[0]?.adult?.length === 0 ||
-      passengers?.[0]?.child?.length === 0 ||
-      passengers?.[0]?.infant?.length === 0 ||
-      flight?.prices?.length === 0 ||
-      !contact.phone
-    ) {
+    if (!contact?.phone || !contact?.email) {
       router.push('/passenger')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -263,6 +257,7 @@ const Passenger = () => {
           label: 'Passport Number',
           name: `passportNumber`,
           placeholder: 'Enter passport number',
+          isRequired: false,
         } as DynamicFormProps)}
       </div>
 
@@ -273,6 +268,7 @@ const Passenger = () => {
           label: 'Passport Expiry Date',
           name: `passportExpiryDate`,
           placeholder: 'Enter passport expiry date',
+          isRequired: false,
         } as DynamicFormProps)}
       </div>
     </Fragment>,
@@ -297,12 +293,17 @@ const Passenger = () => {
 
   const submitHandler = (data: any) => {
     if (tempPassengerInfo) {
-      // console.log({ ...data, id: tempPassengerInfo?.id })
-
       // @ts-ignore
       updatePassenger({ ...data, id: tempPassengerInfo?.id })
 
       formCleanHandler()
+
+      document
+        .querySelector(
+          '#updatePassenger > div > div > div.modal-body > form > div.modal-footer > button.btn'
+        )
+        // @ts-ignore
+        ?.click()
     }
   }
 

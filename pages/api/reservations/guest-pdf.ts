@@ -11,32 +11,36 @@ handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     try {
       await db()
-      const { q } = req.body
+      const { q, final, data } = req.body
 
-      const reservation = await Reservation.findOne({
+      if (final && data) {
+        console.log(JSON.stringify(data, null, 2))
+        const msg = eReservation({
+          message: `Your booking has been confirmed. Your PNR is ${data?.flight?.pnrNumber} and your reservation ID is ${data?.flight?.reservationId}.`,
+        })
+
+        const pdf = await generatePDF(msg)
+        const result = sendEmail({
+          to: data.contact.email,
+          subject: `Reservation Confirmation - ${data?.flight?.reservationId}`,
+          text: msg,
+          webName: `eBallan - ${data.flight?.airline?.toUpperCase()}`,
+          pdf,
+        })
+
+        if (await result)
+          return res.status(200).json({
+            message: `Thank you for booking with us. Your booking has been confirmed. Your PNR is ${data?.flight?.pnrNumber} and your reservation ID is ${data?.flight?.reservationId}.`,
+          })
+        return res.status(500).json({ error: 'Something went wrong!' })
+      }
+
+      const reservation = await Reservation.find({
         $or: [{ 'contact.email': q }, { 'contact.phone': q }],
       }).sort({ createdAt: -1 })
 
-      if (!reservation)
-        return res.status(404).json({ error: 'Reservation not found' })
-
-      const msg = eReservation({
-        message: `Your booking has been confirmed. Your PNR is ${reservation?.flight?.pnrNumber} and your reservation ID is ${reservation?.flight?.reservationId}.`,
-      })
-
-      const pdf = await generatePDF(msg)
-      const result = sendEmail({
-        to: reservation.contact.email,
-        subject: `Reservation Confirmation - ${reservation?.flight?.reservationId}`,
-        text: msg,
-        webName: `eBallan - ${reservation.flight?.airline?.toUpperCase()}`,
-        pdf,
-      })
-
-      if (await result)
-        return res.status(200).json({
-          message: `Thank you for booking with us. Your booking has been confirmed. Your PNR is ${reservation?.flight?.pnrNumber} and your reservation ID is ${reservation?.flight?.reservationId}.`,
-        })
+      if (reservation?.length === 0)
+        return res.status(404).json({ error: 'Reservations not found' })
 
       return res.json(reservation)
     } catch (error: any) {

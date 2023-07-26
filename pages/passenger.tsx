@@ -22,12 +22,12 @@ import { v4 as uuidv4 } from 'uuid'
 const Passenger = () => {
   const router = useRouter()
 
-  const { setPassengers, setContact } = useFlightStore((state) => state)
+  const { setPassengers, setContact, flight } = useFlightStore((state) => state)
 
   const { searchFlight } = useSearchFlightStore((state) => state)
 
   useEffect(() => {
-    if (!searchFlight?.destinationCity || !searchFlight?.originCity) {
+    if (!flight || !flight?.flight?.id) {
       router.push('/')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -214,6 +214,7 @@ const Passenger = () => {
             label: 'Passport Number',
             name: `passportNumber${passengerType}${number}`,
             placeholder: 'Enter passport number',
+            isRequired: false,
           } as DynamicFormProps)}
         </div>
 
@@ -224,6 +225,7 @@ const Passenger = () => {
             label: 'Passport Expiry Date',
             name: `passportExpiryDate${passengerType}${number}`,
             placeholder: 'Enter passport expiry date',
+            isRequired: false,
           } as DynamicFormProps)}
         </div>
       </div>
@@ -234,18 +236,18 @@ const Passenger = () => {
     <div className="py-2">
       <Steps steps={steps} />
       <form onSubmit={handleSubmit(submitHandler)}>
-        {useNumberToArray(searchFlight?.noAdult || 0).map((item) => (
-          <Fragment key={item}>{passengerForm('Adult', item)}</Fragment>
+        {useNumberToArray(searchFlight?.noAdult || 0).map((item, i: number) => (
+          <Fragment key={i}>{passengerForm('Adult', item)}</Fragment>
         ))}
 
         {/* @ts-ignore */}
-        {useNumberToArray(searchFlight?.noChild).map((item) => (
-          <Fragment key={item}>{passengerForm('Child', item)}</Fragment>
+        {useNumberToArray(searchFlight?.noChild).map((item, i: number) => (
+          <Fragment key={i}>{passengerForm('Child', item)}</Fragment>
         ))}
 
         {/*  @ts-ignore */}
-        {useNumberToArray(searchFlight?.noInfant).map((item) => (
-          <Fragment key={item}>{passengerForm('Infant', item)}</Fragment>
+        {useNumberToArray(searchFlight?.noInfant).map((item, i: number) => (
+          <Fragment key={i}>{passengerForm('Infant', item)}</Fragment>
         ))}
 
         <div className="row gy-3 bg-light shadow-sm rounded-2 p-2 mt-4">

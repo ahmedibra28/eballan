@@ -87,6 +87,12 @@ const Payment = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [confirmBooking?.isSuccess])
 
+  useEffect(() => {
+    if (paymentMethod) {
+      setPhone('')
+    }
+  }, [paymentMethod])
+
   return (
     <div className="py-2">
       <Steps steps={steps} />
