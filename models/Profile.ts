@@ -7,8 +7,16 @@ export interface IProfile {
   image?: string
   address?: string
   mobile?: number
+  passport?: string
   bio?: string
   user: Schema.Types.ObjectId
+
+  agent: {
+    businessCategory: string
+    bankAccount: string
+    businessLicense: string
+  }
+
   createdAt?: Date
 }
 
@@ -22,6 +30,11 @@ const profileSchema = new Schema<IProfile>(
     user: {
       type: Schema.Types.ObjectId,
       ref: User,
+    },
+    agent: {
+      businessCategory: String,
+      bankAccount: String,
+      businessLicense: String,
     },
   },
   { timestamps: true }

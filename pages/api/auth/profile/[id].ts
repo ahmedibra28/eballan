@@ -15,7 +15,17 @@ handler.put(
     await db()
     try {
       const { id } = req.query
-      const { name, address, mobile, bio, image, password } = req.body
+      const {
+        name,
+        address,
+        mobile,
+        bio,
+        image,
+        password,
+        businessCategory,
+        businessLicense,
+        bankAccount,
+      } = req.body
 
       const object = await schemaName.findOne({ user: id }).populate('user')
       if (!object)
@@ -43,6 +53,14 @@ handler.put(
       object.image = image ? image : object.image
       object.bio = bio ? bio : object.bio
       object.user = id
+      if ((req.user.type = 'AGENT')) {
+        object.agent = {
+          businessCategory,
+          bankAccount,
+          businessLicense,
+        }
+      }
+
       await object.save()
       res.status(200).json({ message: `${schemaNameString} updated` })
     } catch (error: any) {

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import {
   DynamicFormProps,
   inputFile,
+  inputNumber,
   inputPassword,
   inputTel,
   inputText,
@@ -14,11 +15,12 @@ import {
 import Image from 'next/image'
 import { Spinner } from '../../components'
 import apiHook from '../../api'
-import { IProfile } from '../../models/Profile'
+import { userInfo } from '../../api/api'
+// import { IProfile } from '../../models/Profile'
 
-interface IProfileFormValueProps extends Omit<IProfile, '_id' | 'user'> {
-  password?: string
-}
+// interface IProfileFormValueProps extends Omit<IProfile, '_id' | 'user'> {
+//   password?: string
+// }
 
 const Profile = () => {
   const [file, setFile] = useState(null)
@@ -59,10 +61,23 @@ const Profile = () => {
     setValue('address', !getApi?.isLoading ? getApi?.data?.address : '')
     setValue('mobile', !getApi?.isLoading ? getApi?.data?.mobile : '')
     setValue('bio', !getApi?.isLoading ? getApi?.data?.bio : '')
+    setValue(
+      'businessCategory',
+      !getApi?.isLoading ? getApi?.data?.agent?.businessCategory : ''
+    )
+    setValue(
+      'businessLicense',
+      !getApi?.isLoading ? getApi?.data?.agent?.businessLicense : ''
+    )
+    setValue(
+      'bankAccount',
+      !getApi?.isLoading ? getApi?.data?.agent?.bankAccount : ''
+    )
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getApi?.isLoading, setValue])
 
-  const submitHandler = (data: IProfileFormValueProps) => {
+  const submitHandler = (data: any) => {
     if (!file && !fileLink) {
       updateApi?.mutateAsync({
         _id: getApi?.data?.user?._id,
@@ -71,6 +86,9 @@ const Profile = () => {
         mobile: data?.mobile,
         bio: data?.bio,
         password: data?.password,
+        businessCategory: data?.agent?.businessCategory,
+        businessLicense: data?.agent?.businessLicense,
+        bankAccount: data?.agent?.bankAccount,
       })
     } else {
       updateApi?.mutateAsync({
@@ -157,6 +175,41 @@ const Profile = () => {
               placeholder: '+252 (61) 530-1507',
             } as DynamicFormProps)}
           </div>
+
+          {userInfo()?.userInfo?.role === 'AGENT' && (
+            <div className="col-md-6 col-12">
+              {inputText({
+                register,
+                errors,
+                label: 'Business Category',
+                name: 'businessCategory',
+                placeholder: 'Enter business category',
+              } as DynamicFormProps)}
+            </div>
+          )}
+          {userInfo()?.userInfo?.role === 'AGENT' && (
+            <div className="col-md-6 col-12">
+              {inputNumber({
+                register,
+                errors,
+                label: 'Bank Account',
+                name: 'bankAccount',
+                placeholder: 'Enter bank account',
+              } as DynamicFormProps)}
+            </div>
+          )}
+          {userInfo()?.userInfo?.role === 'AGENT' && (
+            <div className="col-md-6 col-12">
+              {inputText({
+                register,
+                errors,
+                label: 'Business Category',
+                name: 'businessLicense',
+                placeholder: 'Enter business license',
+              } as DynamicFormProps)}
+            </div>
+          )}
+
           <div className="col-12">
             {inputTextArea({
               register,
