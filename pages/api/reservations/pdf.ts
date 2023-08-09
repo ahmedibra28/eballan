@@ -1,5 +1,5 @@
 import nc from 'next-connect'
-import Reservation from '../../../models/Reservation'
+import Reservation, { IReservation } from '../../../models/Reservation'
 import { isAuth } from '../../../utils/auth'
 import db from '../../../config/db'
 import { eReservation } from '../../../utils/eReservation'
@@ -15,13 +15,50 @@ handler.post(
       await db()
       const { _id } = req.body
 
-      const reservation = await Reservation.findById(_id)
+      const reservation = (await Reservation.findById(_id)) as IReservation
 
       if (!reservation)
         return res.status(404).json({ error: 'Reservation not found' })
 
+      const adult = reservation?.passengers?.adult?.map((item) => ({
+        passengerTitle: item?.passengerTitle,
+        name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
+        sex: item?.sex,
+        passengerType: 'Adult',
+      })) as any
+      const child = reservation?.passengers?.child?.map((item) => ({
+        passengerTitle: item?.passengerTitle,
+        name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
+        sex: item?.sex,
+        passengerType: 'Child',
+      })) as any
+      const infant = reservation?.passengers?.infant?.map((item) => ({
+        passengerTitle: item?.passengerTitle,
+        name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
+        sex: item?.sex,
+        passengerType: 'Infant',
+      })) as any
+
       const msg = eReservation({
-        message: `Your booking has been confirmed. Your PNR is ${reservation?.flight?.pnrNumber} and your reservation ID is ${reservation?.flight?.reservationId}.`,
+        reservationNo: reservation?.flight?.reservationId,
+        passengers: [...adult, ...child, ...infant],
+        airline: reservation?.flight?.airline,
+
+        departureCity: reservation?.flight?.fromCityName,
+        departureCityCode: reservation?.flight?.fromCityCode,
+        departureDate: reservation?.flight?.departureDate,
+        departureTime: reservation?.flight?.departureDate,
+        departureAirport: reservation?.flight?.fromAirportName,
+
+        arrivalCity: reservation?.flight?.toCityName,
+        arrivalCityCode: reservation?.flight?.fromCityCode,
+        arrivalDate: reservation?.flight?.arrivalDate,
+        arrivalTime: reservation?.flight?.arrivalDate,
+        arrivalAirport: reservation?.flight?.toAirportName,
+
+        paymentMobile: reservation?.payment?.phone,
+        paymentMethod: reservation?.payment?.paymentMethod,
+        createdAt: reservation?.createdAt as any,
       })
 
       const pdf = await generatePDF(msg)

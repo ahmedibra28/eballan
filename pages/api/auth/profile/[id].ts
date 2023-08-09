@@ -25,6 +25,7 @@ handler.put(
         businessCategory,
         businessLicense,
         bankAccount,
+        passport,
       } = req.body
 
       const object = await schemaName.findOne({ user: id }).populate('user')
@@ -52,6 +53,7 @@ handler.put(
       object.address = address ? address : object.address
       object.image = image ? image : object.image
       object.bio = bio ? bio : object.bio
+      object.passport = passport ? passport : object.passport
       object.user = id
       if ((req.user.type = 'AGENT')) {
         object.agent = {

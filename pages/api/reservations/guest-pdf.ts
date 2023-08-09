@@ -14,9 +14,45 @@ handler.post(
       const { q, final, data } = req.body
 
       if (final && data) {
-        console.log(JSON.stringify(data, null, 2))
+        const adult = data?.passengers?.adult?.map((item: any) => ({
+          passengerTitle: item?.passengerTitle,
+          name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
+          sex: item?.sex,
+          passengerType: 'Adult',
+        })) as any
+        const child = data?.passengers?.child?.map((item: any) => ({
+          passengerTitle: item?.passengerTitle,
+          name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
+          sex: item?.sex,
+          passengerType: 'Child',
+        })) as any
+        const infant = data?.passengers?.infant?.map((item: any) => ({
+          passengerTitle: item?.passengerTitle,
+          name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
+          sex: item?.sex,
+          passengerType: 'Infant',
+        })) as any
+
         const msg = eReservation({
-          message: `Your booking has been confirmed. Your PNR is ${data?.flight?.pnrNumber} and your reservation ID is ${data?.flight?.reservationId}.`,
+          reservationNo: data?.flight?.reservationId,
+          passengers: [...adult, ...child, ...infant],
+          airline: data?.flight?.airline,
+
+          departureCity: data?.flight?.fromCityName,
+          departureCityCode: data?.flight?.fromCityCode,
+          departureDate: data?.flight?.departureDate,
+          departureTime: data?.flight?.departureDate,
+          departureAirport: data?.flight?.fromAirportName,
+
+          arrivalCity: data?.flight?.toCityName,
+          arrivalCityCode: data?.flight?.fromCityCode,
+          arrivalDate: data?.flight?.arrivalDate,
+          arrivalTime: data?.flight?.arrivalDate,
+          arrivalAirport: data?.flight?.toAirportName,
+
+          paymentMobile: data?.payment?.phone,
+          paymentMethod: data?.payment?.paymentMethod,
+          createdAt: data?.createdAt as any,
         })
 
         const pdf = await generatePDF(msg)

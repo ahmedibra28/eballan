@@ -61,6 +61,8 @@ const Profile = () => {
     setValue('address', !getApi?.isLoading ? getApi?.data?.address : '')
     setValue('mobile', !getApi?.isLoading ? getApi?.data?.mobile : '')
     setValue('bio', !getApi?.isLoading ? getApi?.data?.bio : '')
+    setValue('passport', !getApi?.isLoading ? getApi?.data?.passport : '')
+
     setValue(
       'businessCategory',
       !getApi?.isLoading ? getApi?.data?.agent?.businessCategory : ''
@@ -86,15 +88,20 @@ const Profile = () => {
         mobile: data?.mobile,
         bio: data?.bio,
         password: data?.password,
-        businessCategory: data?.agent?.businessCategory,
-        businessLicense: data?.agent?.businessLicense,
-        bankAccount: data?.agent?.bankAccount,
+        passport: data?.passport,
+        businessCategory: data?.businessCategory,
+        businessLicense: data?.businessLicense,
+        bankAccount: data?.bankAccount,
       })
     } else {
       updateApi?.mutateAsync({
         ...data,
         _id: getApi?.data?.user?._id,
         image: fileLink,
+        passport: data?.passport,
+        businessCategory: data?.businessCategory,
+        businessLicense: data?.businessLicense,
+        bankAccount: data?.bankAccount,
       })
     }
   }
@@ -206,6 +213,17 @@ const Profile = () => {
                 label: 'Business Category',
                 name: 'businessLicense',
                 placeholder: 'Enter business license',
+              } as DynamicFormProps)}
+            </div>
+          )}
+          {userInfo()?.userInfo?.role === 'AGENT' && (
+            <div className="col-md-6 col-12">
+              {inputText({
+                register,
+                errors,
+                label: 'Passport',
+                name: 'passport',
+                placeholder: 'Enter passport',
               } as DynamicFormProps)}
             </div>
           )}

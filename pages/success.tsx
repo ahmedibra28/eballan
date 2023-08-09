@@ -1,5 +1,6 @@
 import React from 'react'
 import { FormContainer } from '../components'
+import Link from 'next/link'
 
 const Success = () => {
   return (
@@ -13,7 +14,9 @@ const Success = () => {
       </p>
 
       <div className="text-center">
-        <button className="btn btn-outline-primary">Home</button>
+        <Link href="/" className="btn btn-outline-primary">
+          Home
+        </Link>
       </div>
     </FormContainer>
   )

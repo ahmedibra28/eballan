@@ -27,6 +27,7 @@ const profileSchema = new Schema<IProfile>(
     address: String,
     mobile: Number,
     bio: String,
+    passport: String,
     user: {
       type: Schema.Types.ObjectId,
       ref: User,
