@@ -1,105 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+@import url('https://db.onlinewebfonts.com/c/63cf8985576a4aaa66f7c13c94dba716?family=Kollektif');
 
-:root {
-  --primary-color: #5e17eb;
-  --secondary-color: #daddfc;
-  --white-color: #aaaaae;
-}
-
-button {
-  border-radius: 0 !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.navbar-light .navbar-toggler-icon {
-  background-image: url('/menu.svg') !important;
-}
-
-input,
-select,
-textarea {
-  border-radius: 0 !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0.7rem !important;
-}
-
-.btn-primary,
-.bg-primary {
-  background-color: var(--primary-color) !important;
-  border: 0 !important;
-}
-.btn-outline-primary {
-  padding: 5px !important;
-  border-radius: 0px !important;
-}
-a {
-  color: var(--primary-color);
-  text-decoration: none;
-}
-
-table,
-.report {
-  font-family: 'Courier Prime', monospace !important;
-}
-
-.modal-background,
-.offcanvas,
 body {
-  font-family: 'PT Sans Narrow', sans-serif;
-  background-color: var(--secondary-color) !important;
+  font-family: 'Kollektif', sans-serif !important;
+  font-style: normal !important;
 }
-nav {
-  background-color: var(--primary-color) !important;
-}
-.navbar-brand,
-.nav-link,
-.dropdown-item {
-  color: var(--secondary-color) !important;
+.customF {
+  font-family: 'Monoton', cursive;
 }
 
-.dropdown-item:hover,
-.navbar-brand:hover,
-.nav-link:hover {
-  color: var(--white-color) !important;
+.headerBG {
+  /*  background: linear-gradient(
+      to right,
+      rgba(17, 0, 255, 0.692),
+      rgba(255, 255, 255, 0.223)
+    ),
+    url('https://img.freepik.com/free-vector/plane-fly-blue-sky-with-clouds_107791-9038.jpg?w=2000') no-repeat; */
+
+  background: url('/headerBG.png') no-repeat;
+  width: 100vw;
+  height: 70vh;
+  background-position: center;
+  background-size: cover;
+}
+
+.customBG {
+  background: linear-gradient(
+      to right,
+      rgba(17, 0, 255, 0.692),
+      rgba(255, 255, 255, 0.223)
+    ),
+    url('https://img.freepik.com/free-vector/plane-fly-blue-sky-with-clouds_107791-9038.jpg?w=2000')
+      no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.passenger-model:hover,
+.passenger-model:focus {
   background-color: transparent !important;
 }
-.dropdown-menu {
-  background-color: var(--primary-color) !important;
-}
 
-label {
-  opacity: 0.5;
-}
-
-.dropdown-menu,
-.alert,
-.toast {
-  border-radius: 0 !important;
-  border: none;
-}
-
-#sidebar {
-  height: 100vh;
-  transition: 0.7s ease-in-out;
-  min-width: 10rem;
-
-  z-index: 1;
-}
-#sidebar.active {
-  margin-left: -10rem;
-}
-
-.wrapper {
-  min-width: 100%;
-}
-
-main {
-  min-height: 60vh;
-  width: 100%;
-}
-
-.custom-text-primary {
-  color: var(--primary-color) !important;
+.headerBox {
+  margin-top: -30px !important;
 }

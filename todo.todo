@@ -1,0 +1,75 @@
+1. Success Reservation Page ✅
+2. Reservation@eballan.com ✅
+3. Refound policy dialog modal
+4. Redirect after registering - bug ✅
+5. Somtel payment API
+6. Get reservation PDF file if you forget email ✅
+7. Flight 24 airline - new airline
+8. Issue / bug logger
+9. Admin PDF regenerate ✅
+10. Reservation editable - API
+
+
+const reservation = {
+  passengers: {
+    adult: [
+      {
+        passengerTitle: 'MR',
+        firstName: 'Ahmed',
+        secondName: 'Abdi',
+        lastName: 'Hussein',
+        nationality: 'Somalia',
+        sex: 'Male',
+        dob: '1990-01-01',
+        passportNumber: 'P88888',
+        passportExpiryDate: '2024-01-01',
+        _id: '648dea438945977aff6b9d4b',
+      },
+    ],
+    child: [],
+    infant: [],
+  },
+  flight: {
+    departureDate: '2023-06-28 08:00:00',
+    fromCityName: 'Mogadishu',
+    fromCityCode: 'MGQ',
+    fromAirportName: 'Aden Adde International Airport ',
+    fromCountryName: 'SOMALIA',
+    arrivalDate: '2023-06-28 09:10:00',
+    toCityName: 'Kismayo',
+    toCityCode: 'KMU',
+    toAirportName: 'Kismayo Airport',
+    toCountryName: 'SOMALIA',
+    airline: 'maandeeqair',
+    reservationId: '81310',
+    pnrNumber: 'AKYH09',
+  },
+  contact: { email: 'ahmaat19@gmail.com', phone: '+252615301507' },
+  payment: { phone: '615301507', paymentMethod: 'hormuud' },
+  _id: '648dea438945977aff6b9d4a',
+  user: '648de1f7d9768132cdda138f',
+  prices: [
+    {
+      commission: 20,
+      fare: 120,
+      passengerType: 'Adult',
+      _id: '648dea438945977aff6b9d4c',
+    },
+    {
+      commission: 10,
+      fare: 100,
+      passengerType: 'Child',
+      _id: '648dea438945977aff6b9d4d',
+    },
+    {
+      commission: 0,
+      fare: 20,
+      passengerType: 'Infant',
+      _id: '648dea438945977aff6b9d4e',
+    },
+  ],
+  status: 'canceled',
+  createdAt: '2023-06-17T17:15:47.079Z',
+  updatedAt: '2023-06-17T17:19:28.367Z',
+  __v: 0,
+}
