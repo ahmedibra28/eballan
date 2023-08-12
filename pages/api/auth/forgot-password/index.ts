@@ -4,6 +4,7 @@ import User from '../../../../models/User'
 import { sendEmail } from '../../../../utils/nodemailer'
 import DeviceDetector from 'device-detector-js'
 import { eTemplate } from '../../../../utils/eTemplate'
+import { baseUrl } from '../../../../api/api'
 
 const schemaName = User
 
@@ -35,7 +36,7 @@ handler.post(
       } = device
 
       const message = eTemplate({
-        url: `http://localhost:3000/auth/reset-password/${resetToken}`,
+        url: `${baseUrl}/auth/reset-password/${resetToken}`,
         user: user?.name,
         clientType,
         clientName,

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let baseUrl = 'http://localhost:3000/api'
+export let baseUrl = 'http://localhost:3000/api'
 
 if (process.env.NODE_ENV === 'production') {
   baseUrl = 'http://139.59.70.0/api'
