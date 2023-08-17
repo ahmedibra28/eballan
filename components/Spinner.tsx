@@ -8,7 +8,7 @@ interface Props {
 const Spinner = (props: Props) => {
   const { height = '3em', stroke = '#06bcee' } = props
   return (
-    <div className="text-center">
+    <div className="text-center z-50">
       <LoadingIcons.ThreeDots
         stroke={stroke}
         height={height}

@@ -211,7 +211,7 @@ const Navigation = () => {
         </div>
       </nav>
       {/* <hr className="text-light" /> */}
-      <div className="container text-center">
+      {/* <div className="container text-center">
         <button className="btn btn-light">
           <FaPlaneDeparture className="mb-1 me-2" />
           Flights
@@ -220,7 +220,7 @@ const Navigation = () => {
           <FaHospitalAlt className="mb-1 me-2" />
           Hospital
         </button>
-      </div>
+      </div> */}
     </div>
   )
 }

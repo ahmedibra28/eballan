@@ -8,8 +8,8 @@ import Spinner from '../Spinner'
 
 const SearchResult = () => {
   const [error, setError] = useState('')
-  const [fromDate, setFromDate] = useState<any>(new Date())
-  const [toDate, setToDate] = useState<any>(new Date())
+  const [fromDate, setFromDate] = useState<any>('')
+  const [toDate, setToDate] = useState<any>('')
   const [trip, setTrip] = useState('One-way')
   const [seatType, setSeatType] = useState('Economy')
   const [noAdult, setNoAdult] = useState(0)
@@ -37,14 +37,45 @@ const SearchResult = () => {
   const submitHandler = async (data: any) => {
     if (
       !data.fromDate ||
-      !data.toDate ||
+      // !data.toDate ||
       !data.trip ||
       !data.originCity ||
       !data.destinationCity ||
       !data.seatType ||
       (data.noAdult === 0 && data.noChild === 0 && data.noInfant === 0)
     ) {
-      setError('Please fill all fields')
+      let errorMessage = 'Please fill the following fields:'
+
+      if (!data.fromDate) {
+        errorMessage += ' From Date'
+      }
+
+      if (!data.toDate) {
+        errorMessage += ' To Date'
+      }
+
+      if (!data.trip) {
+        errorMessage += ' Trip'
+      }
+
+      if (!data.originCity) {
+        errorMessage += ' Origin City'
+      }
+
+      if (!data.destinationCity) {
+        errorMessage += ' Destination City'
+      }
+
+      if (!data.seatType) {
+        errorMessage += ' Seat Type'
+      }
+
+      if (data.noAdult === 0 && data.noChild === 0 && data.noInfant === 0) {
+        errorMessage += ' Number of Passengers'
+      }
+
+      setError(errorMessage)
+
       setTimeout(() => {
         setError('')
       }, 5000)
@@ -58,6 +89,16 @@ const SearchResult = () => {
   }
 
   useEffect(() => {
+    if (originCity && destinationCity && originCity === destinationCity) {
+      setError('Please select different cities')
+      setDestinationCity('')
+      setTimeout(() => {
+        setError('')
+      }, 5000)
+    }
+  }, [originCity, destinationCity])
+
+  useEffect(() => {
     if (searchFlightApi?.isSuccess) {
       setError('')
       // @ts-ignore
@@ -67,8 +108,8 @@ const SearchResult = () => {
   }, [searchFlightApi?.isSuccess])
 
   useEffect(() => {
-    setFromDate(searchFlight?.fromDate || new Date())
-    setToDate(searchFlight?.toDate || new Date())
+    setFromDate(searchFlight?.fromDate || '')
+    setToDate(searchFlight?.toDate || '')
     setTrip(searchFlight?.trip || 'One-way')
     setSeatType(searchFlight?.seatType || 'Economy')
     setNoAdult(searchFlight?.noAdult || 0)

@@ -253,19 +253,23 @@ const Search = ({
                 >
                   <option value="">Select to origin city</option>
                   {cities
-                    ?.filter((item) => destinationCity !== item.id?.toString())
+                    // ?.filter((item) => destinationCity !== item.id?.toString())
                     ?.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.name}
                       </option>
                     ))}
                 </select>
-                <span
+                <button
+                  onClick={() => {
+                    setOriginCity(destinationCity)
+                    setDestinationCity(originCity)
+                  }}
                   className="input-group-text bg-white rounded-5 border-0 shadow-none"
                   id="fromDataList"
                 >
                   <FaExchangeAlt className="text-primary" />
-                </span>
+                </button>
               </div>
             </div>
 
@@ -283,7 +287,7 @@ const Search = ({
                 >
                   <option value="">Select to destination city</option>
                   {cities
-                    ?.filter((item) => originCity !== item.id?.toString())
+                    // ?.filter((item) => originCity !== item.id?.toString())
                     ?.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.name}
@@ -308,6 +312,7 @@ const Search = ({
                   minDate={new Date()}
                   showDisabledMonthNavigation
                   className="form-control py-3 border-0 shadow-none bg-transparent"
+                  placeholderText="Select date"
                 />
               </div>
             </div>
@@ -324,6 +329,7 @@ const Search = ({
                     minDate={new Date()}
                     showDisabledMonthNavigation
                     className="form-control py-3 border-0 shadow-none bg-transparent"
+                    placeholderText="Select date"
                   />
                 </div>
               </div>

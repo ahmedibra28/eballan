@@ -13,9 +13,11 @@ handler.get(
         `${BASE_URL}/${airline}/ReservationApi/api/common/cities`
       )
 
-      const newData = data?.filter(
-        (item: any) => item.countryName === 'SOMALIA'
-      )
+      let newData = data?.filter((item: any) => item.countryName === 'SOMALIA')
+
+      newData = newData.sort((a: any, b: any) => {
+        return a.name.localeCompare(b.name)
+      })
 
       return res.json(newData)
     } catch (error: any) {

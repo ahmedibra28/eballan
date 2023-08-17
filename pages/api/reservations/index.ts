@@ -74,7 +74,7 @@ handler.post(
                 id: null,
                 firstName: a.firstName?.toUpperCase(),
                 lastName: a.lastName?.toUpperCase(),
-                passportNo: a.passportNumber,
+                passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
                 // countryId: a.nationality, // update the text to id
                 countryId: 196,
@@ -107,7 +107,7 @@ handler.post(
                 id: null,
                 firstName: a.firstName?.toUpperCase(),
                 lastName: a.lastName?.toUpperCase(),
-                passportNo: a.passportNumber,
+                passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
                 // countryId: a.nationality, // update the text to id
                 countryId: 196,
@@ -140,7 +140,7 @@ handler.post(
                 id: null,
                 firstName: a.firstName?.toUpperCase(),
                 lastName: a.lastName?.toUpperCase(),
-                passportNo: a.passportNumber,
+                passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
                 // countryId: a.nationality, // update the text to id
                 countryId: 196,
