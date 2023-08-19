@@ -18,6 +18,7 @@ import { useRouter } from 'next/router'
 import apiHook from '../api'
 
 import { v4 as uuidv4 } from 'uuid'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 const Passenger = () => {
   const router = useRouter()
@@ -130,6 +131,12 @@ const Passenger = () => {
     router.push('/trip-summary')
   }
 
+  const formatResult = (item: { name: string }) => {
+    return (
+      <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
+    )
+  }
+
   const passengerForm = (passengerType: string, number: number) => {
     return (
       <div className="row gy-3 bg-light shadow-sm rounded-2 p-2 mt-4">
@@ -176,7 +183,25 @@ const Passenger = () => {
             placeholder: 'Enter last name',
           } as DynamicFormProps)}
         </div>
+
         <div className="col-lg-4 col-md-6 col-12">
+          <label htmlFor="" className="form-label mb-0">
+            Nationality
+          </label>
+          <div className="input-group w-100 form-control form-control-sm rounded-0">
+            <div className="w-100 border-0">
+              <ReactSearchAutocomplete
+                items={getCountries?.data as any[]}
+                formatResult={formatResult}
+                showIcon={false}
+                styling={{ border: 'none', boxShadow: 'none', height: '25px' }}
+                placeholder="Search nationality"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* <div className="col-lg-4 col-md-6 col-12">
           {dynamicInputSelect({
             register,
             errors,
@@ -186,7 +211,7 @@ const Passenger = () => {
             data: getCountries?.data,
             value: 'friendlyName',
           } as DynamicFormProps)}
-        </div>
+        </div> */}
         <div className="col-lg-4 col-md-6 col-12">
           {staticInputSelect({
             register,

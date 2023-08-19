@@ -85,6 +85,24 @@ const Header = () => {
       return
     }
 
+    const o = getCitiesApi?.data?.find(
+      (item: { name: string }) => item.name === data.originCity
+    )
+    const d = getCitiesApi?.data?.find(
+      (item: { name: string }) => item.name === data.destinationCity
+    )
+
+    if (!o || !d) {
+      setError('Please select origin and destination cities')
+      setTimeout(() => {
+        setError('')
+      }, 5000)
+      return
+    }
+
+    data.originCity = o.id
+    data.destinationCity = d.id
+
     updateSearchFlight({ ...data, result: [] })
 
     searchFlightApi?.mutateAsync(data).catch((err) => err)

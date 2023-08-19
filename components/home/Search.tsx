@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 const Search = ({
   showTitle = false,
@@ -60,6 +61,30 @@ const Search = ({
   setOriginCity?: any
   setDestinationCity?: any
 }) => {
+  const items = [
+    {
+      id: 0,
+      name: 'Cobol',
+    },
+    {
+      id: 1,
+      name: 'JavaScript',
+    },
+  ]
+
+  const handleOnSelectOrigin = (item: { name: string }) => {
+    setOriginCity(item.name)
+  }
+  const handleOnSelectDestination = (item: { name: string }) => {
+    setDestinationCity(item.name)
+  }
+
+  const formatResult = (item: { name: string }) => {
+    return (
+      <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
+    )
+  }
+
   return (
     <>
       {showTitle && (
@@ -239,61 +264,48 @@ const Search = ({
           </div>
 
           <div className="row gy-3">
-            <div className="col-lg-3 col-6 rounded-5 bg-white">
-              <div className="input-group">
-                <span className="input-group-text bg-white rounded-5 border-0 shadow-none">
-                  <FaMapMarkerAlt className="text-primary" />
-                </span>
-                <select
-                  className="form-control py-3 border-0 shadow-none"
-                  placeholder="Select to city"
-                  name="originCity"
-                  onChange={(e) => setOriginCity(e.target.value)}
-                  value={originCity}
-                >
-                  <option value="">Select to origin city</option>
-                  {cities
-                    // ?.filter((item) => destinationCity !== item.id?.toString())
-                    ?.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                </select>
-                <button
-                  onClick={() => {
-                    setOriginCity(destinationCity)
-                    setDestinationCity(originCity)
-                  }}
-                  className="input-group-text bg-white rounded-5 border-0 shadow-none"
-                  id="fromDataList"
-                >
-                  <FaExchangeAlt className="text-primary" />
-                </button>
+            <div className="col-lg-3 col-6 rounded-5 position-relative">
+              <div className="input-group w-100 form-control rounded-5">
+                <div className="w-100 border-0">
+                  <ReactSearchAutocomplete
+                    items={cities as any[]}
+                    onSelect={handleOnSelectOrigin}
+                    autoFocus
+                    formatResult={formatResult}
+                    showIcon={false}
+                    styling={{ border: 'none', boxShadow: 'none' }}
+                    placeholder="Search origin city"
+                    inputSearchString={originCity}
+                  />
+                </div>
               </div>
+
+              <button
+                onClick={() => {
+                  setOriginCity(destinationCity)
+                  setDestinationCity(originCity)
+                }}
+                className="input-group-text rounded-5 border-0 shadow-none position-absolute"
+                style={{ top: 15, right: 20 }}
+                id="fromDataList"
+              >
+                <FaExchangeAlt className="text-primary" />
+              </button>
             </div>
 
-            <div className="col-lg-3 col-6 rounded-5 bg-white">
-              <div className="input-group">
-                <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
-                  <FaMapMarkerAlt className="text-primary" />
-                </span>
-                <select
-                  className="form-control py-3 border-0 shadow-none bg-transparent"
-                  placeholder="Type to search..."
-                  name="destinationCity"
-                  onChange={(e) => setDestinationCity(e.target.value)}
-                  value={destinationCity}
-                >
-                  <option value="">Select to destination city</option>
-                  {cities
-                    // ?.filter((item) => originCity !== item.id?.toString())
-                    ?.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                </select>
+            <div className="col-lg-3 col-6 rounded-5 position-relative">
+              <div className="input-group w-100 form-control rounded-5">
+                <div className="w-100 border-0">
+                  <ReactSearchAutocomplete
+                    items={cities as any[]}
+                    onSelect={handleOnSelectDestination}
+                    formatResult={formatResult}
+                    showIcon={false}
+                    styling={{ border: 'none', boxShadow: 'none' }}
+                    placeholder="Search destination city"
+                    inputSearchString={destinationCity}
+                  />
+                </div>
               </div>
             </div>
 
