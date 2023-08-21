@@ -22,6 +22,22 @@ handler.post(
       const { BASE_URL } = process.env
 
       const body = req.body
+      let { phone } = body.payment
+
+      if (!phone) {
+        return res.status(400).json({ error: 'Invalid phone' })
+      }
+      if (phone.slice(0, 1) === '0') {
+        phone = phone.substring(1)
+      }
+
+      if (phone.slice(0, 3) === '252') {
+        phone = phone.substring(3)
+      }
+
+      if (phone.length !== 9) {
+        return res.status(400).json({ error: `Phone number must be 9 digits` })
+      }
 
       // handle EVC payment
       const totalPrice =
@@ -329,23 +345,20 @@ handler.get(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     await db()
     try {
-      const { startDate, endDate } = req.query
-
-      const s = moment(startDate).startOf('day').format()
-      const e = moment(endDate).endOf('day').format()
+      const { q } = req.query
 
       const { type } = req.user
 
-      const queryBuilder =
-        startDate && endDate
-          ? {
-              createdAt: {
-                $gte: s,
-                $lte: e,
-              },
-              ...(type !== 'SUPER_ADMIN' && { user: req.user._id }),
-            }
-          : { ...(type !== 'SUPER_ADMIN' && { user: req.user._id }) }
+      const queryBuilder = q
+        ? {
+            $or: [
+              { 'flight.pnrNumber': { $regex: q, $options: 'i' } },
+              { 'flight.reservationId': { $regex: q, $options: 'i' } },
+              { 'contact.phone': { $regex: q, $options: 'i' } },
+            ],
+            ...(type !== 'SUPER_ADMIN' && { user: req.user._id }),
+          }
+        : { ...(type !== 'SUPER_ADMIN' && { user: req.user._id }) }
 
       let query = Reservation.find(queryBuilder)
 

@@ -172,6 +172,7 @@ const Header = () => {
             setNoInfant={setNoInfant}
             setOriginCity={setOriginCity}
             setDestinationCity={setDestinationCity}
+            isLoading={searchFlightApi?.isLoading}
           />
         </div>
       </div>

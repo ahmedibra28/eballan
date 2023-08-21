@@ -57,7 +57,7 @@ const clientPermissions = [
   },
   {
     _id: '637e0261fadbdf655ba856b6',
-    name: 'Dashboard',
+    name: 'Admin Dashboard',
     path: '/reports/dashboard',
     menu: 'report',
     sort: sort.report,
@@ -65,7 +65,7 @@ const clientPermissions = [
   },
   {
     _id: '637e0261fafbdf655ba856b6',
-    name: 'Dashboard',
+    name: 'Agent Dashboard',
     path: '/reports/agents/dashboard',
     menu: 'report',
     sort: sort.report,

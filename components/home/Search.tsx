@@ -5,7 +5,6 @@ import {
   FaChevronDown,
   FaChild,
   FaExchangeAlt,
-  FaMapMarkerAlt,
   FaMinusCircle,
   FaPlusCircle,
   FaSearch,
@@ -38,6 +37,7 @@ const Search = ({
   setNoInfant,
   setOriginCity,
   setDestinationCity,
+  isLoading = false,
 }: {
   cities?: any[]
   showTitle?: boolean
@@ -60,18 +60,8 @@ const Search = ({
   setNoInfant?: any
   setOriginCity?: any
   setDestinationCity?: any
+  isLoading?: boolean
 }) => {
-  const items = [
-    {
-      id: 0,
-      name: 'Cobol',
-    },
-    {
-      id: 1,
-      name: 'JavaScript',
-    },
-  ]
-
   const handleOnSelectOrigin = (item: { name: string }) => {
     setOriginCity(item.name)
   }
@@ -264,8 +254,8 @@ const Search = ({
           </div>
 
           <div className="row gy-3">
-            <div className="col-lg-3 col-6 rounded-5 position-relative">
-              <div className="input-group w-100 form-control rounded-5">
+            <div className="col-lg-3 col-6 rounded-5 position-relative bg-white">
+              <div className="input-group w-100 form-control rounded-5 border-0">
                 <div className="w-100 border-0">
                   <ReactSearchAutocomplete
                     items={cities as any[]}
@@ -293,8 +283,8 @@ const Search = ({
               </button>
             </div>
 
-            <div className="col-lg-3 col-6 rounded-5 position-relative">
-              <div className="input-group w-100 form-control rounded-5">
+            <div className="col-lg-3 col-6 rounded-5 position-relative bg-white">
+              <div className="input-group w-100 form-control rounded-5 border-0">
                 <div className="w-100 border-0">
                   <ReactSearchAutocomplete
                     items={cities as any[]}
@@ -349,11 +339,12 @@ const Search = ({
 
             <div
               className={`${
-                trip === 'Return' ? 'col-lg-2 col-12' : 'col-lg-3 col-6'
+                trip === 'Return' ? 'col-lg-2 col-12' : 'col-lg-2 col-6'
               } text-end rounded-5 bg-white`}
             >
               <button
                 type="button"
+                disabled={isLoading}
                 onClick={() =>
                   // @ts-ignore
                   onSubmit({
@@ -370,7 +361,14 @@ const Search = ({
                 }
                 className="btn btn-white py-3 w-100 bg-transparent border-0 text-primary"
               >
-                <FaSearch className="mb-1" /> Search
+                {isLoading ? (
+                  <span className="spinner-border spinner-border-sm" />
+                ) : (
+                  <>
+                    {' '}
+                    <FaSearch className="mb-1" /> Search
+                  </>
+                )}
               </button>
             </div>
           </div>

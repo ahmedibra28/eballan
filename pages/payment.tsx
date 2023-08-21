@@ -165,7 +165,7 @@ const Payment = () => {
                         flight?.prices?.reduce(
                           (acc, item) => acc + item?.totalPrice,
                           0
-                        )
+                        ) || 0
                       )}
                     </td>
                   </tr>
@@ -179,9 +179,10 @@ const Payment = () => {
                 <input
                   onChange={(e) => setPhone(e.target.value)}
                   value={phone}
+                  disabled={Boolean(!paymentMethod)}
                   type="number"
                   className="form-control rounded-0"
-                  placeholder={`Enter the phone number you used to pay with ${paymentMethod}`}
+                  placeholder={`Enter your ${paymentMethod} phone number without +252`}
                 />
               </div>
 

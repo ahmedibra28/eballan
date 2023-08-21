@@ -118,7 +118,7 @@ const Reservations = () => {
 
             <div className="col-auto">
               <Search
-                placeholder="Search by name"
+                placeholder="Search by pnr or reservation no or number"
                 setQ={setQ}
                 q={q}
                 searchHandler={searchHandler}

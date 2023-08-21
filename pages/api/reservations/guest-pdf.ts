@@ -72,7 +72,12 @@ handler.post(
       }
 
       const reservation = await Reservation.find({
-        $or: [{ 'contact.email': q }, { 'contact.phone': q }],
+        $or: [
+          { 'flight.pnrNumber': q },
+          { 'flight.reservationId': q },
+          { 'contact.phone': q },
+          { 'contact.email': q },
+        ],
       }).sort({ createdAt: -1 })
 
       if (reservation?.length === 0)
