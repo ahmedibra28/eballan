@@ -1,7 +1,6 @@
 import nc from 'next-connect'
 import { isAuth } from '../../../../utils/auth'
 import db from '../../../../config/db'
-import UserRole from '../../../../models/UserRole'
 import Reservation from '../../../../models/Reservation'
 import { currency } from '../../../../utils/currency'
 

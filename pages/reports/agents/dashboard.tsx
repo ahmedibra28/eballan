@@ -1,8 +1,6 @@
 import React from 'react'
 import BarChart from '../../../components/charts/BarChart'
-import LineChart from '../../../components/charts/LineChart'
 import apiHook from '../../../api'
-import Link from 'next/link'
 
 type DashboardReport = {
   agents: number

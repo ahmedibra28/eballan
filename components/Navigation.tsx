@@ -2,12 +2,7 @@ import React, { useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import {
-  FaSignInAlt,
-  FaPowerOff,
-  FaPlaneDeparture,
-  FaHospitalAlt,
-} from 'react-icons/fa'
+import { FaSignInAlt, FaPowerOff } from 'react-icons/fa'
 import { userInfo } from '../api/api'
 import { IClientPermission } from '../models/ClientPermission'
 

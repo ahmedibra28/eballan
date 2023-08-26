@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { FormContainer, Message } from '../../components'
+import { Message } from '../../components'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import Head from 'next/head'
