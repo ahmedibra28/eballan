@@ -125,10 +125,12 @@ const Passenger = () => {
                 {item?.lastName}
               </span>
             </h6>
-            <h6>
-              <FaPassport className="mb-1" />
-              <span className="text-muted"> {item?.passportNumber}</span>
-            </h6>
+            {item?.passportNumber && (
+              <h6>
+                <FaPassport className="mb-1" />
+                <span className="text-muted"> {item?.passportNumber}</span>
+              </h6>
+            )}
             <h6>
               <FaPhoneAlt className="mb-1" />
               <span className="text-muted"> {contact?.phone}</span>
