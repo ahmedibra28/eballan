@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import React from 'react'
 import { FaArrowLeft, FaArrowRight, FaShareAlt } from 'react-icons/fa'
 import { currency } from '../../utils/currency'
@@ -30,7 +29,7 @@ const Result = ({ item }: { item: any }) => {
       <div className="card-body">
         <div className="row">
           <div className="col-lg-3 col-12 my-auto text-center">
-            <Image src={item?.db?.logo} alt="airplane" width={50} height={50} />{' '}
+            <img src={item?.db?.logo} alt="airplane" width={50} height={50} />
             <br />
             <br />
             <span className="fw-bold text-uppercase">{item.db?.name}</span>

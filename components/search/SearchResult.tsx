@@ -4,7 +4,6 @@ import Result from './Result'
 import useSearchFlightStore from '../../zustand/searchFlightStore'
 import apiHook from '../../api'
 import Message from '../Message'
-import Spinner from '../Spinner'
 
 const SearchResult = () => {
   const [error, setError] = useState('')
@@ -149,8 +148,6 @@ const SearchResult = () => {
   return (
     <div className="headerBox">
       {error && <Message variant="danger" value={error} />}
-
-      {searchFlightApi?.isLoading && <Spinner />}
 
       {searchFlightApi?.isError && (
         <Message variant="danger" value={searchFlightApi?.error} />

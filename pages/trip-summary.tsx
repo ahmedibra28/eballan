@@ -284,7 +284,7 @@ const Passenger = () => {
     setValue('firstName', item?.firstName)
     setValue('secondName', item?.secondName)
     setValue('lastName', item?.lastName)
-    setValue('nationality', item?.nationality)
+    setValue('nationality', item?.nationality || 'Somalia')
     setValue('sex', item?.sex)
     setValue('dob', item?.dob)
     setValue('passportNumber', item?.passportNumber)

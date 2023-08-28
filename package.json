@@ -39,6 +39,7 @@
     "react-hook-form": "^7.44.3",
     "react-icons": "^4.9.0",
     "react-loading-icons": "^1.1.0",
+    "react-phone-input-2": "^2.15.1",
     "react-photo-album": "^2.2.2",
     "react-search-autocomplete": "^8.5.2",
     "sass": "^1.62.1",

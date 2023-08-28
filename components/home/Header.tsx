@@ -4,7 +4,6 @@ import Search from './Search'
 import apiHook from '../../api'
 import useSearchFlightStore from '../../zustand/searchFlightStore'
 import Message from '../Message'
-import Spinner from '../Spinner'
 import { useRouter } from 'next/router'
 // import AD from '../AD'
 
@@ -133,8 +132,6 @@ const Header = () => {
       {/* <AD /> */}
 
       {error && <Message variant="danger" value={error} />}
-
-      {searchFlightApi?.isLoading && <Spinner />}
 
       {searchFlightApi?.isError && (
         <Message variant="danger" value={searchFlightApi?.error} />

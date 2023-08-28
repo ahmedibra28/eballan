@@ -1,11 +1,10 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import Steps from '../components/Steps'
 import {
   DynamicFormProps,
   dynamicInputSelect,
   inputDate,
   inputEmail,
-  inputTel,
   inputText,
   staticInputSelect,
 } from '../utils/dForms'
@@ -20,8 +19,12 @@ import apiHook from '../api'
 import { v4 as uuidv4 } from 'uuid'
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+
 const Passenger = () => {
   const router = useRouter()
+  const [phoneNumber, setPhoneNumber] = useState('')
 
   const { setPassengers, setContact, flight } = useFlightStore((state) => state)
 
@@ -84,6 +87,7 @@ const Passenger = () => {
   })?.get
 
   const submitHandler = (data: any) => {
+    data.phone = phoneNumber
     const reformatData = (types: string[]) => {
       const reformattedData = {}
 
@@ -125,7 +129,7 @@ const Passenger = () => {
     setPassengers(newData as any)
     setContact({
       email: data.email,
-      phone: data.phone,
+      phone: phoneNumber,
     })
 
     router.push('/trip-summary')
@@ -194,7 +198,12 @@ const Passenger = () => {
                 items={getCountries?.data as any[]}
                 formatResult={formatResult}
                 showIcon={false}
-                styling={{ border: 'none', boxShadow: 'none', height: '25px' }}
+                styling={{
+                  border: 'none',
+                  boxShadow: 'none',
+                  height: '25px',
+                  zIndex: 10,
+                }}
                 placeholder="Search nationality"
               />
             </div>
@@ -279,14 +288,14 @@ const Passenger = () => {
           <div className="col-12">
             <h6 className="fw-bold text-uppercase">Contact Details</h6>
           </div>
-          <div className="col-lg-4 col-md-6 col-12">
-            {inputTel({
-              register,
-              errors,
-              label: 'Phone',
-              name: 'phone',
-              placeholder: 'Enter phone number',
-            } as DynamicFormProps)}
+          <div className="col-lg-4 col-md-6 col-12" style={{ zIndex: -0 }}>
+            <label htmlFor="phone">Phone</label>
+            <PhoneInput
+              country={'so'}
+              value={phoneNumber}
+              onChange={(phone) => setPhoneNumber(phone)}
+              inputStyle={{ width: '100%' }}
+            />
           </div>
           <div className="col-lg-4 col-md-6 col-12">
             {inputEmail({
