@@ -137,7 +137,7 @@ const Header = () => {
         <Message variant="danger" value={searchFlightApi?.error} />
       )}
 
-      <div className="headerBG">
+      <div className="headerBG p-2">
         <div className="d-flex flex-column justify-content-center align-items-start h-100">
           <Search
             showTitle={true}

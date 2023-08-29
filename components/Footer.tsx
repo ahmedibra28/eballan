@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { FaWhatsapp } from 'react-icons/fa'
 
 const Footer = () => {
   return (
@@ -24,15 +25,20 @@ const Footer = () => {
       <div className="container text-light py-5">
         <div className="row mb-4">
           <div className="col-lg-6 col-12 my-auto">
-            <Link href="#" className="text-light">
+            <Link href="/privacy-policy" className="text-light">
               Privacy Policy
             </Link>
-            <Link href="#" className="text-light mx-4">
+            <Link href="/terms-of-use" className="text-light mx-4">
               Terms of Use
             </Link>
-            <Link href="#" className="text-light">
-              Get Help
-            </Link>
+
+            <a
+              target="_blank"
+              href="https://wa.me/252611598011?text=Help me with flight booking&source=&data=&app_absent="
+              className="text-light"
+            >
+              Get Help Through WhatsApp
+            </a>
           </div>
           <div className="col-lg-6 col-12 my-auto text-end">
             <Image src="/partners/1.png" width={60} height={60} alt="logo" />

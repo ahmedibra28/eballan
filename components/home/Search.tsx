@@ -253,7 +253,7 @@ const Search = ({
             </div>
           </div>
 
-          <div className="row gy-3">
+          <div className="row gy-3 p-1">
             <div className="col-lg-3 col-6 rounded-5 position-relative bg-white">
               <div className="input-group w-100 form-control rounded-5 border-0">
                 <div className="w-100 border-0">

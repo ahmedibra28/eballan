@@ -10,16 +10,17 @@ body {
 }
 
 .headerBG {
-  /*  background: linear-gradient(
+  /* background: linear-gradient(
       to right,
       rgba(17, 0, 255, 0.692),
       rgba(255, 255, 255, 0.223)
     ),
-    url('https://img.freepik.com/free-vector/plane-fly-blue-sky-with-clouds_107791-9038.jpg?w=2000') no-repeat; */
+    url('https://img.freepik.com/free-vector/plane-fly-blue-sky-with-clouds_107791-9038.jpg?w=2000')
+      no-repeat; */
 
   background: url('/headerBG.png') no-repeat;
-  width: 100vw;
   height: 70vh;
+  width: 100%;
   background-position: center;
   background-size: cover;
 }
