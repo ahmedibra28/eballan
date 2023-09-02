@@ -5,6 +5,7 @@ import {
   FaChevronDown,
   FaChild,
   FaExchangeAlt,
+  FaMapMarkerAlt,
   FaMinusCircle,
   FaPlusCircle,
   FaSearch,
@@ -13,7 +14,7 @@ import {
 } from 'react-icons/fa'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+// import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 const Search = ({
   showTitle = false,
@@ -62,18 +63,11 @@ const Search = ({
   setDestinationCity?: any
   isLoading?: boolean
 }) => {
-  const handleOnSelectOrigin = (item: { name: string }) => {
-    setOriginCity(item.name)
-  }
-  const handleOnSelectDestination = (item: { name: string }) => {
-    setDestinationCity(item.name)
-  }
-
-  const formatResult = (item: { name: string }) => {
-    return (
-      <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
-    )
-  }
+  // const formatResult = (item: { name: string }) => {
+  //   return (
+  //     <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
+  //   )
+  // }
 
   return (
     <>
@@ -254,12 +248,12 @@ const Search = ({
           </div>
 
           <div className="row gy-3 p-1">
-            <div className="col-lg-3 col-6 rounded-5 position-relative bg-white">
+            {/* <div className="col-lg-3 col-6 rounded-5 position-relative bg-white">
               <div className="input-group w-100 form-control rounded-5 border-0">
                 <div className="w-100 border-0">
                   <ReactSearchAutocomplete
                     items={cities as any[]}
-                    onSelect={handleOnSelectOrigin}
+                    onSelect={(item) => setOriginCity(item.name)}
                     autoFocus
                     formatResult={formatResult}
                     showIcon={false}
@@ -288,14 +282,73 @@ const Search = ({
                 <div className="w-100 border-0">
                   <ReactSearchAutocomplete
                     items={cities as any[]}
-                    onSelect={handleOnSelectDestination}
+                    onSelect={(item) => setDestinationCity(item.name)}
                     formatResult={formatResult}
                     showIcon={false}
                     styling={{ border: 'none', boxShadow: 'none' }}
                     placeholder="Search destination city"
+                    resultStringKeyName="name"
                     inputSearchString={destinationCity}
                   />
                 </div>
+              </div>
+            </div> */}
+
+            <div className="col-lg-3 col-6 rounded-5 bg-white">
+              <div className="input-group">
+                <span className="input-group-text bg-white rounded-5 border-0 shadow-none">
+                  <FaMapMarkerAlt className="text-primary" />
+                </span>
+                <select
+                  className="form-control py-3 border-0 shadow-none"
+                  placeholder="Select to city"
+                  name="originCity"
+                  onChange={(e) => setOriginCity(e.target.value)}
+                  value={originCity}
+                >
+                  <option value="">Select to origin city</option>
+                  {cities
+                    // ?.filter((item) => destinationCity !== item.id?.toString())
+                    ?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                </select>
+                <button
+                  onClick={() => {
+                    setOriginCity(destinationCity)
+                    setDestinationCity(originCity)
+                  }}
+                  className="input-group-text bg-white rounded-5 border-0 shadow-none"
+                  id="fromDataList"
+                >
+                  <FaExchangeAlt className="text-primary" />
+                </button>
+              </div>
+            </div>
+
+            <div className="col-lg-3 col-6 rounded-5 bg-white">
+              <div className="input-group">
+                <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
+                  <FaMapMarkerAlt className="text-primary" />
+                </span>
+                <select
+                  className="form-control py-3 border-0 shadow-none bg-transparent"
+                  placeholder="Type to search..."
+                  name="destinationCity"
+                  onChange={(e) => setDestinationCity(e.target.value)}
+                  value={destinationCity}
+                >
+                  <option value="">Select to destination city</option>
+                  {cities
+                    // ?.filter((item) => originCity !== item.id?.toString())
+                    ?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                </select>
               </div>
             </div>
 

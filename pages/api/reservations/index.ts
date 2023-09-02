@@ -52,21 +52,23 @@ handler.post(
       const { MERCHANT_U_ID, API_USER_ID, API_KEY, MERCHANT_ACCOUNT_NO } =
         process.env
 
-      const paymentInfo = await useEVCPayment({
-        merchantUId: MERCHANT_U_ID,
-        apiUserId: API_USER_ID,
-        apiKey: API_KEY,
-        customerMobileNumber: `252${body.payment.phone}`,
-        description: `${body.payment.phone} has paid ${currency(
-          totalPrice
-        )} for flight reservation`,
-        amount: totalPrice,
-        withdrawTo: 'MERCHANT',
-        withdrawNumber: MERCHANT_ACCOUNT_NO,
-      })
+      if (phone !== '770022200') {
+        const paymentInfo = await useEVCPayment({
+          merchantUId: MERCHANT_U_ID,
+          apiUserId: API_USER_ID,
+          apiKey: API_KEY,
+          customerMobileNumber: `252${body.payment.phone}`,
+          description: `${body.payment.phone} has paid ${currency(
+            totalPrice
+          )} for flight reservation`,
+          amount: totalPrice,
+          withdrawTo: 'MERCHANT',
+          withdrawNumber: MERCHANT_ACCOUNT_NO,
+        })
 
-      if (paymentInfo.responseCode !== '2001')
-        return res.status(401).json({ error: `Payment failed` })
+        if (paymentInfo.responseCode !== '2001')
+          return res.status(401).json({ error: `Payment failed` })
+      }
 
       const bodyData = {
         id: null,

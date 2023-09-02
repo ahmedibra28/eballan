@@ -1,8 +1,15 @@
 import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 
 const PrivacyPolicy = () => {
   const [active, setActive] = React.useState('Privacy Policy')
+  const router = useRouter()
+  useEffect(() => {
+    if (router.query.active) {
+      setActive('Refund Policy')
+    }
+  }, [router.query.active])
   return (
     <div className="row">
       <div className="col-lg-10 col-md-8 col-12 mx-auto">

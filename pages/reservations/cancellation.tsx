@@ -120,20 +120,20 @@ const Cancellation = () => {
         <h6 className="fw-bold text-uppercase text-center">Step 3 / 3</h6>
         <hr />
         <h6 className="fw-bold">Refund Policy</h6>
+        <p>1.0 Change booking fee will charge $10 </p>
+        <p>1.2 Cancellation fee $10 </p>
+        <p>1.3 No show $30 </p>
+
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda
-          autem enim accusamus, beatae itaque dolorum deserunt deleniti, velit
-          animi porro minima commodi laborum earum dolore dolor recusandae quas
-          tempora cumque. Optio, ullam ipsum? Rem, modi magnam earum tenetur
-          quisquam quaerat dolore dolores? Distinctio molestiae, explicabo
-          reiciendis repellat maiores delectus consequatur nesciunt magnam
-          ipsum, impedit id accusamus facere excepturi cupiditate sequi?
+          1.4 Refunding the payment will take 48 hours of working time, and the
+          commission of the agent cannot be refunded.
         </p>
         <p>
-          Minima necessitatibus et impedit nihil consectetur, doloribus itaque
-          labore nulla omnis consequuntur reprehenderit doloremque quia quaerat
-          repellendus vel expedita ut, fugit ex soluta adipisci in sequi!
-          Cupiditate neque ab molestiae!
+          1.5 If less than 24 hours before departure, the ticket cannot be
+          cancelled or changed
+        </p>
+        <p>
+          <Link href="/privacy-policy?active=refund-policy"> read more...</Link>
         </p>
 
         <button
