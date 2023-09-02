@@ -32,7 +32,7 @@ handler.get(
 
       return res.json(data)
     } catch (error: any) {
-      res.status(500).json({ error: error.response.data || error.message })
+      res.status(500).json({ error: error?.response?.data || error?.message })
     }
   }
 )

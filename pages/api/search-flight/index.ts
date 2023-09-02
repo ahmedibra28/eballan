@@ -163,7 +163,7 @@ handler.post(
 
       return res.json(data?.flat())
     } catch (error: any) {
-      res.status(500).json({ error: error.response.data || error.message })
+      res.status(500).json({ error: error?.response?.data || error?.message })
     }
   }
 )

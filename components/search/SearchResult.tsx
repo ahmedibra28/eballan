@@ -49,9 +49,9 @@ const SearchResult = () => {
         errorMessage += ' From Date'
       }
 
-      if (!data.toDate) {
-        errorMessage += ' To Date'
-      }
+      // if (!data.toDate) {
+      //   errorMessage += ' To Date'
+      // }
 
       if (!data.trip) {
         errorMessage += ' Trip'
