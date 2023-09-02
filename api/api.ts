@@ -3,7 +3,7 @@ import axios from 'axios'
 export let baseUrl = 'http://localhost:3000/api'
 
 if (process.env.NODE_ENV === 'production') {
-  baseUrl = 'http://139.59.70.0/api'
+  baseUrl = 'http://127.0.0.1:3000/api'
 }
 
 export const userInfo = () => {
