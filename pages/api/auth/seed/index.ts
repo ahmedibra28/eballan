@@ -28,6 +28,8 @@ handler.get(
       if (!secret || secret !== 'ts')
         return res.status(401).json({ error: 'Invalid secret' })
 
+      return res.status(401).json({ error: 'Contact admin for help' })
+
       // Check duplicate permissions
       permissions.map((p) => {
         if (p.method && p.route) {

@@ -63,7 +63,7 @@ export interface IReservation {
 
 const reservationSchema = new Schema<IReservation>(
   {
-    user: { type: Schema.Types.ObjectId, ref: User, required: true },
+    user: { type: Schema.Types.ObjectId, ref: User },
     passengers: {
       adult: [
         {
@@ -71,11 +71,11 @@ const reservationSchema = new Schema<IReservation>(
           firstName: { type: String, required: true },
           secondName: { type: String, required: true },
           lastName: { type: String, required: true },
-          nationality: { type: String, required: true },
+          nationality: String,
           sex: { type: String, required: true },
           dob: { type: String, required: true },
-          passportNumber: { type: String, required: true },
-          passportExpiryDate: { type: String, required: true },
+          passportNumber: String,
+          passportExpiryDate: String,
         },
       ],
       child: [
@@ -84,11 +84,11 @@ const reservationSchema = new Schema<IReservation>(
           firstName: { type: String, required: true },
           secondName: { type: String, required: true },
           lastName: { type: String, required: true },
-          nationality: { type: String, required: true },
+          nationality: String,
           sex: { type: String, required: true },
           dob: { type: String, required: true },
-          passportNumber: { type: String, required: true },
-          passportExpiryDate: { type: String, required: true },
+          passportNumber: String,
+          passportExpiryDate: String,
         },
       ],
       infant: [
@@ -97,11 +97,11 @@ const reservationSchema = new Schema<IReservation>(
           firstName: { type: String, required: true },
           secondName: { type: String, required: true },
           lastName: { type: String, required: true },
-          nationality: { type: String, required: true },
+          nationality: String,
           sex: { type: String, required: true },
           dob: { type: String, required: true },
-          passportNumber: { type: String, required: true },
-          passportExpiryDate: { type: String, required: true },
+          passportNumber: String,
+          passportExpiryDate: String,
         },
       ],
     },

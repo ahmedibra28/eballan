@@ -94,7 +94,7 @@ handler.post(
                 lastName: a.lastName?.toUpperCase(),
                 passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
-                // countryId: a.nationality, // update the text to id
+                nationality: a.nationality, // update the text to id
                 countryId: 196,
                 passengerTypeId: body.flight.prices[0].passengerTypeId, // update to adult id
                 passengerTitleId: a.passengerTitle === 'MRS' ? 2 : 1, // update the text to id
@@ -127,7 +127,7 @@ handler.post(
                 lastName: a.lastName?.toUpperCase(),
                 passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
-                // countryId: a.nationality, // update the text to id
+                nationality: a.nationality, // update the text to id
                 countryId: 196,
                 passengerTypeId: body.flight.prices[1].passengerTypeId, // update to child id
                 passengerTitleId: 3, // update the text to id
@@ -160,7 +160,7 @@ handler.post(
                 lastName: a.lastName?.toUpperCase(),
                 passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
-                // countryId: a.nationality, // update the text to id
+                nationality: a.nationality, // update the text to id
                 countryId: 196,
                 passengerTypeId: body.flight.prices[2].passengerTypeId, // update to infant id
                 passengerTitleId: 4, // update the text to id
@@ -274,25 +274,25 @@ handler.post(
         payment: body?.payment,
       }
 
-      await Reservation.create({
+      const dbData = await Reservation.create({
         ...createObject,
         status: 'booked',
         user: req.user?._id,
       })
 
-      const adult = data?.passengers?.adult?.map((item: any) => ({
+      const adult = dbData?.passengers?.adult?.map((item: any) => ({
         passengerTitle: item?.passengerTitle,
         name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
         sex: item?.sex,
         passengerType: 'Adult',
       })) as any
-      const child = data?.passengers?.child?.map((item: any) => ({
+      const child = dbData?.passengers?.child?.map((item: any) => ({
         passengerTitle: item?.passengerTitle,
         name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
         sex: item?.sex,
         passengerType: 'Child',
       })) as any
-      const infant = data?.passengers?.infant?.map((item: any) => ({
+      const infant = dbData?.passengers?.infant?.map((item: any) => ({
         passengerTitle: item?.passengerTitle,
         name: `${item?.firstName} ${item?.secondName} ${item?.lastName}`,
         sex: item?.sex,
@@ -300,31 +300,31 @@ handler.post(
       })) as any
 
       const msg = eReservation({
-        reservationNo: data?.flight?.reservationId,
+        reservationNo: dbData?.flight?.reservationId,
         passengers: [...adult, ...child, ...infant],
-        airline: data?.flight?.airline,
+        airline: dbData?.flight?.airline,
 
-        departureCity: data?.flight?.fromCityName,
-        departureCityCode: data?.flight?.fromCityCode,
-        departureDate: data?.flight?.departureDate,
-        departureTime: data?.flight?.departureDate,
-        departureAirport: data?.flight?.fromAirportName,
+        departureCity: dbData?.flight?.fromCityName,
+        departureCityCode: dbData?.flight?.fromCityCode,
+        departureDate: dbData?.flight?.departureDate,
+        departureTime: dbData?.flight?.departureDate,
+        departureAirport: dbData?.flight?.fromAirportName,
 
-        arrivalCity: data?.flight?.toCityName,
-        arrivalCityCode: data?.flight?.fromCityCode,
-        arrivalDate: data?.flight?.arrivalDate,
-        arrivalTime: data?.flight?.arrivalDate,
-        arrivalAirport: data?.flight?.toAirportName,
+        arrivalCity: dbData?.flight?.toCityName,
+        arrivalCityCode: dbData?.flight?.fromCityCode,
+        arrivalDate: dbData?.flight?.arrivalDate,
+        arrivalTime: dbData?.flight?.arrivalDate,
+        arrivalAirport: dbData?.flight?.toAirportName,
 
-        paymentMobile: data?.payment?.phone,
-        paymentMethod: data?.payment?.paymentMethod,
-        createdAt: data?.createdAt as any,
+        paymentMobile: dbData?.payment?.phone,
+        paymentMethod: dbData?.payment?.paymentMethod,
+        createdAt: dbData?.createdAt as any,
       })
 
       const pdf = await generatePDF(msg)
       const result = sendEmail({
         to: body.contact.email,
-        subject: `Reservation Confirmation - ${data?.reservationId}`,
+        subject: `Reservation Confirmation - ${dbData?.reservationId}`,
         text: msg,
         webName: `eBallan - ${airline?.toUpperCase()}`,
         pdf,
@@ -332,12 +332,14 @@ handler.post(
 
       if (await result)
         return res.status(200).json({
-          message: `Thank you for booking with us. Your booking has been confirmed. Your PNR is ${data?.pnrNumber} and your reservation ID is ${data?.reservationId}.`,
+          message: `Thank you for booking with us. Your booking has been confirmed. Your PNR is ${dbData?.pnrNumber} and your reservation ID is ${dbData?.reservationId}.`,
         })
 
-      return res.json(data)
+      return res.json(dbData)
     } catch (error: any) {
-      res.status(500).json({ error: error.response.data || error.message })
+      res.status(500).json({
+        error: error?.response?.data || error?.message,
+      })
     }
   }
 )

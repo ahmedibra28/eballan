@@ -69,15 +69,6 @@ const Payment = () => {
         paymentMethod,
       },
     })
-    console.log({
-      passengers,
-      flight,
-      contact,
-      payment: {
-        phone,
-        paymentMethod,
-      },
-    })
   }
 
   useEffect(() => {
