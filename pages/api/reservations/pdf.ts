@@ -5,6 +5,8 @@ import db from '../../../config/db'
 import { eReservation } from '../../../utils/eReservation'
 import { sendEmail } from '../../../utils/nodemailer'
 import generatePDF from '../../../utils/generatePDF'
+import { Capitalize } from '../../../utils/Capitalize'
+import moment from 'moment'
 
 const handler = nc()
 handler.use(isAuth)
@@ -57,8 +59,10 @@ handler.post(
         arrivalAirport: reservation?.flight?.toAirportName,
 
         paymentMobile: reservation?.payment?.phone,
-        paymentMethod: reservation?.payment?.paymentMethod,
-        createdAt: reservation?.createdAt as any,
+        paymentMethod: Capitalize(reservation?.payment?.paymentMethod),
+        createdAt: moment(reservation?.createdAt).format(
+          'YYYY-MM-DD HH:mm:ss'
+        ) as any,
       })
 
       const pdf = await generatePDF(msg)

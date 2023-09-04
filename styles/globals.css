@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
 @import url('https://db.onlinewebfonts.com/c/63cf8985576a4aaa66f7c13c94dba716?family=Kollektif');
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 
 body {
   font-family: 'Kollektif', sans-serif !important;
@@ -7,6 +8,9 @@ body {
 }
 .customF {
   font-family: 'Monoton', cursive;
+}
+.title {
+  font-family: 'Indie Flower', cursive;
 }
 
 .headerBG {

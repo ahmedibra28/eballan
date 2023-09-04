@@ -16,7 +16,6 @@ const Destinations = () => {
   return (
     <div className="container my-5">
       <h2 className="fw-bold text-primary">Trending Destinations</h2>
-      <p>These alluring destinations from Mogadishu are picked just for you.</p>
 
       <div className="row gy-3">
         {photos?.map((photo, i: number) => (

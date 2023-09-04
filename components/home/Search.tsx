@@ -2,11 +2,11 @@ import React from 'react'
 import {
   FaBaby,
   FaCalendarAlt,
-  FaChevronDown,
   FaChild,
   FaExchangeAlt,
-  FaMapMarkerAlt,
   FaMinusCircle,
+  FaPlaneArrival,
+  FaPlaneDeparture,
   FaPlusCircle,
   FaSearch,
   FaUser,
@@ -69,11 +69,13 @@ const Search = ({
   //   )
   // }
 
+  const totalPassengers = (noAdult || 0) + (noChild || 0) + (noInfant || 0)
+
   return (
     <>
       {showTitle && (
         <div className="container">
-          <h6 className="fs-1 fw-bold text-white text-center">
+          <h6 className="display-1 fw-light text-white text-center title">
             Nimaan Dhulmarin Dhaayo Maleh
           </h6>
         </div>
@@ -121,17 +123,16 @@ const Search = ({
               </option>
             </select>
 
-            {/* Passenger */}
-            <button
+            {/* <button
               type="button"
               className="btn btn-primary shadow-nonex passenger-model border-0 bg-transparent"
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
-            >
-              <FaUsers className="mb-1" /> {/* @ts-ignore */}
-              <span className="mx-3">{noAdult + noChild + noInfant}</span>
-              <FaChevronDown className="mb-1" />
-            </button>
+            > */}
+            {/* <FaUsers className="mb-1" /> @ts-ignore */}
+            {/* <span className="mx-3">{noAdult + noChild + noInfant}</span> */}
+            {/* <FaChevronDown className="mb-1" /> */}
+            {/* </button>  */}
 
             <div
               className="modal fade"
@@ -297,7 +298,7 @@ const Search = ({
             <div className="col-lg-3 col-6 rounded-5 bg-white">
               <div className="input-group">
                 <span className="input-group-text bg-white rounded-5 border-0 shadow-none">
-                  <FaMapMarkerAlt className="text-primary" />
+                  <FaPlaneDeparture className="text-primary" />
                 </span>
                 <select
                   className="form-control py-3 border-0 shadow-none"
@@ -306,7 +307,7 @@ const Search = ({
                   onChange={(e) => setOriginCity(e.target.value)}
                   value={originCity}
                 >
-                  <option value="">Select to origin city</option>
+                  <option value="">From</option>
                   {cities
                     // ?.filter((item) => destinationCity !== item.id?.toString())
                     ?.map((item) => (
@@ -331,7 +332,7 @@ const Search = ({
             <div className="col-lg-3 col-6 rounded-5 bg-white">
               <div className="input-group">
                 <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
-                  <FaMapMarkerAlt className="text-primary" />
+                  <FaPlaneArrival className="text-primary" />
                 </span>
                 <select
                   className="form-control py-3 border-0 shadow-none bg-transparent"
@@ -340,7 +341,7 @@ const Search = ({
                   onChange={(e) => setDestinationCity(e.target.value)}
                   value={destinationCity}
                 >
-                  <option value="">Select to destination city</option>
+                  <option value="">To</option>
                   {cities
                     // ?.filter((item) => originCity !== item.id?.toString())
                     ?.map((item) => (
@@ -354,7 +355,7 @@ const Search = ({
 
             <div
               className={`${
-                trip === 'Return' ? 'col-lg-2' : 'col-lg-3'
+                trip === 'Return' ? 'col-lg-2' : 'col-lg-2'
               } col-6 rounded-5 bg-white`}
             >
               <div className="d-flex">
@@ -367,12 +368,12 @@ const Search = ({
                   minDate={new Date()}
                   showDisabledMonthNavigation
                   className="form-control py-3 border-0 shadow-none bg-transparent"
-                  placeholderText="Select date"
+                  placeholderText="Date"
                 />
               </div>
             </div>
 
-            {trip === 'Return' && (
+            {/* {trip === 'Return' && (
               <div className="col-lg-2 col-6 rounded-5 bg-white">
                 <div className="d-flex">
                   <span className="input-group-text bg-white rounded-5  border-0 shadow-none">
@@ -388,13 +389,37 @@ const Search = ({
                   />
                 </div>
               </div>
-            )}
+            )} */}
 
-            <div
-              className={`${
-                trip === 'Return' ? 'col-lg-2 col-12' : 'col-lg-2 col-6'
-              } text-end rounded-5 bg-white`}
-            >
+            <div className="col-lg-2 col-6 rounded-5 bg-white">
+              <div className="d-flex">
+                <button
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop"
+                  type="button"
+                  disabled={isLoading}
+                  className="btn btn-white py-3 w-100 bg-transparent border-0 text-primary text-start"
+                >
+                  {/* Passengers */}
+                  <FaUsers className="mb-1" />
+                  {/* @ts-ignore */}
+                  {/* <span className="mx-3">{noAdult + noChild + noInfant}</span> */}
+
+                  {totalPassengers > 0 ? (
+                    <span className="ms-3 text-dark text-muted">
+                      {totalPassengers}
+                    </span>
+                  ) : (
+                    <span className="ms-3 text-dark text-muted">
+                      {' '}
+                      Passengers
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div className="col-lg-2 col-12 text-end rounded-5 bg-white">
               <button
                 type="button"
                 disabled={isLoading}

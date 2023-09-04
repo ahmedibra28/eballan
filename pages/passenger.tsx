@@ -21,6 +21,7 @@ import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
+import { Capitalize } from '../utils/Capitalize'
 
 const Passenger = () => {
   const router = useRouter()
@@ -195,7 +196,15 @@ const Passenger = () => {
           <div className="input-group w-100 form-control form-control-sm rounded-0">
             <div className="w-100 border-0">
               <ReactSearchAutocomplete
-                items={getCountries?.data as any[]}
+                items={
+                  getCountries?.data?.map(
+                    (item: any) =>
+                      item?.name !== 'SOMALILAND' && {
+                        ...item,
+                        name: Capitalize(item?.name?.toLowerCase()),
+                      }
+                  ) as any[]
+                }
                 formatResult={formatResult}
                 showIcon={false}
                 styling={{
@@ -301,7 +310,7 @@ const Passenger = () => {
             {inputEmail({
               register,
               errors,
-              label: 'Email',
+              label: 'Email (To receive eTicket)',
               name: 'email',
               placeholder: 'Enter email',
             } as DynamicFormProps)}

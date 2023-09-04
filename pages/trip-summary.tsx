@@ -27,6 +27,7 @@ import { useForm } from 'react-hook-form'
 import apiHook from '../api'
 import { FormView } from '../components'
 import { userInfo } from '../api/api'
+import { Capitalize } from '../utils/Capitalize'
 
 const Passenger = () => {
   const router = useRouter()
@@ -55,6 +56,12 @@ const Passenger = () => {
     key: ['passenger-titles'],
     method: 'GET',
     url: `passenger/titles?airline=maandeeqair`,
+  })?.get
+
+  const getAirlines = apiHook({
+    key: ['airlines'],
+    method: 'GET',
+    url: `airlines?page=1&q=&limit=${250}`,
   })?.get
 
   function getHoursBetween(startTime: string, endTime: string): string {
@@ -417,14 +424,18 @@ const Passenger = () => {
                   className="col-auto"
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  <Image
-                    src="/favicon.png"
+                  <img
+                    src={
+                      getAirlines?.data?.data?.find(
+                        (item: any) => item?.api === flight?.airline
+                      )?.logo || 'https://via.placeholder.com/150'
+                    }
                     width={20}
                     height={20}
                     alt="airline"
                     style={{ objectFit: 'cover' }}
                   />
-                  <span> {flight?.airline}</span>
+                  <span> {Capitalize(flight?.airline || '')}</span>
                 </div>
               </div>
               <div className="row">

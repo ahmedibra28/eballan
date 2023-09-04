@@ -4,6 +4,8 @@ import db from '../../../config/db'
 import { eReservation } from '../../../utils/eReservation'
 import { sendEmail } from '../../../utils/nodemailer'
 import generatePDF from '../../../utils/generatePDF'
+import moment from 'moment'
+import { Capitalize } from '../../../utils/Capitalize'
 
 const handler = nc()
 
@@ -45,14 +47,16 @@ handler.post(
           departureAirport: data?.flight?.fromAirportName,
 
           arrivalCity: data?.flight?.toCityName,
-          arrivalCityCode: data?.flight?.fromCityCode,
+          arrivalCityCode: data?.flight?.toCityCode,
           arrivalDate: data?.flight?.arrivalDate,
           arrivalTime: data?.flight?.arrivalDate,
           arrivalAirport: data?.flight?.toAirportName,
 
           paymentMobile: data?.payment?.phone,
-          paymentMethod: data?.payment?.paymentMethod,
-          createdAt: data?.createdAt as any,
+          paymentMethod: Capitalize(data?.payment?.paymentMethod),
+          createdAt: moment(data?.createdAt).format(
+            'YYYY-MM-DD HH:mm:ss'
+          ) as any,
         })
 
         const pdf = await generatePDF(msg)

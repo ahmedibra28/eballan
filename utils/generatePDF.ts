@@ -3,8 +3,10 @@ import puppeteer from 'puppeteer'
 const generatePDF = async (html: any) => {
   const browser = await puppeteer.launch({
     headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    executablePath: '/snap/bin/chromium',
+    ...(process.env.NODE_ENV === 'production' && {
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      executablePath: '/snap/bin/chromium',
+    }),
   })
   const page = await browser.newPage()
   await page.setContent(html, { waitUntil: 'networkidle0' })

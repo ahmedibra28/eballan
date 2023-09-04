@@ -173,7 +173,7 @@ const Payment = () => {
                   disabled={Boolean(!paymentMethod)}
                   type="number"
                   className="form-control rounded-0"
-                  placeholder={`Enter your ${paymentMethod} phone number without +252`}
+                  placeholder={`Enter your payment number`}
                 />
               </div>
 

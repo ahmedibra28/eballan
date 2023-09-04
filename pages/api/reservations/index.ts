@@ -12,6 +12,7 @@ import Airline from '../../../models/Airline'
 import { login } from '../../../utils/help'
 import { useEVCPayment } from '../../../hook/useEVCPayment'
 import { currency } from '../../../utils/currency'
+import { Capitalize } from '../../../utils/Capitalize'
 
 const handler = nc()
 
@@ -57,8 +58,8 @@ handler.post(
         merchantUId: MERCHANT_U_ID,
         apiUserId: API_USER_ID,
         apiKey: API_KEY,
-        customerMobileNumber: `252${body.payment.phone}`,
-        description: `${body.payment.phone} has paid ${currency(
+        customerMobileNumber: `252${phone}`,
+        description: `${phone} has paid ${currency(
           totalPrice
         )} for flight reservation`,
         amount: totalPrice,
@@ -317,8 +318,10 @@ handler.post(
         arrivalAirport: dbData?.flight?.toAirportName,
 
         paymentMobile: dbData?.payment?.phone,
-        paymentMethod: dbData?.payment?.paymentMethod,
-        createdAt: dbData?.createdAt as any,
+        paymentMethod: Capitalize(dbData?.payment?.paymentMethod),
+        createdAt: moment(dbData?.createdAt).format(
+          'YYYY-MM-DD HH:mm:ss'
+        ) as any,
       })
 
       const pdf = await generatePDF(msg)

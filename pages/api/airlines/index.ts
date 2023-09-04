@@ -6,7 +6,7 @@ import { isAuth } from '../../../utils/auth'
 const schemaName = Airline
 
 const handler = nc()
-handler.use(isAuth)
+
 handler.get(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     await db()
@@ -45,6 +45,7 @@ handler.get(
   }
 )
 
+handler.use(isAuth)
 handler.post(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     await db()
