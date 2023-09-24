@@ -143,7 +143,8 @@ const Profile = () => {
       <form onSubmit={handleSubmit(submitHandler)}>
         {getApi?.data?.image && (
           <div className="text-center rounded-pill">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={getApi?.data?.image}
               alt="avatar"
               width="100"
@@ -179,7 +180,7 @@ const Profile = () => {
               errors,
               label: 'Mobile',
               name: 'mobile',
-              placeholder: '+252 (61) 530-1507',
+              placeholder: 'Mobile',
             } as DynamicFormProps)}
           </div>
 

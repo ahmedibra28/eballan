@@ -116,9 +116,9 @@ const Reservations = () => {
               <sup className="fs-6"> [{getApi?.data?.total}] </sup>
             </h3>
 
-            <div className="col-auto">
+            <div className="col-lg-3 col-md-6 col-12 mx-auto">
               <Search
-                placeholder="Search by pnr or reservation no or number"
+                placeholder="pnr or reservation no or number"
                 setQ={setQ}
                 q={q}
                 searchHandler={searchHandler}

@@ -1,31 +1,118 @@
 import axios from 'axios'
 import { sha256 } from 'js-sha256'
 
-const requestParam = {
-  apiKey: '393ydT37wG3JUkRl2VNEhTT9ypyq4cFyMEf5OcHkB',
-  edahabNumber: '625158821',
-  amount: 1,
-  agentCode: '7115',
-  returnUrl: 'localhost:3000',
+type CreateInvoice = {
+  InvoiceId: number
+  StatusCode: number
+  RequestId: number
+  StatusDescription: string
+  ValidationErrors: null
 }
 
-// Encode it into a JSON string.
-const json = JSON.stringify(requestParam)
+type VerifyInvoice = {
+  InvoiceStatus: 'Pending' | 'Paid'
+  TransactionId: null
+  InvoiceId: number
+  StatusCode: 0 | 1 | 2 | 3 | 4 | 5 | 6
+  RequestId: number
+  StatusDescription: string
+  ValidationErrors: null
+}
 
-const hashed = sha256(json + 'zgvJ3Inz7U51jsoPKCPkP0a1w4CZiE4LpUUn5d')
+type CreditAccount = {
+  apiKey: string
+  phoneNumber: string
+  transactionAmount: number
+  currency?: string
+  transactionId: string
+}
 
-const url = 'https://edahab.net/sandbox/api/IssueInvoice?hash=' + hashed
+const client = axios.create({
+  baseURL: 'https://edahab.net/api/api/',
+})
+const { EDAHAB_API_KEY, EDAHAB_HASHED } = process.env
+const apiKey = EDAHAB_API_KEY
+const hashed = EDAHAB_HASHED
 
-export const useEDahabPayment = async () => {
+export const useCreateInvoice = async (
+  edahabNumber: string,
+  amount: number,
+  returnUrl = 'https://eballan.com'
+): Promise<CreateInvoice> => {
   try {
-    const { data } = await axios.post(url, json, {
+    const request = {
+      apiKey,
+      edahabNumber,
+      amount,
+      agentCode: '094972',
+      returnUrl,
+    }
+
+    const json = JSON.stringify(request)
+    const hash = sha256(json + hashed)
+    const url = `IssueInvoice?hash=${hash}`
+
+    const { data } = await client.post(url, json, {
       headers: {
         'Content-Type': 'application/json',
       },
     })
-
-    console.log(JSON.stringify(data, null, 2))
+    return data
   } catch (error: any) {
-    console.log(JSON.stringify(error?.message, null, 2))
+    return error?.response?.data
+  }
+}
+
+export const useVerifyInvoice = async (
+  invoiceId: number
+): Promise<VerifyInvoice> => {
+  try {
+    const request = {
+      apiKey,
+      invoiceId,
+    }
+
+    const json = JSON.stringify(request)
+    const hash = sha256(json + hashed)
+    const url = `CheckInvoiceStatus?hash=${hash}`
+
+    const { data } = await client.post(url, json, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return data
+  } catch (error: any) {
+    return error?.response?.data
+  }
+}
+
+// I have not tested this function yet!
+export const useCreditAccount = async (
+  phoneNumber: string,
+  transactionAmount: string,
+  currency?: string
+): Promise<CreditAccount> => {
+  try {
+    const request = {
+      apiKey,
+      phoneNumber,
+      transactionAmount,
+      currency,
+      transactionId: Math.floor(100000 + Math.random() * 900000),
+    }
+
+    const json = JSON.stringify(request)
+    const hash = sha256(json + hashed)
+    const url = `agentPayment?hash=${hash}`
+
+    const { data } = await client.post(url, json, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return data
+  } catch (error: any) {
+    return error?.response?.data
   }
 }

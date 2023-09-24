@@ -23,8 +23,8 @@ const roles = [
 
 const users = {
   _id: '5063114bd386d8fadbd6b00a',
-  name: 'Ahmed Ibrahim',
-  email: 'info@ahmedibra.com',
+  name: 'eBallan',
+  email: 'info@eballan.com',
   password: '123456',
   confirmed: true,
   blocked: false,
@@ -34,7 +34,7 @@ const profile = {
   _id: '5063114bd386d8fadbd6b00b',
   mobile: 252615301507,
   address: 'Mogadishu',
-  image: 'https://github.com/ahmaat19.png',
+  image: 'https://github.com/ahmedibra28.png',
   bio: 'Full Stack Developer',
 }
 

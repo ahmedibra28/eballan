@@ -7,6 +7,8 @@ import { useRouter } from 'next/router'
 import { currency } from '../utils/currency'
 import apiHook from '../api'
 import { Message } from '../components'
+import { useCreateInvoice as edahabPayment } from '../hook/useEDahabPayment'
+import { v4 as uuidv4 } from 'uuid'
 
 const Payment = () => {
   const steps = [
@@ -43,12 +45,13 @@ const Payment = () => {
   const router = useRouter()
   const [phone, setPhone] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('hormuud')
+  const [paymentToken, setPaymentToken] = useState('')
 
   const { passengers, flight, contact } = useFlightStore((state) => state)
 
   useEffect(() => {
     if (flight?.prices?.length === 0 || !contact.phone) {
-      router.push('/passenger')
+      // router.push('/passenger')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -60,6 +63,27 @@ const Payment = () => {
   })?.post
 
   const handleBooking = () => {
+    if (paymentMethod === 'somtel') {
+      // generateToken and setPaymentToken
+      setPaymentToken(uuidv4())
+
+      return edahabPayment(
+        phone,
+        0.01,
+        `https://eballan.com/payment?token=${paymentToken}`
+      )
+        .then((res) => {
+          console.log(res)
+          return res
+        })
+        .catch((err) => {
+          console.log(err)
+          return err
+        })
+    }
+
+    console.log('passed')
+
     confirmBooking?.mutateAsync({
       passengers,
       flight,
@@ -104,6 +128,7 @@ const Payment = () => {
                 {['hormuud', 'somtel', 'somnet', 'mastercard'].map((item) => (
                   <div key={item} className="col-auto">
                     <button
+                      disabled={'mastercard' === item}
                       type="button"
                       onClick={() => setPaymentMethod(item)}
                       className={`card ${

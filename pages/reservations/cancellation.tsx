@@ -120,7 +120,7 @@ const Cancellation = () => {
         <h6 className="fw-bold text-uppercase text-center">Step 3 / 3</h6>
         <hr />
         <h6 className="fw-bold">Refund Policy</h6>
-        <p>1.0 Change booking fee will charge $10 </p>
+        <p>1.1 Change booking fee will charge $10 </p>
         <p>1.2 Cancellation fee $10 </p>
         <p>1.3 No show $30 </p>
 

@@ -248,7 +248,7 @@ const PrivacyPolicy = () => {
               Effective Date: <strong>08 Aug, 2023</strong>
             </p>
 
-            <p>1.0 Change booking fee will charge $10 </p>
+            <p>1.1 Change booking fee will charge $10 </p>
             <p>1.2 Cancellation fee $10 </p>
             <p>1.3 No show $30 </p>
 
@@ -265,8 +265,8 @@ const PrivacyPolicy = () => {
             <p>
               This Refund Policy outlines the terms and conditions governing
               refunds for online flight bookings made through our platform
-              [Insert Company Name]. By using our services and making flight
-              bookings, you agree to comply with this policy.
+              eBallan. By using our services and making flight bookings, you
+              agree to comply with this policy.
             </p>
 
             <h4> Eligibility for Refunds</h4>

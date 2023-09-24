@@ -13,6 +13,7 @@ export interface IUser {
   blocked: boolean
   createdAt?: Date
   type?: string
+  eDahabPaymentInvoiceId?: string
 }
 
 const userSchema = new Schema<IUser>(
@@ -24,6 +25,7 @@ const userSchema = new Schema<IUser>(
     resetPasswordExpire: Date,
     confirmed: { type: Boolean, default: false },
     blocked: { type: Boolean, default: false },
+    eDahabPaymentInvoiceId: String,
   },
   { timestamps: true }
 )
