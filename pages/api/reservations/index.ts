@@ -13,6 +13,10 @@ import { login } from '../../../utils/help'
 import { useEVCPayment } from '../../../hook/useEVCPayment'
 import { currency } from '../../../utils/currency'
 import { Capitalize } from '../../../utils/Capitalize'
+import {
+  useCreateInvoice,
+  useVerifyInvoice,
+} from '../../../hook/useEDahabPayment'
 
 const handler = nc()
 
@@ -24,6 +28,7 @@ handler.post(
 
       const body = req.body
       let { phone } = body.payment
+      const { paymentMethod, status, link } = body.payment
 
       if (!phone) {
         return res.status(400).json({ error: 'Invalid phone' })
@@ -40,7 +45,6 @@ handler.post(
         return res.status(400).json({ error: `Phone number must be 9 digits` })
       }
 
-      // handle EVC payment
       const totalPrice =
         body?.flight?.prices?.reduce(
           (acc: any, item: any) => acc + item?.totalPrice,
@@ -50,26 +54,52 @@ handler.post(
       if (totalPrice < 1)
         return res.status(400).json({ error: 'Invalid amount' })
 
-      const { MERCHANT_U_ID, API_USER_ID, API_KEY, MERCHANT_ACCOUNT_NO } =
-        process.env
+      // Edahab Implementation
+      if (paymentMethod === 'somtel' && status === 'invoice') {
+        const createInvoice = await useCreateInvoice(phone, Number(totalPrice))
+        if (createInvoice?.StatusCode !== 0)
+          return res
+            .status(400)
+            .json({ error: createInvoice?.StatusDescription })
 
-      // if (phone !== '770022200') {
-      const paymentInfo = await useEVCPayment({
-        merchantUId: MERCHANT_U_ID,
-        apiUserId: API_USER_ID,
-        apiKey: API_KEY,
-        customerMobileNumber: `252${phone}`,
-        description: `${phone} has paid ${currency(
-          totalPrice
-        )} for flight reservation`,
-        amount: totalPrice,
-        withdrawTo: 'MERCHANT',
-        withdrawNumber: MERCHANT_ACCOUNT_NO,
-      })
+        const link = `https://edahab.net/api/payment?invoiceId=${createInvoice.InvoiceId}`
+        return res.status(200).json({ message: `success`, link })
+      }
 
-      if (paymentInfo.responseCode !== '2001')
-        return res.status(401).json({ error: `Payment failed` })
-      // }
+      if (paymentMethod === 'somtel' && status === 'verify' && link) {
+        const invoiceId = link.split('invoiceId=')[1]
+        const verifyInvoice = await useVerifyInvoice(invoiceId)
+
+        if (verifyInvoice?.InvoiceStatus !== 'Paid')
+          return res.status(401).json({
+            error: `Please pay ${verifyInvoice?.InvoiceStatus?.toLowerCase()} invoice first`,
+          })
+
+        console.log(verifyInvoice)
+      }
+
+      // handle EVC payment
+      if (paymentMethod === 'hormuud' || paymentMethod === 'somnet') {
+        const { MERCHANT_U_ID, API_USER_ID, API_KEY, MERCHANT_ACCOUNT_NO } =
+          process.env
+
+        // if (phone !== '770022200') {
+        const paymentInfo = await useEVCPayment({
+          merchantUId: MERCHANT_U_ID,
+          apiUserId: API_USER_ID,
+          apiKey: API_KEY,
+          customerMobileNumber: `252${phone}`,
+          description: `${phone} has paid ${currency(
+            totalPrice
+          )} for flight reservation`,
+          amount: totalPrice,
+          withdrawTo: 'MERCHANT',
+          withdrawNumber: MERCHANT_ACCOUNT_NO,
+        })
+
+        if (paymentInfo.responseCode !== '2001')
+          return res.status(401).json({ error: `Payment failed` })
+      }
 
       const bodyData = {
         id: null,

@@ -7,8 +7,6 @@ import { useRouter } from 'next/router'
 import { currency } from '../utils/currency'
 import apiHook from '../api'
 import { Message } from '../components'
-import { useCreateInvoice as edahabPayment } from '../hook/useEDahabPayment'
-import { v4 as uuidv4 } from 'uuid'
 
 const Payment = () => {
   const steps = [
@@ -45,13 +43,13 @@ const Payment = () => {
   const router = useRouter()
   const [phone, setPhone] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('hormuud')
-  const [paymentToken, setPaymentToken] = useState('')
+  const [paymentLink, setPaymentLink] = useState('')
 
   const { passengers, flight, contact } = useFlightStore((state) => state)
 
   useEffect(() => {
     if (flight?.prices?.length === 0 || !contact.phone) {
-      // router.push('/passenger')
+      router.push('/passenger')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -63,48 +61,62 @@ const Payment = () => {
   })?.post
 
   const handleBooking = () => {
-    if (paymentMethod === 'somtel') {
-      // generateToken and setPaymentToken
-      setPaymentToken(uuidv4())
-
-      return edahabPayment(
-        phone,
-        0.01,
-        `https://eballan.com/payment?token=${paymentToken}`
-      )
-        .then((res) => {
-          console.log(res)
-          return res
-        })
-        .catch((err) => {
-          console.log(err)
-          return err
-        })
+    if (paymentMethod === 'somtel' && !paymentLink) {
+      confirmBooking?.mutateAsync({
+        passengers,
+        flight,
+        contact,
+        payment: {
+          phone,
+          paymentMethod,
+          status: 'invoice',
+        },
+      })
+    }
+    if (paymentMethod === 'somtel' && paymentLink) {
+      confirmBooking?.mutateAsync({
+        passengers,
+        flight,
+        contact,
+        payment: {
+          phone,
+          paymentMethod,
+          status: 'verify',
+          link: paymentLink,
+        },
+      })
     }
 
-    console.log('passed')
-
-    confirmBooking?.mutateAsync({
-      passengers,
-      flight,
-      contact,
-      payment: {
-        phone,
-        paymentMethod,
-      },
-    })
+    if (paymentMethod !== 'somtel') {
+      confirmBooking?.mutateAsync({
+        passengers,
+        flight,
+        contact,
+        payment: {
+          phone,
+          paymentMethod,
+        },
+      })
+    }
   }
 
   useEffect(() => {
     if (confirmBooking?.isSuccess) {
-      router.push('/success')
+      if (confirmBooking?.data?.link) {
+        window.open(confirmBooking?.data?.link, '_blank')
+        setPaymentLink(confirmBooking?.data?.link)
+      } else if (!confirmBooking?.data?.link) {
+        setPaymentLink('')
+        router.push('/success')
+      }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [confirmBooking?.isSuccess])
 
   useEffect(() => {
     if (paymentMethod) {
-      setPhone('')
+      setPhone('628237779')
     }
   }, [paymentMethod])
 
@@ -214,7 +226,11 @@ const Payment = () => {
                   onClick={() => handleBooking()}
                   className="btn btn-primary rounded-pill btn-sm px-4"
                 >
-                  {confirmBooking?.isLoading ? 'Loading...' : 'Pay Now'}
+                  {confirmBooking?.isLoading
+                    ? 'Loading...'
+                    : paymentLink
+                    ? 'Verify Payment After You Pay'
+                    : 'Pay Now'}
                 </button>
               </div>
             </div>
