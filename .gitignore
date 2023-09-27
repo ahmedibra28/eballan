@@ -39,6 +39,8 @@ next-env.d.ts
 # uploads
 /public/uploads/*.png
 /public/uploads/*.jpg
+/public/uploads/*.jpeg
+/public/uploads/*.gif
 /public/uploads/*.svg
 /public/uploads/*.pdf
 /public/uploads/*.docx

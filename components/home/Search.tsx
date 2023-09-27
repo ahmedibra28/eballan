@@ -301,7 +301,7 @@ const Search = ({
                   <FaPlaneDeparture className="text-primary" />
                 </span>
                 <select
-                  className="form-control py-3 border-0 shadow-none"
+                  className="form-control py-3 border-0 shadow-none text-muted"
                   placeholder="Select to city"
                   name="originCity"
                   onChange={(e) => setOriginCity(e.target.value)}
@@ -335,7 +335,7 @@ const Search = ({
                   <FaPlaneArrival className="text-primary" />
                 </span>
                 <select
-                  className="form-control py-3 border-0 shadow-none bg-transparent"
+                  className="form-control py-3 border-0 shadow-none bg-transparent text-muted"
                   placeholder="Type to search..."
                   name="destinationCity"
                   onChange={(e) => setDestinationCity(e.target.value)}

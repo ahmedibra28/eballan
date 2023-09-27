@@ -4,6 +4,7 @@ import User from './User'
 export interface IProfile {
   _id: Schema.Types.ObjectId
   name?: string
+  sex?: string
   image?: string
   address?: string
   mobile?: number
@@ -28,6 +29,7 @@ const profileSchema = new Schema<IProfile>(
     mobile: Number,
     bio: String,
     passport: String,
+    sex: { type: String, enum: ['Male', 'Female'], default: 'Male' },
     user: {
       type: Schema.Types.ObjectId,
       ref: User,

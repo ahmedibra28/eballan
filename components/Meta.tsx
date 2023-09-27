@@ -11,7 +11,7 @@ interface Props {
 const Meta = (props: Props) => {
   const { pathname } = useRouter()
 
-  const title = 'eBallan | Cheap Flights'
+  const title = 'eBallan.com'
   const description = `eBallan Booking`
   const image = 'https://www.eballan.com/ticket-logo.jpg'
   const url = `https://www.eballan.com${pathname}`

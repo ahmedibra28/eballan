@@ -11,8 +11,8 @@ import {
   inputTel,
   inputText,
   inputTextArea,
+  staticInputSelect,
 } from '../../utils/dForms'
-import Image from 'next/image'
 import { Spinner } from '../../components'
 import apiHook from '../../api'
 import { userInfo } from '../../api/api'
@@ -60,6 +60,7 @@ const Profile = () => {
     setValue('name', !getApi?.isLoading ? getApi?.data?.name : '')
     setValue('address', !getApi?.isLoading ? getApi?.data?.address : '')
     setValue('mobile', !getApi?.isLoading ? getApi?.data?.mobile : '')
+    setValue('sex', !getApi?.isLoading ? getApi?.data?.sex : '')
     setValue('bio', !getApi?.isLoading ? getApi?.data?.bio : '')
     setValue('passport', !getApi?.isLoading ? getApi?.data?.passport : '')
 
@@ -87,6 +88,7 @@ const Profile = () => {
         address: data?.address,
         mobile: data?.mobile,
         bio: data?.bio,
+        sex: data?.sex,
         password: data?.password,
         passport: data?.passport,
         businessCategory: data?.businessCategory,
@@ -98,6 +100,7 @@ const Profile = () => {
         ...data,
         _id: getApi?.data?.user?._id,
         image: fileLink,
+        sex: data?.sex,
         passport: data?.passport,
         businessCategory: data?.businessCategory,
         businessLicense: data?.businessLicense,
@@ -154,7 +157,6 @@ const Profile = () => {
             />
           </div>
         )}
-
         <div className="row">
           <div className="col-12">
             {inputText({
@@ -163,6 +165,16 @@ const Profile = () => {
               label: 'Name',
               name: 'name',
               placeholder: 'Name',
+            } as DynamicFormProps)}
+          </div>
+          <div className="col-12">
+            {staticInputSelect({
+              register,
+              errors,
+              label: 'Sex',
+              name: 'sex',
+              placeholder: 'Sex',
+              data: [{ name: 'Male' }, { name: 'Female' }],
             } as DynamicFormProps)}
           </div>
           <div className="col-md-6 col-12">
