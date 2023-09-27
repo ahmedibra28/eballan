@@ -116,7 +116,7 @@ const Payment = () => {
 
   useEffect(() => {
     if (paymentMethod) {
-      setPhone('628237779')
+      setPhone('')
     }
   }, [paymentMethod])
 

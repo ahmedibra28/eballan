@@ -13,7 +13,7 @@ const Meta = (props: Props) => {
 
   const title = 'eBallan | Cheap Flights'
   const description = `eBallan Booking`
-  const image = 'https://www.eballan.com/logo.png'
+  const image = 'https://www.eballan.com/ticket-logo.jpg'
   const url = `https://www.eballan.com${pathname}`
   const author = 'Ahmed Ibrahim'
 
@@ -48,22 +48,22 @@ const Meta = (props: Props) => {
       <link
         rel="shortcut icon"
         type="image/vnd.microsoft.icon"
-        href="/logo.png"
+        href="/ticket-logo.jpg"
       />
-      <link rel="apple-touch-icon" type="image/png" href="/logo.png" />
+      <link rel="apple-touch-icon" type="image/png" href="/ticket-logo.jpg" />
       <link
         rel="apple-touch-icon"
         type="image/png"
         sizes="72x72"
-        href="/logo.png"
+        href="/ticket-logo.jpg"
       />
       <link
         rel="apple-touch-icon"
         type="image/png"
         sizes="114x114"
-        href="/logo.png"
+        href="/ticket-logo.jpg"
       />
-      <link rel="icon" type="image/png" href="/logo.png" />
+      <link rel="icon" type="image/png" href="/ticket-logo.jpg" />
 
       {/* <!-- Google / Search Engine Tags --> */}
       <meta
