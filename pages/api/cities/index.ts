@@ -19,6 +19,10 @@ handler.get(
         return a.name.localeCompare(b.name)
       })
 
+      newData = newData?.filter((item: any) => {
+        return item.name !== 'Baydhabo'
+      })
+
       return res.json(newData)
     } catch (error: any) {
       res.status(500).json({ error: error.message })

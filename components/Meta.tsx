@@ -44,26 +44,25 @@ const Meta = (props: Props) => {
       <meta name="author" content={props?.author ? props?.author : author} />
       <meta name="publisher" content={props?.author ? props?.author : author} />
       <meta name="robots" content="index, follow" />
-      <link rel="icon" href="/favicon.png" />
+      <link rel="icon" href="/favicon.png" type="image/png" />
       <link
         rel="shortcut icon"
         type="image/vnd.microsoft.icon"
-        href="/ticket-logo.jpg"
+        href="/favicon.png"
       />
-      <link rel="apple-touch-icon" type="image/png" href="/ticket-logo.jpg" />
+      <link rel="apple-touch-icon" type="image/png" href="/favicon.png" />
       <link
         rel="apple-touch-icon"
         type="image/png"
         sizes="72x72"
-        href="/ticket-logo.jpg"
+        href="/favicon.png"
       />
       <link
         rel="apple-touch-icon"
         type="image/png"
         sizes="114x114"
-        href="/ticket-logo.jpg"
+        href="/favicon.png"
       />
-      <link rel="icon" type="image/png" href="/ticket-logo.jpg" />
 
       {/* <!-- Google / Search Engine Tags --> */}
       <meta
