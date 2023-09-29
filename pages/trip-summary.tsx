@@ -259,7 +259,7 @@ const Passenger = () => {
         } as DynamicFormProps)}
       </div>
 
-      <div className="col-lg-6 col-md-6 col-12">
+      {/* <div className="col-lg-6 col-md-6 col-12">
         {inputText({
           register,
           errors,
@@ -279,7 +279,7 @@ const Passenger = () => {
           placeholder: 'Enter passport expiry date',
           isRequired: false,
         } as DynamicFormProps)}
-      </div>
+      </div> */}
     </Fragment>,
   ]
 
@@ -296,8 +296,8 @@ const Passenger = () => {
     setValue('nationality', item?.nationality || 'Somalia')
     setValue('sex', item?.sex)
     setValue('dob', item?.dob)
-    setValue('passportNumber', item?.passportNumber)
-    setValue('passportExpiryDate', item?.passportExpiryDate)
+    // setValue('passportNumber', item?.passportNumber)
+    // setValue('passportExpiryDate', item?.passportExpiryDate)
   }
 
   const submitHandler = (data: any) => {

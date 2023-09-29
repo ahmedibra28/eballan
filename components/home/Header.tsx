@@ -15,7 +15,7 @@ const Header = () => {
   const [toDate, setToDate] = useState<any>('')
   const [trip, setTrip] = useState('One-way')
   const [seatType, setSeatType] = useState('Economy')
-  const [noAdult, setNoAdult] = useState(0)
+  const [noAdult, setNoAdult] = useState(1)
   const [noChild, setNoChild] = useState(0)
   const [noInfant, setNoInfant] = useState(0)
   const [originCity, setOriginCity] = useState('')
