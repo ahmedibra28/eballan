@@ -6,16 +6,16 @@ const handler = nc()
 handler.get(
   async (req: NextApiRequestExtended, res: NextApiResponseExtended) => {
     try {
-      const { airline } = req.query
+      // const { airline } = req.query
       const { BASE_URL } = process.env
 
       const { data } = await axios.get(
-        `${BASE_URL}/${airline}/ReservationApi/api/common/cities`
+        `${BASE_URL}/saacid/ReservationApi/api/common/cities`
       )
 
-      let newData = data?.filter((item: any) => item.countryName === 'SOMALIA')
+      // let newData = data?.filter((item: any) => item.countryName === 'SOMALIA')
 
-      newData = newData.sort((a: any, b: any) => {
+      let newData = data.sort((a: any, b: any) => {
         return a.name.localeCompare(b.name)
       })
 
