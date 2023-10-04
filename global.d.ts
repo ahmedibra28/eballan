@@ -30,6 +30,7 @@ declare global {
       airline: string
       startDate: string
       endDate: string
+      admin?: string
     }
   }
   interface NextApiResponseExtended extends NextApiResponse {

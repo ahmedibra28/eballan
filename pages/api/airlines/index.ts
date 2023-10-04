@@ -12,6 +12,7 @@ handler.get(
     await db()
     try {
       const q = req.query && req.query.q
+      const admin = req.query && req.query.admin
 
       let query = schemaName.find(
         q ? { name: { $regex: q, $options: 'i' } } : {}
@@ -27,6 +28,7 @@ handler.get(
       const pages = Math.ceil(total / pageSize)
 
       query = query.skip(skip).limit(pageSize).sort({ createdAt: -1 }).lean()
+      query = admin ? query : query.select('-password -username')
 
       const result = await query
 

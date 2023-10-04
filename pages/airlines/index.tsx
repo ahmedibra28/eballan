@@ -31,7 +31,7 @@ const Airlines = () => {
   const getApi = apiHook({
     key: ['airlines'],
     method: 'GET',
-    url: `airlines?page=${page}&q=${q}&limit=${25}`,
+    url: `airlines?page=${page}&q=${q}&limit=${25}&admin=true`,
   })?.get
 
   const postApi = apiHook({
