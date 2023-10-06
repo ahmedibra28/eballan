@@ -106,6 +106,21 @@ const SearchResult = () => {
   }
 
   useEffect(() => {
+    if (fromDate && originCity && destinationCity) {
+      submitHandler({
+        fromDate,
+        trip,
+        noAdult,
+        noChild,
+        noInfant,
+        seatType,
+        originCity,
+        destinationCity,
+      })
+    }
+  }, [noAdult, noChild, noInfant])
+
+  useEffect(() => {
     if (originCity && destinationCity && originCity === destinationCity) {
       setError('Please select different cities')
       setDestinationCity('')

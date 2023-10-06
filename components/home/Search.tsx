@@ -301,7 +301,9 @@ const Search = ({
                   <FaPlaneDeparture className="text-primary" />
                 </span>
                 <select
-                  className="form-control py-3 border-0 shadow-none text-muted"
+                  className={`form-control py-3 border-0 shadow-none ${
+                    originCity ? '' : 'text-muted'
+                  }`}
                   placeholder="Select to city"
                   name="originCity"
                   onChange={(e) => setOriginCity(e.target.value)}
@@ -335,7 +337,9 @@ const Search = ({
                   <FaPlaneArrival className="text-primary" />
                 </span>
                 <select
-                  className="form-control py-3 border-0 shadow-none bg-transparent text-muted"
+                  className={`form-control py-3 border-0 shadow-none bg-transparent ${
+                    destinationCity ? '' : 'text-muted'
+                  }`}
                   placeholder="Type to search..."
                   name="destinationCity"
                   onChange={(e) => setDestinationCity(e.target.value)}
@@ -406,9 +410,7 @@ const Search = ({
                   {/* <span className="mx-3">{noAdult + noChild + noInfant}</span> */}
 
                   {totalPassengers > 0 ? (
-                    <span className="ms-3 text-dark text-muted">
-                      {totalPassengers}
-                    </span>
+                    <span className="ms-3 text-dark">{totalPassengers}</span>
                   ) : (
                     <span className="ms-3 text-dark text-muted">
                       {' '}

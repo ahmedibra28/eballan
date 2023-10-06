@@ -78,13 +78,9 @@ const Footer = () => {
                 Terms of Use
               </Link>
 
-              <a
-                target="_blank"
-                href="https://wa.me/252611598011?text=Help me with flight booking&source=&data=&app_absent="
-                className="text-light"
-              >
+              <Link href="/get-help" className="text-light">
                 Get Help
-              </a>
+              </Link>
             </div>
           </div>
           <hr />
