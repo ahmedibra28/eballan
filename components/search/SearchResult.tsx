@@ -203,8 +203,14 @@ const SearchResult = () => {
         searchFlight?.result?.length > 0 ? (
           searchFlight?.result?.map((item, i) => <Result key={i} item={item} />)
         ) : (
-          <div className="text-center text-danger font-monospace">
-            <h4>Sorry no results found. Please change your search</h4>
+          <div className="text-center font-monospace">
+            {searchFlightApi?.isLoading ? (
+              <h4>Loading...</h4>
+            ) : (
+              <h4 className="text-danger">
+                Sorry no results found. Please change your search
+              </h4>
+            )}
           </div>
         )}
       </div>

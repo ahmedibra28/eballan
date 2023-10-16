@@ -19,8 +19,23 @@ handler.get(
         return a.name.localeCompare(b.name)
       })
 
+      const disabledCities = [
+        'Aweil',
+        'Dessie',
+        'Haramoge',
+        'Khunda',
+        'Kuacjok',
+        'Malakal',
+        'Rabkona',
+        'Renk',
+        'Rumbek',
+        'Wau',
+        'Yida',
+        'Baydhabo',
+      ]
+
       newData = newData?.filter((item: any) => {
-        return item.name !== 'Baydhabo'
+        return !disabledCities.includes(item.name.trim())
       })
 
       return res.json(newData)

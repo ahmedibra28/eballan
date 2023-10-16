@@ -95,7 +95,9 @@ const Search = ({
               }}
             >
               <option value="One-way">One-way</option>
-              <option value="Return">Return</option>
+              <option disabled value="Return">
+                Return
+              </option>
               <option disabled value="Multi-city">
                 Multi-city
               </option>
