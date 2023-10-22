@@ -22,9 +22,9 @@ handler.get(
         user: req.user._id,
       })
       const occupancyReservations = await Reservation.countDocuments({
-        status: { $in: ['completed', 'booked'] },
+        'status': { $in: ['completed', 'booked'] },
         'flight.departureDate': { $gte: new Date().toISOString() },
-        user: req.user._id,
+        'user': req.user._id,
       })
       const seatedSold = await Reservation.aggregate([
         {
@@ -222,9 +222,9 @@ handler.get(
       const topDestinations = await Reservation.aggregate([
         {
           $match: {
-            status: { $in: ['booked', 'completed'] },
+            'status': { $in: ['booked', 'completed'] },
             'flight.toCityName': { $exists: true, $ne: null },
-            user: req.user._id,
+            'user': req.user._id,
           },
         },
         {
@@ -250,14 +250,14 @@ handler.get(
         seatedSold: seatedSold?.[0]?.seatsSold || 0,
         totalSales: currency(totalSales?.[0]?.totalSales || 0),
         totalSalesCommission: currency(
-          totalSalesCommission?.[0]?.totalSales || 0
+          totalSalesCommission?.[0]?.totalSales || 0,
         ),
         topDestinations,
       })
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
-  }
+  },
 )
 
 export default handler

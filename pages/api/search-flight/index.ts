@@ -3,6 +3,7 @@ import nc from 'next-connect'
 import { login } from '../../../utils/help'
 import db from '../../../config/db'
 import Airline from '../../../models/Airline'
+import { LoginAirline } from '../../../types'
 
 const handler = nc()
 
@@ -42,7 +43,7 @@ handler.post(
         timeZoneOffset: '+03:00',
       }
 
-      const loginData = await Promise.all(
+      const loginData = (await Promise.all(
         airlines.map(async (item: any) => {
           const data = await login(item.api, item.username, item.password)
           return {
@@ -50,10 +51,10 @@ handler.post(
             accessToken: data?.accessToken,
           }
         })
-      )
+      )) as LoginAirline[]
 
       const flights = await Promise.all(
-        loginData?.map(async (item: any) => {
+        loginData?.map(async (item) => {
           const { data } = await axios.post(
             `${BASE_URL}/${item.api}/ReservationApi/api/flights/search`,
             oneWayBody,

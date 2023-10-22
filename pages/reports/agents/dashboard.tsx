@@ -1,6 +1,7 @@
 import React from 'react'
 import BarChart from '../../../components/charts/BarChart'
 import apiHook from '../../../api'
+import { userInfo } from '../../../api/api'
 
 type DashboardReport = {
   agents: number
@@ -100,21 +101,21 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="row gy-3">
+    <div className='row gy-3'>
       {numbers.map((number, i: number) => (
-        <div key={i} className="col-lg-3 col-md-4 col-sm-6 col-12">
-          <div className="card shadow-sm rounded-0 border-0">
-            <div className="card-body text-center">
-              <small className="text-center">{number.title}</small>
-              <h5 className="card-text text-center fw-bold fs-1 text-primary">
+        <div key={i} className='col-lg-3 col-md-4 col-sm-6 col-12'>
+          <div className='card shadow-sm rounded-0 border-0'>
+            <div className='card-body text-center'>
+              <small className='text-center'>{number.title}</small>
+              <h5 className='card-text text-center fw-bold fs-1 text-primary'>
                 {number.isMoney ? number.value : number.value}
               </h5>
             </div>
           </div>
         </div>
       ))}
-      <div className="col-lg-6 col-12">
-        <BarChart dataValue={topDestinationsData} bgColor="rgb(255, 82, 162)" />
+      <div className='col-lg-6 col-12'>
+        <BarChart dataValue={topDestinationsData} bgColor='rgb(255, 82, 162)' />
       </div>
     </div>
   )

@@ -10,7 +10,7 @@ handler.get(
       const { BASE_URL } = process.env
 
       const { data } = await axios.get(
-        `${BASE_URL}/saacid/ReservationApi/api/common/cities`
+        `${BASE_URL}/saacid/ReservationApi/api/common/cities`,
       )
 
       // let newData = data?.filter((item: any) => item.countryName === 'SOMALIA')
@@ -32,6 +32,7 @@ handler.get(
         'Wau',
         'Yida',
         'Baydhabo',
+        'Ajunthok',
       ]
 
       newData = newData?.filter((item: any) => {
@@ -42,7 +43,7 @@ handler.get(
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
-  }
+  },
 )
 
 export default handler
