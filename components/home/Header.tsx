@@ -38,7 +38,6 @@ const Header = () => {
   const submitHandler = async (data: any) => {
     if (
       !data.fromDate ||
-      // !data.toDate ||
       !data.trip ||
       !data.originCity ||
       !data.destinationCity ||
@@ -50,10 +49,6 @@ const Header = () => {
       if (!data.fromDate) {
         errorMessage += ' From Date'
       }
-
-      // if (!data.toDate) {
-      //   errorMessage += ' To Date'
-      // }
 
       if (!data.trip) {
         errorMessage += ' Trip'
@@ -84,24 +79,6 @@ const Header = () => {
       return
     }
 
-    // const o = getCitiesApi?.data?.find(
-    //   (item: { name: string }) => item.name === data.originCity
-    // )
-    // const d = getCitiesApi?.data?.find(
-    //   (item: { name: string }) => item.name === data.destinationCity
-    // )
-
-    // if (!o || !d) {
-    //   setError('Please select origin and destination cities')
-    //   setTimeout(() => {
-    //     setError('')
-    //   }, 5000)
-    //   return
-    // }
-
-    // data.originCity = o.id
-    // data.destinationCity = d.id
-
     updateSearchFlight({ ...data, result: [] })
 
     searchFlightApi?.mutateAsync(data).catch((err) => err)
@@ -128,17 +105,17 @@ const Header = () => {
   }, [searchFlightApi?.isSuccess])
 
   return (
-    <div className="bg-primary headerBox pt-1">
+    <div className='bg-primary headerBox pt-1'>
       {/* <AD /> */}
 
-      {error && <Message variant="danger" value={error} />}
+      {error && <Message variant='danger' value={error} />}
 
       {searchFlightApi?.isError && (
-        <Message variant="danger" value={searchFlightApi?.error} />
+        <Message variant='danger' value={searchFlightApi?.error} />
       )}
 
-      <div className="headerBG p-2">
-        <div className="d-flex flex-column justify-content-center align-items-start h-100">
+      <div className='headerBG p-2'>
+        <div className='d-flex flex-column justify-content-center align-items-start h-100'>
           <Search
             showTitle={true}
             cities={getCitiesApi?.data}

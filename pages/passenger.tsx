@@ -22,6 +22,7 @@ import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { Capitalize } from '../utils/Capitalize'
+import dynamic from 'next/dynamic'
 
 const Passenger = () => {
   const router = useRouter()
@@ -32,7 +33,7 @@ const Passenger = () => {
   const { searchFlight } = useSearchFlightStore((state) => state)
 
   useEffect(() => {
-    if (!flight || !flight?.flight?.id) {
+    if (!flight || !flight?.flight) {
       router.push('/')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -144,13 +145,13 @@ const Passenger = () => {
 
   const passengerForm = (passengerType: string, number: number) => {
     return (
-      <div className="row gy-3 bg-light shadow-sm rounded-2 p-2 mt-4">
-        <div className="col-12">
-          <h6 className="fw-bold text-uppercase">
+      <div className='row gy-3 bg-light shadow-sm rounded-2 p-2 mt-4'>
+        <div className='col-12'>
+          <h6 className='fw-bold text-uppercase'>
             {passengerType} {number} - Info
           </h6>
         </div>
-        <div className="col-lg-3 col-md-6 col-12">
+        <div className='col-lg-3 col-md-6 col-12'>
           {dynamicInputSelect({
             register,
             errors,
@@ -158,10 +159,16 @@ const Passenger = () => {
             name: `passengerTitle${passengerType}${number}`,
             placeholder: 'Select passenger title',
             value: 'description',
-            data: getPassengerTitle?.data,
+            data: getPassengerTitle?.data?.filter((item: any) =>
+              passengerType === 'Adult'
+                ? item.description === 'MR' || item.description === 'MRS'
+                : passengerType === 'Infant'
+                ? item.description === 'INF'
+                : item.description === 'CHD',
+            ),
           } as DynamicFormProps)}
         </div>
-        <div className="col-lg-3 col-md-6 col-12">
+        <div className='col-lg-3 col-md-6 col-12'>
           {inputText({
             register,
             errors,
@@ -170,7 +177,7 @@ const Passenger = () => {
             placeholder: 'Enter fist name',
           } as DynamicFormProps)}
         </div>
-        <div className="col-lg-3 col-md-6 col-12">
+        <div className='col-lg-3 col-md-6 col-12'>
           {inputText({
             register,
             errors,
@@ -179,7 +186,7 @@ const Passenger = () => {
             placeholder: 'Enter second name',
           } as DynamicFormProps)}
         </div>
-        <div className="col-lg-3 col-md-6 col-12">
+        <div className='col-lg-3 col-md-6 col-12'>
           {inputText({
             register,
             errors,
@@ -189,12 +196,12 @@ const Passenger = () => {
           } as DynamicFormProps)}
         </div>
 
-        <div className="col-lg-4 col-md-6 col-12">
-          <label htmlFor="" className="form-label mb-0">
+        <div className='col-lg-4 col-md-6 col-12'>
+          <label htmlFor='' className='form-label mb-0'>
             Nationality
           </label>
-          <div className="input-group w-100 form-control form-control-sm rounded-0">
-            <div className="w-100 border-0">
+          <div className='input-group w-100 form-control form-control-sm rounded-0'>
+            <div className='w-100 border-0'>
               <ReactSearchAutocomplete
                 items={
                   getCountries?.data?.map(
@@ -202,7 +209,7 @@ const Passenger = () => {
                       item?.name !== 'SOMALILAND' && {
                         ...item,
                         name: Capitalize(item?.name?.toLowerCase()),
-                      }
+                      },
                   ) as any[]
                 }
                 formatResult={formatResult}
@@ -213,7 +220,7 @@ const Passenger = () => {
                   height: '25px',
                   zIndex: 10,
                 }}
-                placeholder="Search nationality"
+                placeholder='Search nationality'
               />
             </div>
           </div>
@@ -230,7 +237,7 @@ const Passenger = () => {
             value: 'friendlyName',
           } as DynamicFormProps)}
         </div> */}
-        <div className="col-lg-4 col-md-6 col-12">
+        <div className='col-lg-4 col-md-6 col-12'>
           {staticInputSelect({
             register,
             errors,
@@ -240,7 +247,7 @@ const Passenger = () => {
             data: [{ name: 'Male' }, { name: 'Female' }],
           } as DynamicFormProps)}
         </div>
-        <div className="col-lg-4 col-md-6 col-12">
+        <div className='col-lg-4 col-md-6 col-12'>
           {inputDate({
             register,
             errors,
@@ -276,7 +283,7 @@ const Passenger = () => {
   }
 
   return (
-    <div className="py-2">
+    <div className='py-2'>
       <Steps steps={steps} />
       <form onSubmit={handleSubmit(submitHandler)}>
         {useNumberToArray(searchFlight?.noAdult || 0).map((item, i: number) => (
@@ -293,12 +300,12 @@ const Passenger = () => {
           <Fragment key={i}>{passengerForm('Infant', item)}</Fragment>
         ))}
 
-        <div className="row gy-3 bg-light shadow-sm rounded-2 p-2 mt-4">
-          <div className="col-12">
-            <h6 className="fw-bold text-uppercase">Contact Details</h6>
+        <div className='row gy-3 bg-light shadow-sm rounded-2 p-2 mt-4'>
+          <div className='col-12'>
+            <h6 className='fw-bold text-uppercase'>Contact Details</h6>
           </div>
-          <div className="col-lg-4 col-md-6 col-12" style={{ zIndex: -0 }}>
-            <label htmlFor="phone">Phone</label>
+          <div className='col-lg-4 col-md-6 col-12' style={{ zIndex: -0 }}>
+            <label htmlFor='phone'>Phone</label>
             <PhoneInput
               country={'so'}
               value={phoneNumber}
@@ -306,7 +313,7 @@ const Passenger = () => {
               inputStyle={{ width: '100%' }}
             />
           </div>
-          <div className="col-lg-4 col-md-6 col-12">
+          <div className='col-lg-4 col-md-6 col-12'>
             {inputEmail({
               register,
               errors,
@@ -317,15 +324,15 @@ const Passenger = () => {
           </div>
         </div>
 
-        <div className="p-3 mt-4 d-flex justify-content-end align-items-center">
+        <div className='p-3 mt-4 d-flex justify-content-end align-items-center'>
           {/* <button className="btn btn-primary rounded-pill">
           <FaUserPlus className="mb-1" /> Add another passenger
         </button> */}
           <button
-            type="submit"
-            className="btn btn-warning rounded-pill text-light"
+            type='submit'
+            className='btn btn-warning rounded-pill text-light'
           >
-            Continue <FaArrowCircleRight className="mb-1" />
+            Continue <FaArrowCircleRight className='mb-1' />
           </button>
         </div>
       </form>
@@ -333,4 +340,6 @@ const Passenger = () => {
   )
 }
 
-export default Passenger
+export default dynamic(() => Promise.resolve(Passenger), {
+  ssr: false,
+})

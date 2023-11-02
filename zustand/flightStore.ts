@@ -1,10 +1,5 @@
 import { create } from 'zustand'
-
-export type Flight = {
-  prices?: any[]
-  airline?: string
-  flight?: any
-}
+import { IFlight } from '../types'
 
 export type Passenger = {
   id: string
@@ -20,8 +15,8 @@ export type Passenger = {
 }
 
 type FlightStore = {
-  flight: Flight
-  setFlight: (flight: Flight[]) => void
+  flight: IFlight
+  setFlight: (flight: IFlight) => void
   passengers: {
     adult: Passenger[]
     child: Passenger[]
@@ -41,13 +36,14 @@ type FlightStore = {
 }
 
 const useFlightStore = create<FlightStore>((set) => ({
+  // @ts-ignore
   flight: {},
   passengers: [],
   contact: {
     email: '',
     phone: '',
   },
-  setFlight: (flight: Flight[]) => {
+  setFlight: (flight: IFlight) => {
     set((state) => ({
       flight: { ...state.flight, ...flight },
     }))
@@ -73,7 +69,7 @@ const useFlightStore = create<FlightStore>((set) => ({
               ? {
                   ...passenger,
                 }
-              : item
+              : item,
           )
           ?.filter((item) => item) || []
 
@@ -84,7 +80,7 @@ const useFlightStore = create<FlightStore>((set) => ({
               ? {
                   ...passenger,
                 }
-              : item
+              : item,
           )
           ?.filter((item) => item) || []
 
@@ -95,7 +91,7 @@ const useFlightStore = create<FlightStore>((set) => ({
               ? {
                   ...passenger,
                 }
-              : item
+              : item,
           )
           ?.filter((item) => item) || []
 

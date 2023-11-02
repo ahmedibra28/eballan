@@ -28,11 +28,12 @@ import apiHook from '../api'
 import { FormView } from '../components'
 import { userInfo } from '../api/api'
 import { Capitalize } from '../utils/Capitalize'
+import dynamic from 'next/dynamic'
 
 const Passenger = () => {
   const router = useRouter()
   const { passengers, flight, contact, updatePassenger } = useFlightStore(
-    (state) => state
+    (state) => state,
   )
 
   const [tempPassengerInfo, setTempPassengerInfo] = useState(null)
@@ -56,12 +57,6 @@ const Passenger = () => {
     key: ['passenger-titles'],
     method: 'GET',
     url: `passenger/titles?airline=maandeeqair`,
-  })?.get
-
-  const getAirlines = apiHook({
-    key: ['airlines'],
-    method: 'GET',
-    url: `airlines?page=1&q=&limit=${250}`,
   })?.get
 
   function getHoursBetween(startTime: string, endTime: string): string {
@@ -112,74 +107,87 @@ const Passenger = () => {
   ]
 
   const infoCard = (item: any, type: string) => {
+    const totalFare =
+      (flight?.prices?.find((item) => item?.passenger === type)?.fare || 0) +
+        (type === 'Adult'
+          ? flight?.prices?.find((item) => item?.passenger === type)
+              ?.commission || 0
+          : type === 'Child'
+          ? flight?.prices?.find((item) => item?.passenger === type)
+              ?.commission || 0
+          : (type === 'Infant' &&
+              flight?.prices?.find((item) => item?.passenger === type)
+                ?.commission) ||
+            0) || 0
+
     return (
-      <div className="col-lg-6 col-12">
-        <div className="card border-0 shadow-sm">
-          <div className="card-body">
-            <p className="text-uppercase fw-bold">Passenger Details</p>
+      <div className='col-lg-6 col-12'>
+        <div className='card border-0 shadow-sm'>
+          <div className='card-body'>
+            <p className='text-uppercase fw-bold'>Passenger Details</p>
 
             <h6>
               <Image
-                src="https://www.worldometers.info//img/flags/small/tn_so-flag.gif"
+                src='https://www.worldometers.info//img/flags/small/tn_so-flag.gif'
                 width={20}
                 height={20}
                 style={{ objectFit: 'cover' }}
-                alt="flag"
-                className="rounded-pill"
+                alt='flag'
+                className='rounded-pill'
               />
-              <span className="text-muted ms-1">
+              <span className='text-muted ms-1'>
                 {item?.passengerTitle}. {item?.firstName} {item?.secondName}{' '}
                 {item?.lastName}
               </span>
             </h6>
             {item?.passportNumber && (
               <h6>
-                <FaPassport className="mb-1" />
-                <span className="text-muted"> {item?.passportNumber}</span>
+                <FaPassport className='mb-1' />
+                <span className='text-muted'> {item?.passportNumber}</span>
               </h6>
             )}
             <h6>
-              <FaPhoneAlt className="mb-1" />
-              <span className="text-muted"> {contact?.phone}</span>
+              <FaPhoneAlt className='mb-1' />
+              <span className='text-muted'> {contact?.phone}</span>
             </h6>
             <h6>
-              <FaUser className="mb-1" />
-              <span className="text-muted"> {type}</span>
+              <FaUser className='mb-1' />
+              <span className='text-muted'> {type}</span>
             </h6>
             <h6>
-              <MdOutlineAirlineSeatReclineNormal className="mb-1 fs-5" />
-              <span className="text-muted"> Random Seat</span>
+              <MdOutlineAirlineSeatReclineNormal className='mb-1 fs-5' />
+              <span className='text-muted'> Random Seat</span>
             </h6>
-            <h6 className="text-end">
-              <span className="fw-bold">
-                {currency(
-                  flight?.prices?.find((item) => item?.passenger?.type === type)
-                    ?.fare +
+            <h6 className='text-end'>
+              <span className='fw-bold'>
+                {/* {currency(
+                  (flight?.prices?.find((item) => item?.passenger === type)
+                    ?.fare ?? 0) +
                     (type === 'Adult'
-                      ? flight?.prices?.find(
-                          (item) => item?.passenger?.type === type
-                        )?.dbCommission || 0
+                      ? flight?.prices?.find((item) => item?.passenger === type)
+                          ?.commission ?? 0
                       : type === 'Child'
-                      ? flight?.prices?.find(
-                          (item) => item?.passenger?.type === type
-                        )?.dbCommission || 0
+                      ? flight?.prices?.find((item) => item?.passenger === type)
+                          ?.commission ?? 0
                       : (type === 'Infant' &&
                           flight?.prices?.find(
-                            (item) => item?.passenger?.type === type
-                          )?.dbCommission) ||
-                        0)
-                )}
+                            (item) => item?.passenger === type,
+                          )?.commission) ??
+                        0) ?? 0,
+                )} */}
+
+                {currency(totalFare)}
               </span>
             </h6>
             <button
-              type="button"
-              data-bs-toggle="modal"
+              type='button'
+              data-bs-toggle='modal'
               data-bs-target={`#updatePassenger`}
               onClick={() => {
                 setTempPassengerInfo(item)
                 editHandler(item)
               }}
-              className="btn btn-primary btn-sm"
+              className='btn btn-primary btn-sm'
             >
               Update
             </button>
@@ -191,7 +199,7 @@ const Passenger = () => {
 
   const form = [
     <Fragment key={0}>
-      <div className="col-md-6 col-12">
+      <div className='col-md-6 col-12'>
         {dynamicInputSelect({
           register,
           errors,
@@ -202,7 +210,7 @@ const Passenger = () => {
           data: getPassengerTitle?.data,
         } as DynamicFormProps)}
       </div>
-      <div className="col-md-6 col-12">
+      <div className='col-md-6 col-12'>
         {inputText({
           register,
           errors,
@@ -211,7 +219,7 @@ const Passenger = () => {
           placeholder: 'Enter fist name',
         } as DynamicFormProps)}
       </div>
-      <div className="col-md-6 col-12">
+      <div className='col-md-6 col-12'>
         {inputText({
           register,
           errors,
@@ -220,7 +228,7 @@ const Passenger = () => {
           placeholder: 'Enter second name',
         } as DynamicFormProps)}
       </div>
-      <div className="col-md-6 col-12">
+      <div className='col-md-6 col-12'>
         {inputText({
           register,
           errors,
@@ -229,7 +237,7 @@ const Passenger = () => {
           placeholder: 'Enter last name',
         } as DynamicFormProps)}
       </div>
-      <div className="col-md-6 col-12">
+      <div className='col-md-6 col-12'>
         {staticInputSelect({
           register,
           errors,
@@ -239,7 +247,7 @@ const Passenger = () => {
           data: [{ name: 'Somalia' }, { name: 'Ethiopia' }, { name: 'Kenya' }],
         } as DynamicFormProps)}
       </div>
-      <div className="col-md-6 col-12">
+      <div className='col-md-6 col-12'>
         {staticInputSelect({
           register,
           errors,
@@ -249,7 +257,7 @@ const Passenger = () => {
           data: [{ name: 'Male' }, { name: 'Female' }],
         } as DynamicFormProps)}
       </div>
-      <div className="col-md-6 col-12">
+      <div className='col-md-6 col-12'>
         {inputDate({
           register,
           errors,
@@ -258,28 +266,6 @@ const Passenger = () => {
           placeholder: 'Enter date of birth',
         } as DynamicFormProps)}
       </div>
-
-      {/* <div className="col-lg-6 col-md-6 col-12">
-        {inputText({
-          register,
-          errors,
-          label: 'Passport Number',
-          name: `passportNumber`,
-          placeholder: 'Enter passport number',
-          isRequired: false,
-        } as DynamicFormProps)}
-      </div>
-
-      <div className="col-lg-6 col-md-6 col-12">
-        {inputDate({
-          register,
-          errors,
-          label: 'Passport Expiry Date',
-          name: `passportExpiryDate`,
-          placeholder: 'Enter passport expiry date',
-          isRequired: false,
-        } as DynamicFormProps)}
-      </div> */}
     </Fragment>,
   ]
 
@@ -309,7 +295,7 @@ const Passenger = () => {
 
       document
         .querySelector(
-          '#updatePassenger > div > div > div.modal-body > form > div.modal-footer > button.btn'
+          '#updatePassenger > div > div > div.modal-body > form > div.modal-footer > button.btn',
         )
         // @ts-ignore
         ?.click()
@@ -317,7 +303,7 @@ const Passenger = () => {
   }
 
   return (
-    <div className="py-2">
+    <div className='py-2'>
       <Steps steps={steps} />
 
       <FormView
@@ -329,59 +315,59 @@ const Passenger = () => {
         handleSubmit={handleSubmit}
         submitHandler={submitHandler}
         modal={'updatePassenger'}
-        label="Passenger Info"
-        modalSize="modal-md"
+        label='Passenger Info'
+        modalSize='modal-md'
       />
 
-      <h6 className="fw-bold text-uppercase mt-4">Trip Summary</h6>
+      <h6 className='fw-bold text-uppercase mt-4'>Trip Summary</h6>
 
-      <div className="row gy-3">
-        <div className="col-lg-8 col-12">
-          <div className="row gy-3 mb-3">
+      <div className='row gy-3'>
+        <div className='col-lg-8 col-12'>
+          <div className='row gy-3 mb-3'>
             {passengers?.[0]?.adult?.map((item, i) => (
               <Fragment key={i}>{infoCard(item, 'Adult')}</Fragment>
             ))}
           </div>
 
-          <div className="row gy-3 mb-3">
+          <div className='row gy-3 mb-3'>
             {passengers?.[0]?.child?.map((item, i) => (
               <Fragment key={i}>{infoCard(item, 'Child')}</Fragment>
             ))}
           </div>
 
-          <div className="row gy-3 mb-3">
+          <div className='row gy-3 mb-3'>
             {passengers?.[0]?.infant?.map((item, i) => (
               <Fragment key={i}>{infoCard(item, 'Infant')}</Fragment>
             ))}
           </div>
         </div>
 
-        <div className="col-lg-4 col-12">
-          <div className="card border-0 shadow-sm">
-            <div className="card-body">
+        <div className='col-lg-4 col-12'>
+          <div className='card border-0 shadow-sm'>
+            <div className='card-body'>
               <p>
                 To go on trip from
                 <strong> {flight?.flight?.fromCityName}</strong> to
                 <strong> {flight?.flight?.toCityName}</strong>
               </p>
 
-              <div className="row">
+              <div className='row'>
                 <div
-                  className="col-auto d-flex flex-column"
+                  className='col-auto d-flex flex-column'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  <span>{flight?.flight?.departureTime}</span>
-                  <small className="text-muted">
+                  <span>{flight?.flight?.departureDate?.slice(11, 20)}</span>
+                  <small className='text-muted'>
                     {moment(flight?.flight?.departureDate).format(
-                      'ddd, DD MMM'
+                      'ddd, DD MMM',
                     )}
                   </small>
                 </div>
-                <div className="col-auto my-auto">
+                <div className='col-auto my-auto'>
                   <FaDotCircle />
                 </div>
                 <div
-                  className="col-auto d-flex flex-column"
+                  className='col-auto d-flex flex-column'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
                   <span>
@@ -389,89 +375,87 @@ const Passenger = () => {
                     {flight?.flight?.fromCityName} (
                     {flight?.flight?.fromCityCode})
                   </span>
-                  <small className="text-muted">
+                  <small className='text-muted'>
                     {flight?.flight?.fromAirportName}
                   </small>
                 </div>
               </div>
-              <div className="row">
+              <div className='row'>
                 <div
-                  className="col-auto d-flex flex-column ms-5 ps-5"
+                  className='col-auto d-flex flex-column ms-5 ps-5'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
                   <div
-                    className="d-flex"
+                    className='d-flex'
                     style={{ height: 50, marginLeft: 16 }}
                   >
-                    <div className="vr"></div>
+                    <div className='vr'></div>
                   </div>
                 </div>
               </div>
-              <div className="row my-3">
+              <div className='row my-3'>
                 <div
-                  className="col-auto"
+                  className='col-auto'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
                   {getHoursBetween(
-                    flight?.flight?.departureTime,
-                    flight?.flight?.arrivalTime
+                    flight?.flight?.departureDate?.slice(11, 20),
+                    flight?.flight?.arrivalDate?.slice(11, 20),
                   )}
                 </div>
-                <div className="col-auto my-auto" style={{ marginLeft: 2 }}>
+                <div className='col-auto my-auto' style={{ marginLeft: 2 }}>
                   <FaDotCircle />
                 </div>
                 <div
-                  className="col-auto"
+                  className='col-auto'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
                   <img
                     src={
-                      getAirlines?.data?.data?.find(
-                        (item: any) => item?.api === flight?.airline
-                      )?.logo || 'https://via.placeholder.com/150'
+                      flight?.airline?.logo || 'https://via.placeholder.com/150'
                     }
                     width={20}
                     height={20}
-                    alt="airline"
+                    alt='airline'
                     style={{ objectFit: 'cover' }}
                   />
-                  <span> {Capitalize(flight?.airline || '')}</span>
+                  <span> {Capitalize(flight?.airline?.name || '')}</span>
                 </div>
               </div>
-              <div className="row">
+              <div className='row'>
                 <div
-                  className="col-auto ms-5 ps-5"
+                  className='col-auto ms-5 ps-5'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
                   <div
-                    className="d-flex"
+                    className='d-flex'
                     style={{ height: 50, marginLeft: 16 }}
                   >
-                    <div className="vr"></div>
+                    <div className='vr'></div>
                   </div>
                 </div>
               </div>
-              <div className="row">
+              <div className='row'>
                 <div
-                  className="col-auto d-flex flex-column"
+                  className='col-auto d-flex flex-column'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
-                  <span> {flight?.flight?.arrivalTime}</span>
-                  <small className="text-muted">
+                  <span> {flight?.flight?.arrivalDate?.slice(11, 20)}</span>
+                  <small className='text-muted'>
                     {moment(flight?.flight?.arrivalDate).format('ddd, DD MMM')}
                   </small>
                 </div>
-                <div className="col-auto my-auto">
+                <div className='col-auto my-auto'>
                   <FaDotCircle />
                 </div>
                 <div
-                  className="col-auto d-flex flex-column"
+                  className='col-auto d-flex flex-column'
                   style={{ minWidth: 90, maxWidth: 300 }}
                 >
                   <span>
                     {flight?.flight?.toCityName} ({flight?.flight?.toCityCode})
                   </span>
-                  <small className="text-muted">
+                  <small className='text-muted'>
                     {flight?.flight?.toAirportName}
                   </small>
                 </div>
@@ -479,71 +463,53 @@ const Passenger = () => {
             </div>
           </div>
 
-          <div className="card border-0 shadow-sm mt-4">
-            <div className="card-body">
+          <div className='card border-0 shadow-sm mt-4'>
+            <div className='card-body'>
               <p>
-                <span className="me-4">
+                <span className='me-4'>
                   {Number(passengers?.[0]?.adult?.length || 0) +
                     Number(passengers?.[0]?.child?.length || 0) +
                     Number(passengers?.[0]?.infant?.length || 0)}
                   x Passengers
                 </span>
               </p>
-              <p className="fw-bold">
-                <span className="me-4">Total</span>
+              <p className='fw-bold'>
+                <span className='me-4'>Total</span>
                 <span>
                   {currency(
                     flight?.prices?.reduce(
                       (acc, item) => acc + item?.totalPrice,
-                      0
-                    )
+                      0,
+                    ),
                   )}
                 </span>
               </p>
 
-              <div className="d-flex justify-content-between">
+              <div className='d-flex justify-content-between'>
                 {!userInfo().userInfo && (
                   <Link
-                    href="/auth/login?next=/trip-summary"
-                    className="btn btn-primary text-light rounded-pill"
+                    href='/auth/login?next=/trip-summary'
+                    className='btn btn-primary text-light rounded-pill'
                   >
-                    Login <FaSignInAlt className="mb-1" />
+                    Login <FaSignInAlt className='mb-1' />
                   </Link>
                 )}
                 <Link
-                  href="/payment"
-                  className="btn btn-warning text-light rounded-pill"
+                  href='/payment'
+                  className='btn btn-warning text-light rounded-pill'
                 >
                   Continue {!userInfo().userInfo && 'as guest'}{' '}
-                  <FaArrowCircleRight className="mb-1" />
+                  <FaArrowCircleRight className='mb-1' />
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* <div className="bg-light p-2">
-        <div className="text-end">
-          <span className="me-5 fs-4">1x Passenger</span>
-          <span className="fs-4">$175.00</span>
-        </div>
-        <div className="text-end">
-          <span className="me-5 fw-bold fs-4">Total</span>
-          <span className="fw-bold fs-4">$175.00</span>
-        </div>
-      </div>
-
-      <div className="p-3 mt-4 d-flex justify-content-between align-items-center">
-        <button className="btn btn-primary rounded-pill">
-          <FaInfoCircle className="mb-1" /> Review passenger details
-        </button>
-        <button className="btn btn-warning rounded-pill text-light">
-          Continue <FaArrowCircleRight className="mb-1" />
-        </button>
-      </div> */}
     </div>
   )
 }
 
-export default Passenger
+export default dynamic(() => Promise.resolve(Passenger), {
+  ssr: false,
+})

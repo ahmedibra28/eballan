@@ -1,7 +1,6 @@
 import React from 'react'
 import BarChart from '../../../components/charts/BarChart'
 import apiHook from '../../../api'
-import { userInfo } from '../../../api/api'
 
 type DashboardReport = {
   agents: number

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { IFlight } from '../types'
 
 export type SearchFlight = {
   fromDate?: string
@@ -10,7 +11,7 @@ export type SearchFlight = {
   noAdult?: number
   noChild?: number
   noInfant?: number
-  result?: []
+  result?: IFlight[]
 }
 
 type SearchFlightStore = {

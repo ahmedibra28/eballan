@@ -3,8 +3,9 @@ import { FaArrowLeft, FaArrowRight, FaShareAlt } from 'react-icons/fa'
 import { currency } from '../../utils/currency'
 import useFlightStore from '../../zustand/flightStore'
 import { useRouter } from 'next/router'
+import { IFlight } from '../../types'
 
-const Result = ({ item }: { item: any }) => {
+const Result = ({ item }: { item: IFlight }) => {
   const router = useRouter()
 
   const { setFlight } = useFlightStore((state) => state)
@@ -25,100 +26,110 @@ const Result = ({ item }: { item: any }) => {
   }
 
   return (
-    <div className="card border-0 rounded-2 shadow mb-2">
-      <div className="card-body">
-        <div className="row">
-          <div className="col-lg-3 col-12 my-auto text-center">
-            <img src={item?.db?.logo} alt="airplane" width={50} height={50} />
+    <div className='card border-0 rounded-2 shadow mb-2'>
+      <div className='card-body'>
+        <div className='row'>
+          <div className='col-lg-3 col-12 my-auto text-center'>
+            <img
+              src={item?.airline?.logo}
+              alt='airplane'
+              width={50}
+              height={50}
+            />
             <br />
             <br />
-            <span className="fw-bold text-uppercase">{item.db?.name}</span>
+            <span className='fw-bold text-uppercase'>{item.airline?.name}</span>
           </div>
-          <div className="col-lg-6 col-12 border border-bottom-0 border-top-0 my-auto">
-            <div className="d-flex justify-content-around align-items-center">
-              <div className="text-center">
-                <span className="fw-bold">
+          <div className='col-lg-6 col-12 border border-bottom-0 border-top-0 my-auto'>
+            <div className='d-flex justify-content-around align-items-center'>
+              <div className='text-center'>
+                <span className='fw-bold'>
                   {item?.flight?.departureDate?.slice(0, 10)}
                 </span>
                 <br />
-                <span className="fw-bold">{item?.flight?.departureTime}</span>
+                <span className='fw-bold'>
+                  {item?.flight?.departureDate?.slice(11, 20)}
+                </span>
                 <br />
-                <span className="">{item?.flight?.fromCityCode}</span>
+                <span className=''>{item?.flight?.fromCityCode}</span>
               </div>
-              <div className="text-center">
-                <FaArrowRight className="me-3" />
-                <span className="">Direct</span>
-                <FaArrowRight className="ms-3" />
+              <div className='text-center'>
+                <FaArrowRight className='me-3' />
+                <span className=''>Direct</span>
+                <FaArrowRight className='ms-3' />
               </div>
-              <div className="text-center">
-                <span className="fw-bold">
+              <div className='text-center'>
+                <span className='fw-bold'>
                   {item?.flight?.arrivalDate?.slice(0, 10)}
                 </span>
                 <br />
-                <span className="fw-bold"> {item?.flight?.arrivalTime}</span>
+                <span className='fw-bold'>
+                  {' '}
+                  {item?.flight?.arrivalDate?.slice(11, 20)}
+                </span>
                 <br />
-                <span className="">{item?.flight?.toCityCode}</span>
+                <span className=''>{item?.flight?.toCityCode}</span>
               </div>
-              <div className="text-center">
-                <span className="fw-light">
+              <div className='text-center'>
+                <span className='fw-light'>
                   {getHoursBetween(
-                    item?.flight?.departureTime,
-                    item?.flight?.arrivalTime
+                    item?.flight?.departureDate?.slice(11, 20),
+                    item?.flight?.arrivalDate?.slice(11, 20),
                   )}
                 </span>
                 <br />
               </div>
             </div>
 
-            {item?.arrival && (
-              <div className="d-flex justify-content-around align-items-center mt-3">
-                <div className="text-center">
-                  <span className="fw-bold">
+            {/* {item?.arrival && (
+              <div className='d-flex justify-content-around align-items-center mt-3'>
+                <div className='text-center'>
+                  <span className='fw-bold'>
                     {item?.arrival?.arrivalDate?.slice(0, 10)}
                   </span>
                   <br />
-                  <span className="fw-bold"> {item?.arrival?.arrivalTime}</span>
+                  <span className='fw-bold'> {item?.arrival?.arrivalTime}</span>
                   <br />
-                  <span className="">{item?.arrival?.toCityCode}</span>
+                  <span className=''>{item?.arrival?.toCityCode}</span>
                 </div>
 
-                <div className="text-center">
-                  <FaArrowLeft className="me-3" />
-                  <span className="">Direct</span>
-                  <FaArrowLeft className="ms-3" />
+                <div className='text-center'>
+                  <FaArrowLeft className='me-3' />
+                  <span className=''>Direct</span>
+                  <FaArrowLeft className='ms-3' />
                 </div>
-                <div className="text-center">
-                  <span className="fw-bold">
+                <div className='text-center'>
+                  <span className='fw-bold'>
                     {item?.arrival?.departureDate?.slice(0, 10)}
                   </span>
                   <br />
-                  <span className="fw-bold">
+                  <span className='fw-bold'>
                     {item?.arrival?.departureTime}
                   </span>
                   <br />
-                  <span className="">{item?.arrival?.fromCityCode}</span>
+                  <span className=''>{item?.arrival?.fromCityCode}</span>
                 </div>
-                <div className="text-center">
-                  <span className="fw-light">
+                <div className='text-center'>
+                  <span className='fw-light'>
                     {getHoursBetween(
                       item?.arrival?.departureTime,
-                      item?.arrival?.arrivalTime
+                      item?.arrival?.arrivalTime,
                     )}
                   </span>
                   <br />
                 </div>
               </div>
-            )}
+            )} */}
           </div>
-          <div className="col-lg-3 col-12 text-center">
-            <FaShareAlt className="text-warning float-end" /> <br />
-            <button className="btn btn-light text-uppercase my-2">
-              <span className="fs-1">
+          <div className='col-lg-3 col-12 text-center'>
+            <FaShareAlt className='text-warning float-end' /> <br />
+            <button className='btn btn-light text-uppercase my-2'>
+              <span className='fs-1'>
                 {currency(
                   item?.prices?.reduce(
                     (acc: number, cur: any) => acc + cur.totalPrice,
-                    0
-                  )
+                    0,
+                  ),
                 )}
               </span>
             </button>
@@ -128,7 +139,7 @@ const Result = ({ item }: { item: any }) => {
                 setFlight(item)
                 router.push('/passenger')
               }}
-              className="btn btn-primary text-uppercase"
+              className='btn btn-primary text-uppercase'
             >
               Select
             </button>

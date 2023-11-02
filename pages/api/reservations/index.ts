@@ -17,6 +17,7 @@ import {
   useCreateInvoice,
   useVerifyInvoice,
 } from '../../../hook/useEDahabPayment'
+import { IFlight } from '../../../types'
 
 const handler = nc()
 
@@ -29,6 +30,8 @@ handler.post(
       const body = req.body
       let { phone } = body.payment
       const { paymentMethod, status, link } = body.payment
+
+      const flight: IFlight = req.body.flight
 
       if (!phone) {
         return res.status(400).json({ error: 'Invalid phone' })
@@ -46,9 +49,9 @@ handler.post(
       }
 
       const totalPrice =
-        body?.flight?.prices?.reduce(
+        flight?.prices?.reduce(
           (acc: any, item: any) => acc + item?.totalPrice,
-          0
+          0,
         ) || 0
 
       if (totalPrice < 1)
@@ -90,7 +93,7 @@ handler.post(
           apiKey: API_KEY,
           customerMobileNumber: `252${phone}`,
           description: `${phone} has paid ${currency(
-            totalPrice
+            totalPrice,
           )} for flight reservation`,
           amount: totalPrice,
           withdrawTo: 'MERCHANT',
@@ -102,117 +105,65 @@ handler.post(
       }
 
       const bodyData = {
-        id: null,
         bookingTypeId: 1,
         paymentStatusId: 2,
         reservationStatusId: 1,
-        contactInformation: {
-          id: null,
-          additionalInformation: null,
-          passengerTitleId: null,
-          firstName: null,
-          lastName: null,
-          email: body.contact.email,
-          phone: body.contact.phone,
-          phone2: null,
-        },
         passengers: body.passengers
           .map((item: any) => {
             const adult =
               item?.adult?.map((a: any) => ({
-                id: null,
                 firstName: a.firstName?.toUpperCase(),
                 lastName: a.lastName?.toUpperCase(),
                 passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
-                nationality: a.nationality, // update the text to id
                 countryId: 196,
-                passengerTypeId: body.flight.prices[0].passengerTypeId, // update to adult id
-                passengerTitleId: a.passengerTitle === 'MRS' ? 2 : 1, // update the text to id
+                passengerTypeId: 1,
+                passengerTitleId: a.passengerTitle === 'MRS' ? 2 : 1,
                 reservationDetails: [
                   {
                     segmentNumber: 1,
                     ticketTypeId: 1,
-                    flightPricing: body.flight.prices[0],
-                    flightRouteId: body.flight.flight.flightRouteId,
-                    flightScheduleId: body.flight.flight.flightScheduleId,
-                    reservationDetailPricingLogs: {
-                      ticketPrice: body.flight.prices[0].fare,
-                      fare: body.flight.prices[0].totalFare,
-                      taxGroupId: body.flight.prices[0].taxGroupId,
-                      surchargeGroupId: body.flight.prices[0].surchargeGroupId,
-                      baseAgentCommission:
-                        body.flight.prices[0].baseAgentCommission,
-                      nonBaseAgentCommission:
-                        body.flight.prices[0].nonBaseAgentCommission,
-                      commission: body.flight.prices[0].commission,
-                    },
+                    flightRouteId: flight.flight.flightRouteId,
+                    flightScheduleId: flight.flight.flightScheduleId,
                   },
                 ],
               })) || []
 
             const child =
               item?.child?.map((a: any) => ({
-                id: null,
                 firstName: a.firstName?.toUpperCase(),
                 lastName: a.lastName?.toUpperCase(),
                 passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
-                nationality: a.nationality, // update the text to id
                 countryId: 196,
-                passengerTypeId: body.flight.prices[1].passengerTypeId, // update to child id
-                passengerTitleId: 3, // update the text to id
+                passengerTypeId: 2,
+                passengerTitleId: 3,
                 reservationDetails: [
                   {
                     segmentNumber: 1,
                     ticketTypeId: 1,
-                    flightPricing: body.flight.prices[0],
-                    flightRouteId: body.flight.flight.flightRouteId,
-                    flightScheduleId: body.flight.flight.flightScheduleId,
-                    reservationDetailPricingLogs: {
-                      ticketPrice: body.flight.prices[0].fare,
-                      fare: body.flight.prices[0].totalFare,
-                      taxGroupId: body.flight.prices[0].taxGroupId,
-                      surchargeGroupId: body.flight.prices[0].surchargeGroupId,
-                      baseAgentCommission:
-                        body.flight.prices[0].baseAgentCommission,
-                      nonBaseAgentCommission:
-                        body.flight.prices[0].nonBaseAgentCommission,
-                      commission: body.flight.prices[0].commission,
-                    },
+                    flightRouteId: flight.flight.flightRouteId,
+                    flightScheduleId: flight.flight.flightScheduleId,
                   },
                 ],
               })) || []
 
             const infant =
               item?.infant?.map((a: any) => ({
-                id: null,
                 firstName: a.firstName?.toUpperCase(),
                 lastName: a.lastName?.toUpperCase(),
                 passportNo: a.passportNumber || '',
                 dob: moment(a.dob).format(),
                 nationality: a.nationality, // update the text to id
                 countryId: 196,
-                passengerTypeId: body.flight.prices[2].passengerTypeId, // update to infant id
-                passengerTitleId: 4, // update the text to id
+                passengerTypeId: 3,
+                passengerTitleId: 4,
                 reservationDetails: [
                   {
                     segmentNumber: 1,
                     ticketTypeId: 1,
-                    flightPricing: body.flight.prices[0],
-                    flightRouteId: body.flight.flight.flightRouteId,
-                    flightScheduleId: body.flight.flight.flightScheduleId,
-                    reservationDetailPricingLogs: {
-                      ticketPrice: body.flight.prices[0].fare,
-                      fare: body.flight.prices[0].totalFare,
-                      taxGroupId: body.flight.prices[0].taxGroupId,
-                      surchargeGroupId: body.flight.prices[0].surchargeGroupId,
-                      baseAgentCommission:
-                        body.flight.prices[0].baseAgentCommission,
-                      nonBaseAgentCommission:
-                        body.flight.prices[0].nonBaseAgentCommission,
-                      commission: body.flight.prices[0].commission,
-                    },
+                    flightRouteId: flight.flight.flightRouteId,
+                    flightScheduleId: flight.flight.flightScheduleId,
                   },
                 ],
               })) || []
@@ -222,7 +173,7 @@ handler.post(
           ?.flat(),
       }
 
-      const airline = body.flight.airline?.replace(' ', '')?.toLowerCase()
+      const airline = flight.airline?.key
 
       if (!req.body) return res.status(400).json({ error: 'Invalid body' })
 
@@ -233,12 +184,12 @@ handler.post(
       const auth = await login(
         airlineQuery.api,
         airlineQuery.username,
-        airlineQuery.password
+        airlineQuery.password,
       )
 
       const { data } = await axios.post(
         `${BASE_URL}/${airline}/ReservationApi/api/bookings/AddConfirmBooking`,
-        bodyData,
+        { ...bodyData, contactInformation: body?.contact },
         {
           headers: {
             Authorization: `Bearer ${auth.accessToken}`,
@@ -246,46 +197,31 @@ handler.post(
             scheme: 'https',
             platform: 1,
           },
-        }
+        },
       )
 
       // save to database
-      const filteredData = (item: any, airline: string) => {
+      const filteredData = (item: { flight: IFlight }, airline: string) => {
         const prices = [
           {
-            commission: item?.flight?.prices[0].dbCommission,
+            commission: item?.flight?.prices[0].commission,
             fare: item?.flight?.prices[0].fare,
-            passengerType: item?.flight?.prices[0].passengerType?.type,
+            passengerType: item?.flight?.prices[0].passenger,
           },
           {
-            commission: item?.flight?.prices[1].dbCommission,
+            commission: item?.flight?.prices[1].commission,
             fare: item?.flight?.prices[1].fare,
-            passengerType: item?.flight?.prices[1].passengerType?.type,
+            passengerType: item?.flight?.prices[1].passenger,
           },
           {
-            commission: item?.flight?.prices[2].dbCommission,
+            commission: item?.flight?.prices[2].commission,
             fare: item?.flight?.prices[2].fare,
-            passengerType: item?.flight?.prices[2].passengerType?.type,
+            passengerType: item?.flight?.prices[2].passenger,
           },
         ]
 
         const flight = {
-          departureDate:
-            item?.flight?.flight?.departureDate?.slice(0, 10) +
-            ' ' +
-            item?.flight?.flight?.departureTime,
-          fromCityName: item?.flight?.flight?.fromCityName,
-          fromCityCode: item?.flight?.flight?.fromCityCode,
-          fromAirportName: item?.flight?.flight?.fromAirportName,
-          fromCountryName: item?.flight?.flight?.fromCountryName,
-          arrivalDate:
-            item?.flight?.flight?.arrivalDate?.slice(0, 10) +
-            ' ' +
-            item?.flight?.flight?.arrivalTime,
-          toCityName: item?.flight?.flight?.toCityName,
-          toCityCode: item?.flight?.flight?.toCityCode,
-          toAirportName: item?.flight?.flight?.toAirportName,
-          toCountryName: item?.flight?.flight?.toCountryName,
+          ...item?.flight?.flight,
           airline,
           reservationId: data?.reservationId,
           pnrNumber: data?.pnrNumber,
@@ -350,7 +286,7 @@ handler.post(
         paymentMobile: dbData?.payment?.phone,
         paymentMethod: Capitalize(dbData?.payment?.paymentMethod),
         createdAt: moment(dbData?.createdAt).format(
-          'YYYY-MM-DD HH:mm:ss'
+          'YYYY-MM-DD HH:mm:ss',
         ) as any,
       })
 
@@ -374,7 +310,7 @@ handler.post(
         error: error?.response?.data || error?.message,
       })
     }
-  }
+  },
 )
 
 handler.use(isAuth)
@@ -392,6 +328,8 @@ handler.get(
               { 'flight.pnrNumber': { $regex: q, $options: 'i' } },
               { 'flight.reservationId': { $regex: q, $options: 'i' } },
               { 'contact.phone': { $regex: q, $options: 'i' } },
+              { 'flight.fromCityName': { $regex: q, $options: 'i' } },
+              { 'flight.toCityName': { $regex: q, $options: 'i' } },
             ],
             ...(type !== 'SUPER_ADMIN' && { user: req.user._id }),
           }
@@ -422,7 +360,7 @@ handler.get(
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
-  }
+  },
 )
 
 // handler.get(

@@ -12,7 +12,7 @@ export const userInfo = () => {
       typeof window !== 'undefined' && localStorage.getItem('userInfo')
         ? JSON.parse(
             typeof window !== 'undefined' &&
-              (localStorage.getItem('userInfo') as string | any)
+              (localStorage.getItem('userInfo') as string | any),
           )
         : null,
   }
@@ -21,7 +21,7 @@ export const userInfo = () => {
 export const config = () => {
   return {
     headers: {
-      Authorization: `Bearer ${userInfo()?.userInfo?.token}`,
+      'Authorization': `Bearer ${userInfo()?.userInfo?.token}`,
       'x-db-key': userInfo()?.userInfo?.clientCode,
     },
   }

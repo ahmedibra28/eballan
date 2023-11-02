@@ -49,6 +49,7 @@
     "react-photo-album": "^2.2.2",
     "react-search-autocomplete": "^8.5.2",
     "sass": "^1.62.1",
+    "sharp": "^0.32.6",
     "uuid": "^9.0.0",
     "zustand": "^4.3.8"
   },

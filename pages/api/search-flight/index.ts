@@ -25,10 +25,8 @@ handler.post(
         noAdult,
         noChild,
         noInfant,
-        // trip,
         originCity,
         destinationCity,
-        // seatType,
       } = req.body
 
       const oneWayBody = {
@@ -50,7 +48,7 @@ handler.post(
             ...item,
             accessToken: data?.accessToken,
           }
-        })
+        }),
       )) as LoginAirline[]
 
       const flights = await Promise.all(
@@ -62,7 +60,7 @@ handler.post(
               headers: {
                 Authorization: `Bearer ${item.accessToken}`,
               },
-            }
+            },
           )
           return {
             name: item.name,
@@ -73,78 +71,78 @@ handler.post(
             logo: item.logo,
             data,
           }
-        })
+        }),
       )
 
       const filteredData = (item: any, airline: string, db: any) => {
         const adultPrice = item?.flightPricings?.find(
-          (i: any) => i?.passengerType?.type === 'Adult'
+          (i: any) => i?.passengerType?.type === 'Adult',
         )
         const childPrice = item?.flightPricings?.find(
-          (i: any) => i?.passengerType?.type === 'Child'
+          (i: any) => i?.passengerType?.type === 'Child',
         )
 
         const infantPrice = item?.flightPricings?.find(
-          (i: any) => i?.passengerType?.type === 'Infant'
+          (i: any) => i?.passengerType?.type === 'Infant',
         )
 
         const prices = [
           {
-            flightId: adultPrice?.flightId,
-            passenger: adultPrice?.passengerType,
-            commission: adultPrice?.commission,
+            passenger: adultPrice?.passengerType?.type,
+            commission: db?.adultCommission,
             fare: adultPrice?.fare,
-            numberOfSeats: adultPrice?.numberOfSeats,
-            numberOfSeatsAvailable: adultPrice?.numberOfSeatsAvailable,
             baggageWeight: adultPrice?.baggageWeight,
             handCarryWeight: adultPrice?.handCarryWeight,
-            dbCommission: db.adultCommission,
-            totalPrice:
-              (adultPrice?.totalFare -
-                adultPrice?.commission +
-                db.adultCommission) *
-              noAdult,
-            ...adultPrice,
+            totalPrice: (adultPrice?.fare + db?.adultCommission) * noAdult,
           },
           {
-            flightId: childPrice?.flightId,
-            passenger: childPrice?.passengerType,
-            commission: childPrice?.commission,
+            passenger: childPrice?.passengerType?.type,
+            commission: db?.childCommission,
             fare: childPrice?.fare,
-            numberOfSeats: childPrice?.numberOfSeats,
-            numberOfSeatsAvailable: childPrice?.numberOfSeatsAvailable,
             baggageWeight: childPrice?.baggageWeight,
             handCarryWeight: childPrice?.handCarryWeight,
-            dbCommission: db.childCommission,
-            totalPrice:
-              (childPrice?.totalFare -
-                childPrice?.commission +
-                db.childCommission) *
-              noChild,
-            ...childPrice,
+            totalPrice: (childPrice?.fare + db?.childCommission) * noChild,
           },
           {
-            flightId: infantPrice?.flightId,
-            passenger: infantPrice?.passengerType,
-            commission: infantPrice?.commission,
+            passenger: infantPrice?.passengerType?.type,
+            commission: db?.infantCommission,
             fare: infantPrice?.fare,
-            numberOfSeats: infantPrice?.numberOfSeats,
-            numberOfSeatsAvailable: infantPrice?.numberOfSeatsAvailable,
             baggageWeight: infantPrice?.baggageWeight,
             handCarryWeight: infantPrice?.handCarryWeight,
-            dbCommission: db.infantCommission,
-            totalPrice:
-              (infantPrice?.totalFare -
-                infantPrice?.commission +
-                db.infantCommission) *
-              noInfant,
-            ...infantPrice,
+            totalPrice: (infantPrice?.fare + db?.infantCommission) * noInfant,
           },
         ]
 
-        delete item.flightPricings
+        const flight = {
+          segmentNumber: 1,
+          ticketTypeId: 1,
+          flightRouteId: item?.flightRouteId,
+          flightScheduleId: item?.flightScheduleId,
+          departureDate:
+            item?.departureDate?.slice(0, 10) + ' ' + item?.departureTime,
+          arrivalDate:
+            item?.arrivalDate?.slice(0, 10) + ' ' + item?.arrivalTime,
+          fromCityName: item?.fromCityName,
+          toCityName: item?.toCityName,
+          fromAirportName: item?.fromAirportName,
+          toAirportName: item?.toAirportName,
+          fromCityCode: item?.fromCityCode,
+          toCityCode: item?.toCityCode,
+          fromCountryName: item?.fromCountryName,
+          toCountryName: item?.toCountryName,
+          fromCountryId: item?.fromCountryId,
+          toCountryId: item?.toCountryId,
+          fromCountryIsoCode3: item?.fromCountryIsoCode3,
+          toCountryIsoCode3: item?.toCountryIsoCode3,
+        }
 
-        return { prices, flight: item, airline, db }
+        const airlineInfo = {
+          key: airline,
+          name: db?.name,
+          logo: db?.logo,
+        }
+
+        return { prices, flight, airline: airlineInfo }
       }
 
       const data = flights?.map((item: any) => {
@@ -156,7 +154,7 @@ handler.post(
             childCommission: item.childCommission,
             infantCommission: item.infantCommission,
             name: item.name,
-          })
+          }),
         )
 
         return newResult
@@ -166,7 +164,7 @@ handler.post(
     } catch (error: any) {
       res.status(500).json({ error: error?.response?.data || error?.message })
     }
-  }
+  },
 )
 
 export default handler
