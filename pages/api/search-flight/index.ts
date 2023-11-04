@@ -74,10 +74,13 @@ handler.post(
         }),
       )
 
+      // console.log(JSON.stringify(flights[0]))
+
       const filteredData = (item: any, airline: string, db: any) => {
         const adultPrice = item?.flightPricings?.find(
           (i: any) => i?.passengerType?.type === 'Adult',
         )
+
         const childPrice = item?.flightPricings?.find(
           (i: any) => i?.passengerType?.type === 'Child',
         )
@@ -134,6 +137,8 @@ handler.post(
           toCountryId: item?.toCountryId,
           fromCountryIsoCode3: item?.fromCountryIsoCode3,
           toCountryIsoCode3: item?.toCountryIsoCode3,
+          adultNumberOfSeatsAvailable: adultPrice?.numberOfSeatsAvailable,
+          childNumberOfSeatsAvailable: childPrice?.numberOfSeatsAvailable,
         }
 
         const airlineInfo = {
@@ -160,7 +165,16 @@ handler.post(
         return newResult
       })
 
-      return res.json(data?.flat())
+      // remove flight with no seats
+      const results = data
+        ?.flat()
+        ?.filter(
+          (item: any) =>
+            item?.flight?.adultNumberOfSeatsAvailable > 0 ||
+            item?.flight?.childNumberOfSeatsAvailable > 0,
+        )
+
+      return res.json(results)
     } catch (error: any) {
       res.status(500).json({ error: error?.response?.data || error?.message })
     }
