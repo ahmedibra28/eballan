@@ -1,15 +1,11 @@
-import FormContainer from '@/components/FormContainer'
+import City from '@/components/ui/home/City'
+import Hero from '@/components/ui/home/Hero'
 
 export default function Home() {
   return (
-    <FormContainer title='Home'>
-      <h1 className='text-gray-500 text-center'>
-        Welcome to
-        <a href='https://nextjs.org' target='_blank'>
-          <strong> Next.JS 13 </strong>
-        </a>
-        boilerplate
-      </h1>
-    </FormContainer>
+    <>
+      <Hero />
+      <City />
+    </>
   )
 }

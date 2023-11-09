@@ -13,7 +13,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className='mt-20 bg-white p-12 '>
+      <div className='mt-20 bg-white p-12 -mx-4'>
         <div className='flex flex-row flex-wrap justify-between items-center max-w-7xl mx-auto gap-5'>
           {partners.map((partner) => (
             <div
@@ -31,7 +31,7 @@ const Footer = () => {
           ))}
         </div>
       </div>
-      <div className='bg-my-primary -mb-4 mt-12 p-12 text-white '>
+      <div className='bg-my-primary -mb-4 mt-12 p-12 text-white -mx-4'>
         <div className='mx-auto text-center'>
           <Link href='/privacy-policy' className='text-light'>
             Privacy Policy

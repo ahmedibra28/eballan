@@ -30,6 +30,9 @@ export interface DynamicFormProps {
   dropdownValue?: string
   customFormat?: any
   disabled?: boolean
+  className?: string
+  iconLeft?: any
+  iconRight?: any
 }
 
 const Autocomplete = (props: DynamicFormProps) => {
@@ -51,6 +54,9 @@ const Autocomplete = (props: DynamicFormProps) => {
     item: itemProp,
     dropdownValue = '',
     customFormat = '',
+    className = '',
+    iconLeft,
+    iconRight,
   } = props
   const ref = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
@@ -70,20 +76,28 @@ const Autocomplete = (props: DynamicFormProps) => {
         })}
         ref={ref}
       >
-        <input
-          autoComplete='off'
-          {...register(
-            name,
-            isRequired && { required: `${label} is required` }
-          )}
-          type='text'
-          className='input rounded-none border border-gray-300 w-full'
-          value={value}
-          // @ts-ignore
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          tabIndex={0}
-        />
+        <div
+          className={`flex items-center bg-white ${
+            iconLeft ? 'pl-2 rounded-xl' : ''
+          } ${iconRight ? '' : 'pr-2'}`}
+        >
+          {iconLeft && iconLeft}
+          <input
+            autoComplete='off'
+            {...register(
+              name,
+              isRequired && { required: `${label} is required` }
+            )}
+            type='text'
+            className={`p-3 rounded-none outline-none w-full ${className}`}
+            value={value}
+            // @ts-ignore
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            tabIndex={0}
+          />
+          {iconRight && iconRight}
+        </div>
 
         {/* add this part */}
         {items?.length > 0 && (
@@ -621,6 +635,7 @@ export const InputDate = (args: DynamicFormProps) => {
     label,
     isRequired = true,
     hasLabel = true,
+    className = 'input rounded-none border border-gray-300 w-full',
   } = args
 
   return (
@@ -634,7 +649,7 @@ export const InputDate = (args: DynamicFormProps) => {
         {...register(name, isRequired && { required: `${label} is required` })}
         type='date'
         placeholder={placeholder}
-        className='input rounded-none border border-gray-300 w-full'
+        className={className}
       />
       {errors && errors[name] && (
         <span className='text-secondary text-sm mt-1'>
@@ -737,6 +752,7 @@ export const CustomSubmitButton = ({
   isLoading = false,
   label = 'Submit',
   spinner = 'loading loading-spinner',
+  iconLeft = '',
   ...args
 }) => {
   return (
@@ -752,7 +768,10 @@ export const CustomSubmitButton = ({
           loading...
         </span>
       ) : (
-        label
+        <>
+          {iconLeft}
+          {label}
+        </>
       )}
     </button>
   )

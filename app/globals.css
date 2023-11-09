@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://db.onlinewebfonts.com/c/63cf8985576a4aaa66f7c13c94dba716?family=Kollektif');
+
 body {
+  font-family: 'Kollektif', sans-serif !important;
+  font-style: normal !important;
   background-color: #f3f4f6;
 }

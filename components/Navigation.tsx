@@ -16,7 +16,7 @@ const Navigation = () => {
   useInterval()
 
   return (
-    <div className='flex-none'>
+    <div className='flex-none text-white'>
       <ul className='menu menu-horizontal px-1'>
         {!userInfo.id && (
           <li>
@@ -41,7 +41,7 @@ const Navigation = () => {
           </label>
           <ul
             tabIndex={0}
-            className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52'
+            className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-my-primary rounded-box w-52'
           >
             <li>
               <Link href='/account/profile' className='justify-between'>
