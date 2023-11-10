@@ -74,9 +74,36 @@ model ClientPermission {
   @@map("client_permissions")
 }
 
+model Airline {
+  id                String  @id @default(dbgenerated("nanoid()")) @db.VarChar(21)
+  name              String
+  api               String  @unique
+  adultCommission   Int
+  childCommission   Int
+  infantCommission  Int
+  logo              String
+  username          String
+  password          String
+  accessToken       String?
+  refreshToken      String?
+  accessTokenExpiry BigInt?
+
+  status Status @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("airlines")
+}
+
 enum Method {
   GET
   POST
   PUT
   DELETE
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
 }

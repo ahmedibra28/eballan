@@ -1,7 +1,7 @@
 import { isAuth } from '@/lib/auth'
 import { getErrorResponse } from '@/lib/helpers'
 import { NextResponse } from 'next/server'
-import { QueryMode, prisma } from '@/lib/prisma.db'
+import { Prisma, prisma } from '@/lib/prisma.db'
 
 export async function GET(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
     const q = searchParams.get('q')
 
     const query = q
-      ? { name: { contains: q, mode: QueryMode.insensitive } }
+      ? { name: { contains: q, mode: Prisma.QueryMode.insensitive } }
       : {}
 
     const page = parseInt(searchParams.get('page') as string) || 1
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
     const checkExistence =
       name &&
       (await prisma.role.findFirst({
-        where: { name: { equals: name, mode: QueryMode.insensitive } },
+        where: { name: { equals: name, mode: Prisma.QueryMode.insensitive } },
       }))
     if (checkExistence) return getErrorResponse('Role already exist')
 

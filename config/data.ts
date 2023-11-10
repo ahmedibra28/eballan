@@ -39,6 +39,7 @@ const sort = {
   hidden: 0,
   profile: 1,
   admin: 2,
+  normal: 3,
 }
 
 const clientPermissions = [
@@ -89,6 +90,14 @@ const clientPermissions = [
     menu: 'admin',
     sort: sort.admin,
     description: 'Client Permissions page',
+  },
+  {
+    id: 'GQ-gSEEsKu1G2XppSSV6l',
+    name: 'Airlines',
+    path: '/airlines',
+    menu: 'normal',
+    sort: sort.normal,
+    description: 'Airlines page',
   },
 ]
 
@@ -242,6 +251,36 @@ const permissions = [
     route: '/api/uploads',
     name: 'Upload',
     method: 'POST',
+  },
+
+  // Airline
+  {
+    id: 'lEtv7KNz0REGAJRgUptT1',
+    description: 'Airlines',
+    route: '/api/airlines',
+    name: 'Airline',
+    method: 'GET',
+  },
+  {
+    id: 'n1ZzNTlfDayXBJisbLSBV',
+    description: 'Airline',
+    route: '/api/airlines',
+    name: 'Airline',
+    method: 'POST',
+  },
+  {
+    id: 'Zp1VH1-2QRltXJrvk1iwA',
+    description: 'Airline',
+    route: '/api/airlines/:id',
+    name: 'Airline',
+    method: 'PUT',
+  },
+  {
+    id: 'KNznCsr9nBiwxbplXdGm9',
+    description: 'Airline',
+    route: '/api/airlines/:id',
+    name: 'Airline',
+    method: 'DELETE',
   },
 ]
 

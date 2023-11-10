@@ -1,7 +1,7 @@
 import { isAuth } from '@/lib/auth'
 import { getErrorResponse } from '@/lib/helpers'
 import { NextResponse } from 'next/server'
-import { QueryMode, prisma } from '@/lib/prisma.db'
+import { Prisma, prisma } from '@/lib/prisma.db'
 
 interface Params {
   params: {
@@ -55,8 +55,8 @@ export async function PUT(req: Request, { params }: Params) {
       params.id &&
       (await prisma.role.findFirst({
         where: {
-          name: { equals: name, mode: QueryMode.insensitive },
-          type: { equals: type, mode: QueryMode.insensitive },
+          name: { equals: name, mode: Prisma.QueryMode.insensitive },
+          type: { equals: type, mode: Prisma.QueryMode.insensitive },
           id: { not: params.id },
         },
       }))

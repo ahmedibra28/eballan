@@ -4,40 +4,26 @@ import React, { useState, useEffect, FormEvent } from 'react'
 import dynamic from 'next/dynamic'
 import { confirmAlert } from 'react-confirm-alert'
 import { useForm } from 'react-hook-form'
-import {
-  FaCircleCheck,
-  FaFilePen,
-  FaCircleXmark,
-  FaTrash,
-  FaBars,
-} from 'react-icons/fa6'
+import { FaEllipsis, FaFilePen, FaTrash } from 'react-icons/fa6'
 import moment from 'moment'
 import useAuthorization from '@/hooks/useAuthorization'
 import useApi from '@/hooks/useApi'
 import Confirm from '@/components/Confirm'
 import { useRouter } from 'next/navigation'
-import {
-  Autocomplete,
-  ButtonCircle,
-  InputCheckBox,
-  InputEmail,
-  InputPassword,
-  InputText,
-} from '@/components/dForms'
+import { ButtonCircle, InputText, StaticInputSelect } from '@/components/dForms'
 import Message from '@/components/Message'
 import Pagination from '@/components/Pagination'
 import FormView from '@/components/FormView'
 import Spinner from '@/components/Spinner'
 import Search from '@/components/Search'
-import { IRole, IUser } from '@/types'
 import TableView from '@/components/TableView'
+import { IAirline } from '@/types'
 
 const Page = () => {
   const [page, setPage] = useState(1)
   const [id, setId] = useState<any>(null)
   const [edit, setEdit] = useState(false)
   const [q, setQ] = useState('')
-  const [val, setVal] = useState('')
 
   const path = useAuthorization()
   const router = useRouter()
@@ -49,48 +35,41 @@ const Page = () => {
   }, [path, router])
 
   const getApi = useApi({
-    key: ['users'],
+    key: ['airlines'],
     method: 'GET',
-    url: `users?page=${page}&q=${q}&limit=${25}`,
-  })?.get
-
-  const getRolesApi = useApi({
-    key: ['roles'],
-    method: 'GET',
-    url: `roles?page=1&q=${val}&limit=${10}`,
+    url: `airlines?page=${page}&q=${q}&limit=${50}`,
   })?.get
 
   const postApi = useApi({
-    key: ['users'],
+    key: ['airlines'],
     method: 'POST',
-    url: `users`,
+    url: `airlines`,
   })?.post
 
   const updateApi = useApi({
-    key: ['users'],
+    key: ['airlines'],
     method: 'PUT',
-    url: `users`,
+    url: `airlines`,
   })?.put
 
   const deleteApi = useApi({
-    key: ['users'],
+    key: ['airlines'],
     method: 'DELETE',
-    url: `users`,
+    url: `airlines`,
   })?.deleteObj
 
   useEffect(() => {
-    if (val) {
-      getRolesApi?.refetch()
+    if (updateApi?.isSuccess) {
+      getApi?.refetch()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [val])
+  }, [updateApi?.isSuccess])
 
   const {
     register,
     handleSubmit,
     setValue,
     reset,
-    watch,
     formState: { errors },
   } = useForm({})
 
@@ -117,14 +96,17 @@ const Page = () => {
     setPage(1)
   }
 
-  const editHandler = (item: IUser) => {
+  const editHandler = (item: IAirline) => {
     setId(item.id)
-    setValue('blocked', item?.blocked)
-    setValue('confirmed', item?.confirmed)
     setValue('name', item?.name)
-    setValue('email', item?.email)
-    setValue('roleId', item?.role.name)
-    setVal(item?.role.name)
+    setValue('api', item?.api)
+    setValue('username', item?.username)
+    setValue('password', item?.password)
+    setValue('adultCommission', item?.adultCommission)
+    setValue('childCommission', item?.childCommission)
+    setValue('infantCommission', item?.infantCommission)
+    setValue('logo', item?.logo)
+    setValue('status', item?.status)
 
     setEdit(true)
   }
@@ -133,44 +115,54 @@ const Page = () => {
     confirmAlert(Confirm(() => deleteApi?.mutateAsync(id)))
   }
 
-  const name = 'Users List'
-  const label = 'User'
-  const modal = 'user'
+  const name = 'Airlines List'
+  const label = 'Airline'
+  const modal = 'airline'
+
+  // FormView
+  const formCleanHandler = () => {
+    reset()
+    setEdit(false)
+    setId(null)
+    // @ts-ignore
+    window[modal].close()
+  }
+
+  const submitHandler = (data: any) => {
+    if (edit) {
+      updateApi?.mutateAsync({
+        id: id,
+        ...data,
+      })
+    } else {
+      postApi?.mutateAsync({
+        ...data,
+      })
+    }
+  }
 
   // TableView
   const table = {
     header: [
       { title: 'Name' },
-      { title: 'Email' },
-      { title: 'Role', className: 'hidden md:table-cell' },
-      { title: 'Confirmed', className: 'hidden md:table-cell' },
-      { title: 'Blocked', className: 'hidden md:table-cell' },
+      { title: 'API' },
+      { title: 'Username' },
+      { title: 'Status' },
       { title: 'CreatedAt', className: 'hidden md:table-cell' },
       { title: 'Action' },
     ],
     body: [
       { format: (item: any) => item?.name },
-      { format: (item: any) => item?.email },
+      { format: (item: any) => item?.api },
+      { format: (item: any) => item?.username },
       {
-        className: 'hidden md:table-cell',
-        format: (item: any) => item?.role?.type,
-      },
-      {
-        className: 'hidden md:table-cell',
         format: (item: any) =>
-          item?.confirmed ? (
-            <FaCircleCheck className='text-green-500' />
+          item?.status === 'ACTIVE' ? (
+            <span className='text-green-500'>{item?.status}</span>
+          ) : item?.status === 'INACTIVE' ? (
+            <span className='text-blue-500'>{item?.status}</span>
           ) : (
-            <FaCircleXmark className='text-red-500' />
-          ),
-      },
-      {
-        className: 'hidden md:table-cell',
-        format: (item: any) =>
-          !item?.blocked ? (
-            <FaCircleCheck className='text-green-500' />
-          ) : (
-            <FaCircleXmark className='text-red-500' />
+            <span className='text-red-500'>{item?.status}</span>
           ),
       },
       {
@@ -179,13 +171,13 @@ const Page = () => {
       },
       {
         format: (item: any) => (
-          <div className='dropdown dropdown-top dropdown-left z-50'>
+          <div className='dropdown dropdown-top dropdown-left z-30'>
             <label tabIndex={0} className='cursor-pointer'>
-              <FaBars className='text-2xl' />
+              <FaEllipsis className='text-2xl' />
             </label>
             <ul
               tabIndex={0}
-              className='dropdown-content z-50 menu p-2 bg-white rounded-tl-box rounded-tr-box rounded-bl-box w-28 border border-gray-200 shadow'
+              className='dropdown-content menu p-2 bg-white rounded-tl-box rounded-tr-box rounded-bl-box w-28 border border-gray-200 shadow'
             >
               <li className='h-10 w-24'>
                 <ButtonCircle
@@ -219,32 +211,6 @@ const Page = () => {
     paginationData: getApi?.data,
   }
 
-  // FormView
-  const formCleanHandler = () => {
-    reset()
-    setEdit(false)
-    setId(null)
-    setVal('')
-    getRolesApi?.refetch()
-    // @ts-ignore
-    window[modal].close()
-  }
-
-  const submitHandler = (data: any) => {
-    const roleId = getRolesApi?.data?.data?.find(
-      (item: IRole) => item?.name === data?.roleId
-    )?.id
-
-    edit
-      ? updateApi?.mutateAsync({
-          id: id,
-          ...data,
-          roleId,
-        })
-      : postApi?.mutateAsync({ ...data, roleId })
-  }
-
-  // form view
   const form = [
     <div key={0} className='flex flex-wrap justify-between'>
       <div className='w-full'>
@@ -257,67 +223,13 @@ const Page = () => {
         />
       </div>
       <div className='w-full'>
-        <InputEmail
+        <StaticInputSelect
           register={register}
           errors={errors}
-          label='Email'
-          name='email'
-          placeholder='Enter email address'
-        />
-      </div>
-      <div className='w-full'>
-        <Autocomplete
-          register={register}
-          errors={errors}
-          label='Role'
-          name='roleId'
-          items={getRolesApi?.data?.data}
-          item='name'
-          value={val}
-          onChange={setVal}
-          setValue={setValue}
-          className='w-full input border border-gray-300'
-        />
-      </div>
-      <div key={2} className='w-full'>
-        <InputPassword
-          register={register}
-          errors={errors}
-          label='Password'
-          name='password'
-          placeholder='Enter password'
-          isRequired={false}
-        />
-      </div>
-      <div className='w-full'>
-        <InputPassword
-          register={register}
-          errors={errors}
-          label='Confirm Password'
-          name='confirmPassword'
-          placeholder='Enter confirm password'
-          isRequired={false}
-          minLength={true}
-          validate={true}
-          watch={watch}
-        />
-      </div>
-      <div className='w-full'>
-        <InputCheckBox
-          register={register}
-          errors={errors}
-          label='Confirmed'
-          name='confirmed'
-          isRequired={false}
-        />
-      </div>
-      <div className='w-full'>
-        <InputCheckBox
-          register={register}
-          errors={errors}
-          label='Blocked'
-          name='blocked'
-          isRequired={false}
+          label='Status'
+          name='status'
+          placeholder='Select status'
+          data={[{ name: 'ACTIVE' }, { name: 'INACTIVE' }]}
         />
       </div>
     </div>,
@@ -343,7 +255,7 @@ const Page = () => {
       {postApi?.isError && <Message variant='error' value={postApi?.error} />}
 
       <div className='ms-auto text-end'>
-        <Pagination data={table.paginationData} setPage={setPage} />
+        <Pagination data={table?.paginationData} setPage={setPage} />
       </div>
 
       <FormView
@@ -354,7 +266,7 @@ const Page = () => {
         handleSubmit={handleSubmit}
         submitHandler={submitHandler}
         modal={modal}
-        label={`${edit ? 'Edit' : 'Add New'} ${label}`}
+        label={`${edit ? 'Edit' : 'Add New'} Record`}
         modalSize='max-w-xl'
       />
 
@@ -378,7 +290,7 @@ const Page = () => {
             </button>
             <div className='w-full sm:w-[80%] md:w-[50%] lg:w-[30%] mx-auto'>
               <Search
-                placeholder='Search by email'
+                placeholder='Search by name'
                 setQ={setQ}
                 q={q}
                 searchHandler={searchHandler}

@@ -18,7 +18,7 @@ export default function Hero() {
         <h1 className='text-3xl md:text-4xl lg:text-7xl font-extrabold text-white mb-5 duration-1000'>
           Nimaan Dhulmarin Dhaayo Maleh
         </h1>
-        <SearchForm />
+        <SearchForm source='home' />
       </div>
     </>
   )

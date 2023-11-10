@@ -40,7 +40,7 @@ export default function PrivacyPolicy() {
 
       {active === 'Privacy Policy' && (
         <div className='space-y-3'>
-          <h1>Privacy Policy</h1>
+          <h1 className='text-2xl font-bold'>Privacy Policy</h1>
           <p>
             Effective Date: <strong>08 Aug, 2023</strong>
           </p>
@@ -246,7 +246,7 @@ export default function PrivacyPolicy() {
 
       {active === 'Refund Policy' && (
         <div className='space-y-3'>
-          <h1>Refund Policy</h1>
+          <h1 className='text-2xl font-bold'>Refund Policy</h1>
           <p>
             Effective Date: <strong>08 Aug, 2023</strong>
           </p>

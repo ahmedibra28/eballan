@@ -119,54 +119,18 @@ const Autocomplete = (props: DynamicFormProps) => {
                       // @ts-ignore
                       setValue(name, item[itemProp])
 
-                      if (dropdownValue === 'product-purchase') {
+                      if (dropdownValue === 'departure-date') {
                         // @ts-ignore
-                        setValue(
-                          `${name?.split('.')?.[0]}.cost`,
-                          // @ts-ignore
-                          item?.cost
-                        )
-
-                        // @ts-ignore
-                        setValue(`${name?.split('.')?.[0]}.price`, item?.price)
-
-                        // @ts-ignore
-                        setValue(
-                          `${name?.split('.')?.[0]}.id`,
-                          // @ts-ignore
-                          item?.id
-                        )
+                        setValue(`fromId`, item?.id)
                       }
-
-                      if (dropdownValue === 'product-sale') {
+                      if (dropdownValue === 'arrival-date') {
+                        // @ts-ignore
+                        setValue(`toId`, item?.id)
+                      }
+                      if (dropdownValue === 'country') {
                         // @ts-ignore
                         setValue(
-                          `${name?.split('.')?.[0]}.price`,
-                          // @ts-ignore
-                          item?.price?.toFixed(2)
-                        )
-                        // @ts-ignore
-                        setValue(
-                          `${name?.split('.')?.[0]}.quantity`,
-                          // @ts-ignore
-                          1
-                        )
-                        // @ts-ignore
-                        setValue(
-                          `${name?.split('.')?.[0]}.discount`,
-                          // @ts-ignore
-                          0
-                        )
-                        // @ts-ignore
-                        setValue(
-                          `${name?.split('.')?.[0]}.total`,
-                          // @ts-ignore
-                          Number(item?.price) * Number(item?.quantity)
-                        )
-                        // @ts-ignore
-                        setValue(
-                          `${name?.split('.')?.[0]}.id`,
-                          // @ts-ignore
+                          `countryId${name.split('country')[1]}`,
                           item?.id
                         )
                       }
