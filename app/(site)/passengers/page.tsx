@@ -12,8 +12,7 @@ import {
 import Steps from '@/components/ui/Steps'
 import country from '@/server/country'
 import passengerTitle from '@/server/passengerTitle'
-import passengerType from '@/server/passengerType'
-import { ICountry, IPassenger, IPassengerTitle, IPassengerType } from '@/types'
+import { ICountry, IPassenger, IPassengerTitle } from '@/types'
 import useFlightStore from '@/zustand/useFlightStore'
 import React, { Fragment } from 'react'
 import { useForm } from 'react-hook-form'
@@ -39,6 +38,10 @@ export default function Page() {
 
   const { flight } = useFlightStore((state) => state)
   const { updatePassenger } = usePassengerStore((state) => state)
+
+  React.useEffect(() => {
+    if (!flight) return router.back()
+  }, [])
 
   const {
     register,

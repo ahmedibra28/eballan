@@ -134,6 +134,10 @@ const Autocomplete = (props: DynamicFormProps) => {
                           item?.id
                         )
                       }
+                      if (dropdownValue === 'countryEdit') {
+                        // @ts-ignore
+                        setValue(`countryId`, item?.id)
+                      }
                     }}
                     className='border-b border-b-base-content/10 w-full'
                   >
