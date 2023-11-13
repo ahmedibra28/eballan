@@ -100,6 +100,7 @@ export default function SearchForm({ source }: { source?: string }) {
         })
       })
     }
+    // eslint-disable-next-line
   }, [])
 
   const {
@@ -249,6 +250,7 @@ export default function SearchForm({ source }: { source?: string }) {
               iconLeft={
                 <FaPlaneDeparture className='text-my-primary text-lg' />
               }
+              // @ts-ignore
               items={cities?.filter((item) =>
                 item?.name?.toLowerCase()?.includes(valueF?.toLowerCase()!)
               )}
@@ -290,6 +292,7 @@ export default function SearchForm({ source }: { source?: string }) {
               hasLabel={false}
               name='to'
               iconLeft={<FaPlaneArrival className='text-my-primary text-lg' />}
+              // @ts-ignore
               items={cities?.filter((item) =>
                 item?.name?.toLowerCase()?.includes(valueT?.toLowerCase()!)
               )}

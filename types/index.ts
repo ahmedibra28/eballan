@@ -190,3 +190,126 @@ export interface IPassenger {
     phone: string
   }
 }
+
+export type IInsertToDB = {
+  passengers: {
+    passengerTitle: string
+    firstName: string
+    secondName: string
+    lastName: string
+    country: string
+    countryId: number
+    sex: string
+    dob: string
+    id: string
+    passengerType: string
+  }[]
+  prices: {
+    passenger: string
+    commission: number
+    fare: number
+    baggageWeight: number
+    handCarryWeight: number
+    totalPrice: number
+  }[]
+  flight: {
+    segmentNumber: number
+    ticketTypeId: number
+    flightRouteId: number
+    flightScheduleId: number
+    departureDate: string
+    arrivalDate: string
+    fromCityName: string
+    toCityName: string
+    fromAirportName: string
+    toAirportName: string
+    fromCityCode: string
+    toCityCode: string
+    fromCountryName: string
+    toCountryName: string
+    fromCountryId: number
+    toCountryId: number
+    fromCountryIsoCode3: string
+    toCountryIsoCode3: string
+    adultNumberOfSeatsAvailable: number
+    childNumberOfSeatsAvailable: number
+    airlineId: string
+  }
+  adult: number
+  child: number
+  infant: number
+  phone: string
+  paymentMethod: string
+  reservationId: number
+  pnrNumber: string
+  status: string
+  createdById: string
+}
+
+export type IPdf = {
+  id: string
+  reservationId: number
+  pnrNumber: string
+  status: string
+  adult: number
+  child: number
+  infant: number
+  phone: string
+  paymentMethod: string
+  flightId: string
+  flight: {
+    id: string
+    segmentNumber: number
+    ticketTypeId: number
+    flightRouteId: number
+    flightScheduleId: number
+    departureDate: string
+    arrivalDate: string
+    fromCityName: string
+    toCityName: string
+    fromAirportName: string
+    toAirportName: string
+    fromCityCode: string
+    toCityCode: string
+    fromCountryName: string
+    toCountryName: string
+    fromCountryId: number
+    toCountryId: number
+    fromCountryIsoCode3: string
+    toCountryIsoCode3: string
+    adultNumberOfSeatsAvailable: number
+    childNumberOfSeatsAvailable: number
+    airlineId: string
+    airline: {
+      name: string
+      logo: string
+      api: string
+      id: string
+    }
+  }
+  passengers: {
+    id: string
+    passengerTitle: string
+    firstName: string
+    secondName: string
+    lastName: string
+    country: string
+    countryId: number
+    sex: string
+    dob: string
+    passengerType: string
+    reservationId: string
+  }[]
+  prices: {
+    id: string
+    passenger: string
+    commission: number
+    fare: number
+    baggageWeight: number
+    handCarryWeight: number
+    totalPrice: number
+    reservationId: string
+  }[]
+  createdAt?: Date
+  createdById?: string
+}

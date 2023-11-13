@@ -1,0 +1,400 @@
+'use server'
+
+import // useCreateInvoice as CreateInvoice,
+// useVerifyInvoice as VerifyInvoice,
+'@/hooks/useEDahabPayment'
+// import { useEVCPayment as EVCPayment } from '@/hooks/useEVCPayment'
+import DateTime from '@/lib/dateTime'
+import { getEnvVariable } from '@/lib/helpers'
+import { IPassenger, IFlight, IInsertToDB } from '@/types'
+import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid'
+import { prisma } from '@/lib/prisma.db'
+
+export default async function book({
+  passenger,
+  flight,
+  payment,
+  //  link,
+  createdById,
+}: {
+  passenger: IPassenger
+  flight: IFlight
+  payment: { phone: string; paymentMethod: string }
+  link?: string
+  createdById: string
+}) {
+  try {
+    const BASE_URL = getEnvVariable('BASE_URL')
+
+    if (!payment.phone) throw new Error('Invalid phone')
+    if (payment.phone.slice(0, 1) === '0') {
+      payment.phone = payment.phone.substring(1)
+    }
+
+    if (payment.phone.slice(0, 3) === '252') {
+      payment.phone = payment.phone.substring(3)
+    }
+
+    if (payment.phone.length !== 9)
+      throw new Error('Phone number must be 9 digits')
+
+    const totalPrice =
+      flight?.prices?.reduce((acc, cur) => acc + cur?.totalPrice, 0) || 0
+
+    if (totalPrice < 1) throw new Error('Invalid amount')
+
+    // Edahab Implementation
+    // if (payment.paymentMethod === 'somtel' && status === 'invoice') {
+    //   const createInvoice = await CreateInvoice(
+    //     payment.phone,
+    //     Number(totalPrice)
+    //   )
+    //   if (createInvoice?.StatusCode !== 0)
+    //     throw new Error(createInvoice?.StatusDescription)
+
+    //   const link = `https://edahab.net/api/payment?invoiceId=${createInvoice.InvoiceId}`
+
+    //   return { message: `success`, link }
+    // }
+
+    // if (payment.paymentMethod === 'somtel' && status === 'verify' && link) {
+    //   const invoiceId = link.split('invoiceId=')[1]
+    //   const verifyInvoice = await VerifyInvoice(Number(invoiceId))
+
+    //   if (verifyInvoice?.InvoiceStatus !== 'Paid')
+    //     throw new Error(
+    //       `Please pay ${verifyInvoice?.InvoiceStatus?.toLowerCase()} invoice first`
+    //     )
+    // }
+
+    // handle EVC payment
+    if (
+      payment.paymentMethod === 'hormuud' ||
+      payment.paymentMethod === 'somnet'
+    ) {
+      // const MERCHANT_U_ID = getEnvVariable('MERCHANT_U_ID')
+      // const API_USER_ID = getEnvVariable('API_USER_ID')
+      // const API_KEY = getEnvVariable('API_KEY')
+      // const MERCHANT_ACCOUNT_NO = getEnvVariable('MERCHANT_ACCOUNT_NO')
+      // if (phone !== '770022200') {
+      // const paymentInfo = await EVCPayment({
+      //   merchantUId: MERCHANT_U_ID,
+      //   apiUserId: API_USER_ID,
+      //   apiKey: API_KEY,
+      //   customerMobileNumber: `252${payment.phone}`,
+      //   description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
+      //   amount: totalPrice,
+      //   withdrawTo: 'MERCHANT',
+      //   withdrawNumber: MERCHANT_ACCOUNT_NO,
+      // })
+      // if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
+    }
+
+    let readyToBook = {
+      bookingTypeId: 1,
+      paymentStatusId: 2,
+      reservationStatusId: 1,
+      passengers: [
+        passenger?.adult?.length > 0 && {
+          ...passenger.adult?.map((item) => ({
+            firstName: item.firstName,
+            lastName: item.lastName,
+            passportNo: '',
+            dob: DateTime(item.dob).format(),
+            countryId: item?.countryId,
+            passengerTypeId: 1, // Adult
+            passengerTitleId: item.passengerTitle,
+            reservationDetails: [
+              {
+                segmentNumber: 1,
+                ticketTypeId: 1,
+                flightRouteId: flight.flight.flightRouteId,
+                flightScheduleId: flight.flight.flightScheduleId,
+              },
+            ],
+          })),
+        },
+
+        passenger?.child?.length > 0 && {
+          ...passenger.child?.map((item) => ({
+            firstName: item.firstName,
+            lastName: item.lastName,
+            passportNo: '',
+            dob: DateTime(item.dob).format(),
+            countryId: item?.countryId,
+            passengerTypeId: 2, // Child
+            passengerTitleId: item.passengerTitle,
+            reservationDetails: [
+              {
+                segmentNumber: 1,
+                ticketTypeId: 1,
+                flightRouteId: flight.flight.flightRouteId,
+                flightScheduleId: flight.flight.flightScheduleId,
+              },
+            ],
+          })),
+        },
+        passenger?.infant?.length > 0 && {
+          ...passenger.infant?.map((item) => ({
+            firstName: item.firstName,
+            lastName: item.lastName,
+            passportNo: '',
+            dob: DateTime(item.dob).format(),
+            countryId: item?.countryId,
+            passengerTypeId: 3, // Infant
+            passengerTitleId: item.passengerTitle,
+            reservationDetails: [
+              {
+                segmentNumber: 1,
+                ticketTypeId: 1,
+                flightRouteId: flight.flight.flightRouteId,
+                flightScheduleId: flight.flight.flightScheduleId,
+              },
+            ],
+          })),
+        },
+      ],
+      contactInformation: {
+        email: passenger?.contact?.email,
+        phone: passenger?.contact?.phone,
+      },
+    }
+
+    readyToBook = {
+      ...readyToBook,
+      passengers: readyToBook?.passengers
+        ?.filter((item: any) => item)
+        ?.map((item) => Object.values(item))
+        ?.flat(),
+    }
+
+    let airline = await prisma.airline.findFirst({
+      where: {
+        status: 'ACTIVE',
+        api: `${flight.airline?.key}`,
+      },
+    })
+    if (!airline) throw new Error(`No active airline`)
+
+    if ((airline?.accessTokenExpiry || 0) <= Date.now()) {
+      const { data } = await axios.post(
+        `${BASE_URL}/${airline?.api}/Core/api/login`,
+        {
+          username: airline?.username,
+          password: airline?.password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      if (!data) throw new Error(`Failed to login to ${airline?.name}`)
+
+      await prisma.airline.update({
+        where: { id: `${airline?.id}` },
+        data: {
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken,
+          accessTokenExpiry: Date.now() + 60 * (60 * 1000),
+        },
+      })
+    }
+
+    airline = await prisma.airline.findFirst({
+      where: {
+        status: 'ACTIVE',
+        api: flight.airline?.key,
+        id: airline?.id,
+      },
+    })
+
+    const { data } = await axios.post(
+      `${BASE_URL}/${airline?.api}/ReservationApi/api/bookings/AddConfirmBooking`,
+      readyToBook,
+      {
+        headers: {
+          Authorization: `Bearer ${airline?.accessToken}`,
+          uuid: uuidv4(),
+          scheme: 'https',
+          platform: 1,
+        },
+      }
+    )
+
+    let forDatabase = {
+      passengers: [
+        passenger?.adult?.length > 0 && {
+          ...passenger?.adult?.map((item) => ({
+            ...item,
+            passengerType: 'Adult',
+          })),
+        },
+        passenger?.child?.length > 0 && {
+          ...passenger?.child?.map((item) => ({
+            ...item,
+            passengerType: 'Child',
+          })),
+        },
+        passenger?.infant?.length > 0 && {
+          ...passenger?.infant?.map((item) => ({
+            ...item,
+            passengerType: 'Infant',
+          })),
+        },
+      ],
+      prices: [
+        passenger?.adult?.length > 0
+          ? flight?.prices?.find((item) => item.passenger === 'Adult')
+          : undefined,
+        passenger?.child?.length > 0
+          ? flight?.prices?.find((item) => item.passenger === 'Child')
+          : undefined,
+        passenger?.infant?.length > 0
+          ? flight?.prices?.find((item) => item.passenger === 'Infant')
+          : undefined,
+      ],
+      flight: { ...flight?.flight, airlineId: airline?.id },
+      adult: flight?.adult,
+      child: flight?.child,
+      infant: flight?.infant,
+      phone: payment?.phone,
+      paymentMethod: payment?.paymentMethod,
+      reservationId: data?.reservationId,
+      pnrNumber: data?.pnrNumber,
+      status: 'BOOKED',
+      createdById: createdById,
+    }
+
+    forDatabase = {
+      ...forDatabase,
+      passengers: forDatabase?.passengers
+        ?.filter((item: any) => item)
+        ?.map((item) => Object.values(item))
+        ?.flat()
+        ?.map((item) => {
+          delete item?.id
+          return item
+        }),
+      prices: forDatabase?.prices?.filter((item: any) => item),
+    }
+
+    // @ts-ignore
+    const obj: IInsertToDB = forDatabase
+
+    // console.log(JSON.stringify(obj))
+    // const obj = {
+    //   passengers: [
+    //     {
+    //       passengerTitle: '1',
+    //       firstName: 'Abukar',
+    //       secondName: 'Abdulahi',
+    //       lastName: 'Mohamed',
+    //       country: 'EGYPT',
+    //       countryId: 63,
+    //       sex: 'Male',
+    //       dob: '1980-10-10',
+    //       passengerType: 'Adult',
+    //     },
+    //   ],
+    //   prices: [
+    //     {
+    //       passenger: 'Adult',
+    //       commission: 20,
+    //       fare: 120,
+    //       baggageWeight: 25,
+    //       handCarryWeight: 7,
+    //       totalPrice: 140,
+    //     },
+    //   ],
+    //   flight: {
+    //     segmentNumber: 1,
+    //     ticketTypeId: 1,
+    //     flightRouteId: 6520,
+    //     flightScheduleId: 4637,
+    //     departureDate: '2023-11-29 08:30:00',
+    //     arrivalDate: '2023-11-29 09:45:00',
+    //     fromCityName: 'Mogadishu',
+    //     toCityName: 'Kismayo',
+    //     fromAirportName: 'Aden Adde International Airport ',
+    //     toAirportName: 'Kismayo Airport',
+    //     fromCityCode: 'MGQ',
+    //     toCityCode: 'KMU',
+    //     fromCountryName: 'SOMALIA',
+    //     toCountryName: 'SOMALIA',
+    //     fromCountryId: 196,
+    //     toCountryId: 196,
+    //     fromCountryIsoCode3: 'SOM',
+    //     toCountryIsoCode3: 'SOM',
+    //     adultNumberOfSeatsAvailable: 54,
+    //     childNumberOfSeatsAvailable: 54,
+    //     airlineId: 'Gg_g7AOAVu4tTZV8DfY_W',
+    //   },
+    //   adult: 1,
+    //   child: 0,
+    //   infant: 0,
+    //   phone: '615301507',
+    //   paymentMethod: 'Hormuud',
+    //   reservationId: 90716,
+    //   pnrNumber: 'AMFE10',
+    //   status: 'BOOKED',
+    //   createdById: 'e5cTUpLtGS7foE42nJuwp',
+    // }
+
+    await prisma.$transaction(async (prisma) => {
+      // Insert passengers
+      const passengers = await Promise.all(
+        obj.passengers.map(async (passenger) => {
+          const p = await prisma.passenger.create({
+            data: passenger,
+          })
+          return p
+        })
+      )
+
+      // Insert prices
+      const prices = await Promise.all(
+        obj.prices.map(async (price) => {
+          const p = await prisma.price.create({
+            data: price,
+          })
+          return p
+        })
+      )
+
+      // Insert flight
+      const flight = await prisma.flight.create({
+        data: obj.flight,
+      })
+      // Insert reservation
+      await prisma.reservation.create({
+        data: {
+          reservationId: obj?.reservationId,
+          pnrNumber: obj?.pnrNumber,
+          status: 'BOOKED',
+          adult: obj?.adult,
+          child: obj?.child,
+          infant: obj?.infant,
+          phone: obj?.phone,
+          paymentMethod: obj?.paymentMethod,
+          createdById: obj.createdById,
+          flightId: flight.id,
+          passengers: {
+            connect: passengers.map((passenger) => ({ id: passenger.id })),
+          },
+          prices: {
+            connect: prices.map((price) => ({ id: price.id })),
+          },
+        },
+      })
+    })
+
+    return {
+      reservationId: data?.reservationId,
+      pnrNumber: data?.pnrNumber,
+    }
+  } catch (error: any) {
+    throw new Error(`Error booking reservation: ${error?.message}`)
+  }
+}

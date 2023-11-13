@@ -51,3 +51,6 @@ migrations
 /public/uploads/*.doc
 
 /prisma/migrations
+
+
+*.todo

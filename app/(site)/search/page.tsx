@@ -45,6 +45,7 @@ export default function Page() {
           className='p-2 bg-gray-200 w-full rounded-xl flex flex-wrap justify-between items-center mb-5'
         >
           <div className='w-full md:w-[25%] lg:w-[20%] p-2 mx-auto md:border md:border-white md:border-b-0 md:border-l-0 md:border-t-0 flex flex-col items-center justify-center duration-1000'>
+            {/*  eslint-disable-next-line */}
             <img
               src={flight?.airline?.logo || '/noimageavailable.png'}
               width={200}

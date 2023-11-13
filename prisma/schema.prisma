@@ -23,8 +23,9 @@ model User {
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
-  role   Role   @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  roleId String
+  role        Role          @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  roleId      String
+  reservation Reservation[]
 
   @@map("users")
 }
@@ -88,12 +89,101 @@ model Airline {
   refreshToken      String?
   accessTokenExpiry BigInt?
 
+  flights Flight[]
+
   status Status @default(ACTIVE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("airlines")
+}
+
+model Passenger {
+  id             String       @id @default(dbgenerated("nanoid()")) @db.VarChar(21)
+  passengerTitle String
+  firstName      String
+  secondName     String
+  lastName       String
+  country        String
+  countryId      Int
+  sex            String
+  dob            String
+  passengerType  String
+  reservation    Reservation? @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  reservationId  String?      @db.VarChar(21)
+
+  @@map("passengers")
+}
+
+model Price {
+  id              String       @id @default(dbgenerated("nanoid()")) @db.VarChar(21)
+  passenger       String
+  commission      Int
+  fare            Int
+  baggageWeight   Int
+  handCarryWeight Int
+  totalPrice      Int
+  reservation     Reservation? @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  reservationId   String?      @db.VarChar(21)
+
+  @@map("prices")
+}
+
+model Flight {
+  id                          String       @id @default(dbgenerated("nanoid()")) @db.VarChar(21)
+  segmentNumber               Int
+  ticketTypeId                Int
+  flightRouteId               Int
+  flightScheduleId            Int
+  departureDate               String
+  arrivalDate                 String
+  fromCityName                String
+  toCityName                  String
+  fromAirportName             String
+  toAirportName               String
+  fromCityCode                String
+  toCityCode                  String
+  fromCountryName             String
+  toCountryName               String
+  fromCountryId               Int
+  toCountryId                 Int
+  fromCountryIsoCode3         String
+  toCountryIsoCode3           String
+  adultNumberOfSeatsAvailable Int
+  childNumberOfSeatsAvailable Int
+  reservation                 Reservation?
+
+  airline   Airline @relation(fields: [airlineId], references: [id], onDelete: Restrict)
+  airlineId String  @db.VarChar(21)
+
+  @@map("flight")
+}
+
+model Reservation {
+  id            String @id @default(dbgenerated("nanoid()")) @db.VarChar(21)
+  reservationId Int
+  pnrNumber     String
+  status        Status @default(ACTIVE)
+  adult         Int
+  child         Int
+  infant        Int
+  phone         String
+  paymentMethod String
+
+  passengers Passenger[]
+  prices     Price[]
+
+  flight   Flight? @relation(fields: [flightId], references: [id], onDelete: Restrict)
+  flightId String? @unique
+
+  createdBy   User?   @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  createdById String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("reservations")
 }
 
 enum Method {
@@ -106,4 +196,5 @@ enum Method {
 enum Status {
   ACTIVE
   INACTIVE
+  BOOKED
 }

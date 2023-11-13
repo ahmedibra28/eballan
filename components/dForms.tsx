@@ -131,6 +131,7 @@ const Autocomplete = (props: DynamicFormProps) => {
                         // @ts-ignore
                         setValue(
                           `countryId${name.split('country')[1]}`,
+                          // @ts-ignore
                           item?.id
                         )
                       }

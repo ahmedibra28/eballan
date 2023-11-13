@@ -30,41 +30,6 @@ export default async function flight({
     })
     if (airlines?.length < 1) throw new Error(`No active airlines`)
 
-    // const loginData = await Promise.all(
-    //   airlines.map(async (item) => {
-    //     if ((item?.accessTokenExpiry || 0) > Date.now()) return item
-
-    //     const { data } = await axios.post(
-    //       `${BASE_URL}/${item?.api}/Core/api/login`,
-    //       {
-    //         username: item?.username,
-    //         password: item?.password,
-    //       },
-    //       {
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //         },
-    //       }
-    //     )
-
-    //     if (!data) throw new Error(`Failed to login to ${item?.name}`)
-
-    //     const updateAccess = await prisma.airline.update({
-    //       where: { id: item.id },
-    //       data: {
-    //         accessToken: data.accessToken,
-    //         refreshToken: data.refreshToken,
-    //         accessTokenExpiry: Date.now() + 60 * (60 * 1000),
-    //       },
-    //     })
-
-    //     return {
-    //       ...item,
-    //       ...updateAccess,
-    //     }
-    //   })
-    // )
-
     const oneWayBody = {
       departureDate: date?.slice(0, 10),
       arrivalDate: '',

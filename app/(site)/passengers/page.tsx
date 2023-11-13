@@ -41,6 +41,7 @@ export default function Page() {
 
   React.useEffect(() => {
     if (!flight) return router.back()
+    // eslint-disable-next-line
   }, [])
 
   const {
@@ -189,6 +190,7 @@ export default function Page() {
             errors={errors}
             label='Country'
             name={`country${passengerType}${number}`}
+            // @ts-ignore
             items={countries?.filter((item) =>
               item?.name?.toLowerCase()?.includes(valueC?.toLowerCase()!)
             )}

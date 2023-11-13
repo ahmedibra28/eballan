@@ -37,6 +37,7 @@ export default function Page() {
 
   React.useEffect(() => {
     if (!passenger || !flight) return router.back()
+    // eslint-disable-next-line
   }, [])
 
   function getHoursBetween(startTime: string, endTime: string): string {
@@ -220,6 +221,7 @@ export default function Page() {
           errors={errors}
           label='Country'
           name={`country`}
+          // @ts-ignore
           items={countries?.filter((item) =>
             item?.name?.toLowerCase()?.includes(valueC?.toLowerCase()!)
           )}

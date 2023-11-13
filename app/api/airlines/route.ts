@@ -95,7 +95,7 @@ export async function POST(req: NextApiRequestExtended) {
         username,
         password,
         status,
-        createdById: req.user.id,
+        // createdById: req.user.id,
       },
     })
 
