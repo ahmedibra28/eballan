@@ -10,7 +10,12 @@ import useAuthorization from '@/hooks/useAuthorization'
 import useApi from '@/hooks/useApi'
 import Confirm from '@/components/Confirm'
 import { useRouter } from 'next/navigation'
-import { ButtonCircle, InputText, StaticInputSelect } from '@/components/dForms'
+import {
+  ButtonCircle,
+  InputNumber,
+  InputText,
+  StaticInputSelect,
+} from '@/components/dForms'
 import Message from '@/components/Message'
 import Pagination from '@/components/Pagination'
 import FormView from '@/components/FormView'
@@ -145,7 +150,7 @@ const Page = () => {
   const table = {
     header: [
       { title: 'Name' },
-      { title: 'API' },
+      { title: 'API', className: 'hidden md:table-cell' },
       { title: 'Username' },
       { title: 'Status' },
       { title: 'CreatedAt', className: 'hidden md:table-cell' },
@@ -153,7 +158,7 @@ const Page = () => {
     ],
     body: [
       { format: (item: any) => item?.name },
-      { format: (item: any) => item?.api },
+      { format: (item: any) => item?.api, className: 'hidden md:table-cell' },
       { format: (item: any) => item?.username },
       {
         format: (item: any) =>
@@ -213,7 +218,7 @@ const Page = () => {
 
   const form = [
     <div key={0} className='flex flex-wrap justify-between'>
-      <div className='w-full'>
+      <div className='w-full md:w-[48%]'>
         <InputText
           register={register}
           errors={errors}
@@ -222,7 +227,71 @@ const Page = () => {
           placeholder='Enter name'
         />
       </div>
-      <div className='w-full'>
+      <div className='w-full md:w-[48%]'>
+        <InputText
+          register={register}
+          errors={errors}
+          label='API'
+          name='api'
+          placeholder='Enter api'
+        />
+      </div>
+      <div className='w-full md:w-[48%]'>
+        <InputText
+          register={register}
+          errors={errors}
+          label='Logo'
+          name='logo'
+          placeholder='Enter logo'
+        />
+      </div>
+      <div className='w-full md:w-[48%]'>
+        <InputNumber
+          register={register}
+          errors={errors}
+          label='Adult commission'
+          name='adultCommission'
+          placeholder='Enter adult commission'
+        />
+      </div>
+      <div className='w-full md:w-[48%]'>
+        <InputNumber
+          register={register}
+          errors={errors}
+          label='Child commission'
+          name='childCommission'
+          placeholder='Enter child commission'
+        />
+      </div>
+      <div className='w-full md:w-[48%]'>
+        <InputNumber
+          register={register}
+          errors={errors}
+          label='Infant commission'
+          name='infantCommission'
+          placeholder='Enter infant commission'
+        />
+      </div>
+      <div className='w-full md:w-[48%]'>
+        <InputText
+          register={register}
+          errors={errors}
+          label='Username'
+          name='username'
+          placeholder='Enter username'
+        />
+      </div>
+      <div className='w-full md:w-[48%]'>
+        <InputText
+          register={register}
+          errors={errors}
+          label='Password'
+          name='password'
+          placeholder='Enter password'
+        />
+      </div>
+
+      <div className='w-full md:w-[48%]'>
         <StaticInputSelect
           register={register}
           errors={errors}

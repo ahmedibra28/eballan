@@ -14,6 +14,7 @@ import {
   InputPassword,
   InputTel,
   InputText,
+  InputTextArea,
 } from '@/components/dForms'
 import useUserInfoStore from '@/zustand/userStore'
 import Upload from '@/components/Upload'
@@ -54,12 +55,11 @@ const Profile = () => {
   useEffect(() => {
     if (updateApi?.isSuccess) {
       getApi?.refetch()
-      const { name, mobile, email, image } = updateApi?.data
+      const { name, mobile, image } = updateApi?.data
       updateUserInfo({
         ...userInfo,
         name,
         mobile,
-        email,
         image,
       })
       setFileLink([])
@@ -148,12 +148,12 @@ const Profile = () => {
                 errors={errors}
                 label='Mobile'
                 name='mobile'
-                placeholder='+252 (61) 530-1507'
+                placeholder='615301507'
               />
             </div>
 
             <div className='w-full md:w-[48%] lg:w-[32%]'>
-              <InputText
+              <InputTextArea
                 register={register}
                 errors={errors}
                 label='Bio'

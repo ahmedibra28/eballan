@@ -109,7 +109,7 @@ const Meta = ({
       yandex: 'yandex',
       yahoo: 'yahoo',
       other: {
-        me: ['info@ahmedibra.com', 'http://ahmedibra.com'],
+        me: ['info@eballan.com', 'http://eballan.com'],
       },
     },
   }

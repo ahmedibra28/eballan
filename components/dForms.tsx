@@ -259,7 +259,7 @@ export const InputTextArea = (args: DynamicFormProps) => {
         {...register(name, isRequired && { required: `${label} is required` })}
         type='text'
         placeholder={placeholder}
-        className='input rounded-none border border-gray-300 w-full'
+        className='textarea rounded-none border border-gray-300 w-full'
       />
       {errors && errors[name] && (
         <span className='text-secondary text-sm mt-1'>

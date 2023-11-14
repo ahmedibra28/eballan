@@ -49,7 +49,10 @@ export async function GET(req: NextApiRequestExtended) {
       page,
       pages,
       total,
-      data: result,
+      data: result?.map((item) => ({
+        ...item,
+        accessTokenExpiry: String(item.accessTokenExpiry),
+      })),
     })
   } catch ({ status = 500, message }: any) {
     return getErrorResponse(message, status)
@@ -87,15 +90,14 @@ export async function POST(req: NextApiRequestExtended) {
     const categoryObj = await prisma.airline.create({
       data: {
         name,
-        api,
-        adultCommission,
-        childCommission,
-        infantCommission,
+        api: api?.trim(),
+        adultCommission: Number(adultCommission),
+        childCommission: Number(childCommission),
+        infantCommission: Number(infantCommission),
         logo,
         username,
         password,
         status,
-        // createdById: req.user.id,
       },
     })
 
