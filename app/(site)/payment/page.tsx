@@ -15,7 +15,7 @@ export default function Page() {
   const router = useRouter()
 
   const [phone, setPhone] = React.useState('')
-  const [paymentMethod, setPaymentMethod] = React.useState('hormuud')
+  const [paymentMethod, setPaymentMethod] = React.useState('Hormuud')
   const [paymentLink, setPaymentLink] = React.useState('')
   const [error, setError] = React.useState<string | null>(null)
   const { userInfo } = useUserInfoStore((state) => state)
@@ -103,7 +103,7 @@ export default function Page() {
         passenger: passenger!,
         flight: flight!,
         payment: { phone, paymentMethod },
-        createdById: userInfo?.id || 'e5cTUpLtGS7foE42nJuwp',
+        createdById: userInfo?.id,
       })
         .then((data) => {
           return router.push(

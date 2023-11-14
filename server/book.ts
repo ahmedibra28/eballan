@@ -22,7 +22,7 @@ export default async function book({
   flight: IFlight
   payment: { phone: string; paymentMethod: string }
   link?: string
-  createdById: string
+  createdById?: string
 }) {
   try {
     const BASE_URL = getEnvVariable('BASE_URL')
@@ -210,18 +210,23 @@ export default async function book({
       },
     })
 
-    const { data } = await axios.post(
-      `${BASE_URL}/${airline?.api}/ReservationApi/api/bookings/AddConfirmBooking`,
-      readyToBook,
-      {
-        headers: {
-          Authorization: `Bearer ${airline?.accessToken}`,
-          uuid: uuidv4(),
-          scheme: 'https',
-          platform: 1,
-        },
-      }
-    )
+    // const { data } = await axios.post(
+    //   `${BASE_URL}/${airline?.api}/ReservationApi/api/bookings/AddConfirmBooking`,
+    //   readyToBook,
+    //   {
+    //     headers: {
+    //       Authorization: `Bearer ${airline?.accessToken}`,
+    //       uuid: uuidv4(),
+    //       scheme: 'https',
+    //       platform: 1,
+    //     },
+    //   }
+    // )
+
+    const data = {
+      pnrNumber: Math.random().toString(36).substring(2, 9)?.toString(),
+      reservationId: Number(Math.random().toString().substring(2, 7)),
+    }
 
     let forDatabase = {
       passengers: [
@@ -264,7 +269,7 @@ export default async function book({
       reservationId: data?.reservationId,
       pnrNumber: data?.pnrNumber,
       status: 'BOOKED',
-      createdById: createdById,
+      createdById,
     }
 
     forDatabase = {
@@ -282,65 +287,6 @@ export default async function book({
 
     // @ts-ignore
     const obj: IInsertToDB = forDatabase
-
-    // console.log(JSON.stringify(obj))
-    // const obj = {
-    //   passengers: [
-    //     {
-    //       passengerTitle: '1',
-    //       firstName: 'Abukar',
-    //       secondName: 'Abdulahi',
-    //       lastName: 'Mohamed',
-    //       country: 'EGYPT',
-    //       countryId: 63,
-    //       sex: 'Male',
-    //       dob: '1980-10-10',
-    //       passengerType: 'Adult',
-    //     },
-    //   ],
-    //   prices: [
-    //     {
-    //       passenger: 'Adult',
-    //       commission: 20,
-    //       fare: 120,
-    //       baggageWeight: 25,
-    //       handCarryWeight: 7,
-    //       totalPrice: 140,
-    //     },
-    //   ],
-    //   flight: {
-    //     segmentNumber: 1,
-    //     ticketTypeId: 1,
-    //     flightRouteId: 6520,
-    //     flightScheduleId: 4637,
-    //     departureDate: '2023-11-29 08:30:00',
-    //     arrivalDate: '2023-11-29 09:45:00',
-    //     fromCityName: 'Mogadishu',
-    //     toCityName: 'Kismayo',
-    //     fromAirportName: 'Aden Adde International Airport ',
-    //     toAirportName: 'Kismayo Airport',
-    //     fromCityCode: 'MGQ',
-    //     toCityCode: 'KMU',
-    //     fromCountryName: 'SOMALIA',
-    //     toCountryName: 'SOMALIA',
-    //     fromCountryId: 196,
-    //     toCountryId: 196,
-    //     fromCountryIsoCode3: 'SOM',
-    //     toCountryIsoCode3: 'SOM',
-    //     adultNumberOfSeatsAvailable: 54,
-    //     childNumberOfSeatsAvailable: 54,
-    //     airlineId: 'Gg_g7AOAVu4tTZV8DfY_W',
-    //   },
-    //   adult: 1,
-    //   child: 0,
-    //   infant: 0,
-    //   phone: '615301507',
-    //   paymentMethod: 'Hormuud',
-    //   reservationId: 90716,
-    //   pnrNumber: 'AMFE10',
-    //   status: 'BOOKED',
-    //   createdById: 'e5cTUpLtGS7foE42nJuwp',
-    // }
 
     await prisma.$transaction(async (prisma) => {
       // Insert passengers
@@ -378,7 +324,7 @@ export default async function book({
           infant: obj?.infant,
           phone: obj?.phone,
           paymentMethod: obj?.paymentMethod,
-          createdById: obj.createdById,
+          ...(obj.createdById && { createdById: obj.createdById }),
           flightId: flight.id,
           passengers: {
             connect: passengers.map((passenger) => ({ id: passenger.id })),

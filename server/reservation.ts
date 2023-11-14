@@ -34,8 +34,12 @@ export default async function reservation({
       },
     })
 
+    if (!getData) {
+      throw new Error('Reservation not found')
+    }
+
     return getData as IPdf
   } catch (error: any) {
-    throw new Error(`Error fetching reservation: ${error?.message}`)
+    throw new Error(error?.message)
   }
 }

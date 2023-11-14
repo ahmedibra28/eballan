@@ -55,6 +55,7 @@ export async function GET(req: Request) {
       where: { id: users.id },
       create: {
         ...users,
+        id: users.id,
         password: await encryptPassword({ password: users.password }),
         roleId: roles[0].id,
       },

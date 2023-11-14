@@ -12,6 +12,12 @@ const roles = [
     description: 'Default role given to authenticated user.',
     type: 'AUTHENTICATED',
   },
+  {
+    id: 'a75POUlPzMDmaJtz0JCxa',
+    name: 'Agency',
+    description: 'Default role given to agency user.',
+    type: 'AGENCY',
+  },
 ]
 
 const users = {
