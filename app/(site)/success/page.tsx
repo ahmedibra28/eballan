@@ -83,7 +83,7 @@ export default function Page() {
               </p>
               <PDFDownloadLink
                 document={<PdfGenerator data={reservationData!} />}
-                fileName='example.pdf'
+                fileName='eballan.pdf'
               >
                 {({ blob, url, loading, error }) => {
                   console.log({ blob, url, loading, error })

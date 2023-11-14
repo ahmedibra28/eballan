@@ -180,6 +180,8 @@ model Reservation {
   phone         String
   paymentMethod String
 
+  dealerCode String?
+
   passengers Passenger[]
   prices     Price[]
 

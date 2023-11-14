@@ -173,7 +173,7 @@ export const eTemplate = ({
                     align="center"
                   >
                     <a
-                      href="https://example.com"
+                      href="https://eballan.com"
                       class="f-fallback email-masthead_name"
                       style="
                         color: #a8aaaf;

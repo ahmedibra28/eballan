@@ -17,12 +17,14 @@ export default async function book({
   payment,
   //  link,
   createdById,
+  dealerCode,
 }: {
   passenger: IPassenger
   flight: IFlight
   payment: { phone: string; paymentMethod: string }
   link?: string
   createdById?: string
+  dealerCode?: string
 }) {
   try {
     const BASE_URL = getEnvVariable('BASE_URL')
@@ -270,6 +272,7 @@ export default async function book({
       pnrNumber: data?.pnrNumber,
       status: 'BOOKED',
       createdById,
+      dealerCode,
     }
 
     forDatabase = {
@@ -323,6 +326,7 @@ export default async function book({
           child: obj?.child,
           infant: obj?.infant,
           phone: obj?.phone,
+          dealerCode: obj?.dealerCode,
           paymentMethod: obj?.paymentMethod,
           ...(obj.createdById && { createdById: obj.createdById }),
           flightId: flight.id,

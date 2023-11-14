@@ -16,6 +16,7 @@ export default function Page() {
 
   const [phone, setPhone] = React.useState('')
   const [paymentMethod, setPaymentMethod] = React.useState('Hormuud')
+  const [dealerCode, setDealerCode] = React.useState<string | null>(null)
   const [paymentLink, setPaymentLink] = React.useState('')
   const [error, setError] = React.useState<string | null>(null)
   const { userInfo } = useUserInfoStore((state) => state)
@@ -104,6 +105,7 @@ export default function Page() {
         flight: flight!,
         payment: { phone, paymentMethod },
         createdById: userInfo?.id,
+        dealerCode: dealerCode || '',
       })
         .then((data) => {
           return router.push(
@@ -185,6 +187,16 @@ export default function Page() {
               />
             </div>
 
+            <div className='mb-3'>
+              <input
+                onChange={(e) => setDealerCode(e.target.value)}
+                value={dealerCode!}
+                type='text'
+                className='input border border-3 border-warning rounded-none w-full focus:outline-none'
+                placeholder={`Enter your dealer code`}
+              />
+            </div>
+
             <div className='flex justify-between mt-4'>
               <button
                 onClick={() => router.back()}
@@ -193,7 +205,9 @@ export default function Page() {
                 Cancel
               </button>
               <button
-                disabled={Boolean(!phone)}
+                disabled={
+                  Boolean(!phone) || Boolean(isPending) || !paymentMethod
+                }
                 className='btn btn-primary rounded-xl px-8'
                 onClick={handleBook}
               >

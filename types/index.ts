@@ -244,6 +244,7 @@ export type IInsertToDB = {
   pnrNumber: string
   status: string
   createdById: string
+  dealerCode?: string
 }
 
 export type IPdf = {
