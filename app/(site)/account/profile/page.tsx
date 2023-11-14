@@ -11,6 +11,8 @@ import Message from '@/components/Message'
 import Spinner from '@/components/Spinner'
 import {
   CustomSubmitButton,
+  InputCheckBox,
+  InputNumber,
   InputPassword,
   InputTel,
   InputText,
@@ -18,9 +20,11 @@ import {
 } from '@/components/dForms'
 import useUserInfoStore from '@/zustand/userStore'
 import Upload from '@/components/Upload'
+import Link from 'next/link'
 
 const Profile = () => {
   const [fileLink, setFileLink] = React.useState<string[]>([])
+  const [fileLinkDocument, setFileLinkDocument] = React.useState<string[]>([])
 
   const path = useAuthorization()
   const router = useRouter()
@@ -63,6 +67,7 @@ const Profile = () => {
         image,
       })
       setFileLink([])
+      setFileLinkDocument([])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateApi?.isSuccess])
@@ -72,7 +77,17 @@ const Profile = () => {
     setValue('address', !getApi?.isPending ? getApi?.data?.address : '')
     setValue('mobile', !getApi?.isPending ? getApi?.data?.mobile : '')
     setValue('bio', !getApi?.isPending ? getApi?.data?.bio : '')
+    setValue('company', !getApi?.isPending ? getApi?.data?.company : '')
+    setValue('bankName', !getApi?.isPending ? getApi?.data?.bankName : '')
+    setValue('bankAccount', !getApi?.isPending ? getApi?.data?.bankAccount : '')
+    setValue(
+      'policyConfirmed',
+      !getApi?.isPending ? getApi?.data?.policyConfirmed : ''
+    )
     setFileLink(!getApi?.isPending ? [getApi?.data?.image] : [])
+    setFileLinkDocument(
+      !getApi?.isPending ? [getApi?.data?.verificationDocument] : []
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getApi?.isPending, setValue])
 
@@ -81,6 +96,9 @@ const Profile = () => {
       ...data,
       id: getApi?.data?.id,
       image: fileLink ? fileLink[0] : getApi?.data?.image,
+      verificationDocument: fileLinkDocument
+        ? fileLinkDocument[0]
+        : getApi?.data?.verificationDocument,
     })
   }
 
@@ -97,7 +115,7 @@ const Profile = () => {
 
       {getApi?.isPending && <Spinner />}
 
-      <div className='bg-opacity-60 max-w-4xl mx-auto'>
+      <div className='bg-opacity-60 max-w-4xl mx-auto bg-white p-4 md:p-8'>
         <div className='divider text-3xl uppercase text-primary'>
           {userInfo.name}
         </div>
@@ -152,6 +170,38 @@ const Profile = () => {
               />
             </div>
 
+            {userInfo?.role === 'AGENCY' && (
+              <>
+                <div className='w-full md:w-[48%] lg:w-[32%]'>
+                  <InputText
+                    register={register}
+                    errors={errors}
+                    label='Company Name'
+                    name='company'
+                    placeholder='Company name'
+                  />
+                </div>
+                <div className='w-full md:w-[48%] lg:w-[32%]'>
+                  <InputText
+                    register={register}
+                    errors={errors}
+                    label='Bank Name'
+                    name='bankName'
+                    placeholder='Bank name'
+                  />
+                </div>
+                <div className='w-full md:w-[48%] lg:w-[32%]'>
+                  <InputNumber
+                    register={register}
+                    errors={errors}
+                    label='Bank Account'
+                    name='bankAccount'
+                    placeholder='Bank account'
+                  />
+                </div>
+              </>
+            )}
+
             <div className='w-full md:w-[48%] lg:w-[32%]'>
               <InputTextArea
                 register={register}
@@ -164,7 +214,7 @@ const Profile = () => {
 
             <div className='w-full md:w-[48%] lg:w-[32%]'>
               <Upload
-                label='Image'
+                label={userInfo?.role === 'AGENCY' ? 'Logo' : 'Image'}
                 setFileLink={setFileLink}
                 fileLink={fileLink}
                 fileType='image'
@@ -183,6 +233,39 @@ const Profile = () => {
                   </div>
                 </div>
               )}
+            </div>
+
+            {userInfo?.role === 'AGENCY' && (
+              <div className='w-full md:w-[48%] lg:w-[32%]'>
+                <Upload
+                  label='Verification Document'
+                  setFileLink={setFileLinkDocument}
+                  fileLink={fileLinkDocument}
+                  fileType='document'
+                />
+
+                {fileLinkDocument.length > 0 && (
+                  <div className='w-full'>
+                    <a className='underline' href={fileLinkDocument?.[0]}>
+                      Verification Document
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
+            <div className='flex justify-start flex-wrap flex-col w-full gap-2'>
+              <div className='w-full'>
+                <InputCheckBox
+                  isRequired={false}
+                  register={register}
+                  errors={errors}
+                  label='I agree with the terms and conditions'
+                  name='policyConfirmed'
+                />
+              </div>
+              <Link href='/terms-of-use' className='text-sm underline'>
+                <span>Terms of use</span>
+              </Link>
             </div>
 
             <div className='flex justify-start flex-wrap flex-row w-full gap-2'>

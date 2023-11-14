@@ -17,6 +17,11 @@ export async function GET(req: NextApiRequestExtended) {
         image: true,
         bio: true,
         address: true,
+        company: true,
+        policyConfirmed: true,
+        bankName: true,
+        bankAccount: true,
+        verificationDocument: true,
       },
     })
 

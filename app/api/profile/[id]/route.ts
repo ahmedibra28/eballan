@@ -9,11 +9,28 @@ interface Params {
   }
 }
 
-export async function PUT(req: Request, { params }: Params) {
+export async function PUT(req: NextApiRequestExtended, { params }: Params) {
   try {
     await isAuth(req, params)
 
-    const { name, address, mobile, bio, image, password } = await req.json()
+    const {
+      name,
+      address,
+      mobile,
+      bio,
+      image,
+      password,
+
+      company,
+      verificationDocument,
+      bankName,
+      bankAccount,
+      policyConfirmed,
+    } = await req.json()
+
+    if (req.user.role === 'AGENCY' && !policyConfirmed) {
+      return getErrorResponse('Please confirm our policy', 400)
+    }
 
     const object = await prisma.user.findUnique({
       where: { id: params.id },
@@ -36,10 +53,18 @@ export async function PUT(req: Request, { params }: Params) {
       data: {
         ...(password && { password: await encryptPassword({ password }) }),
         name: name || object.name,
-        mobile: mobile || object.mobile,
+        mobile: Number(mobile) || Number(object.mobile),
         address: address || object.address,
         image: image || object.image,
         bio: bio || object.bio,
+
+        ...(req.user.role === 'AGENCY' && {
+          company,
+          verificationDocument,
+          bankName,
+          bankAccount,
+          policyConfirmed,
+        }),
       },
     })
 
