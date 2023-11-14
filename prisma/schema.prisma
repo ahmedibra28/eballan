@@ -20,6 +20,8 @@ model User {
   blocked             Boolean  @default(false)
   resetPasswordToken  String?
   resetPasswordExpire BigInt?
+  verificationToken   String?
+  verificationExpire  BigInt?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 

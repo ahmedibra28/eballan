@@ -105,6 +105,14 @@ const clientPermissions = [
     sort: sort.normal,
     description: 'Airlines page',
   },
+  {
+    id: 'GQ-gSEEsK11G2XppSSV6l',
+    name: 'Reservations',
+    path: '/reservations',
+    menu: 'normal',
+    sort: sort.normal,
+    description: 'Reservations page',
+  },
 ]
 
 const permissions = [
@@ -286,6 +294,22 @@ const permissions = [
     description: 'Airline',
     route: '/api/airlines/:id',
     name: 'Airline',
+    method: 'DELETE',
+  },
+
+  // Reservation
+  {
+    id: 'lEtv7KNz0REGAJRgUptT2',
+    description: 'Reservations',
+    route: '/api/reservations',
+    name: 'Reservation',
+    method: 'GET',
+  },
+  {
+    id: 'KNznCsr9nBiwxbplXdGm8',
+    description: 'Reservation',
+    route: '/api/reservations/:id',
+    name: 'Reservation',
     method: 'DELETE',
   },
 ]

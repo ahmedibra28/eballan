@@ -298,7 +298,6 @@ export type IPdf = {
     sex: string
     dob: string
     passengerType: string
-    reservationId: string
   }[]
   prices: {
     id: string
@@ -308,8 +307,12 @@ export type IPdf = {
     baggageWeight: number
     handCarryWeight: number
     totalPrice: number
-    reservationId: string
   }[]
   createdAt?: Date
   createdById?: string
+  createdBy?: {
+    id: string
+    name: string
+    image?: string
+  }
 }

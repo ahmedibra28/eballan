@@ -1,6 +1,13 @@
-import { encryptPassword, generateToken, getErrorResponse } from '@/lib/helpers'
+import {
+  encryptPassword,
+  getErrorResponse,
+  getResetPasswordToken,
+} from '@/lib/helpers'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma.db'
+import DeviceDetector from 'device-detector-js'
+import { verifyTemplate } from '@/lib/verifyTemplate'
+import { sendEmail } from '@/lib/nodemailer'
 
 export async function POST(req: Request) {
   try {
@@ -21,7 +28,7 @@ export async function POST(req: Request) {
       data: {
         name,
         email: email.toLowerCase(),
-        confirmed: true,
+        confirmed: false,
         blocked: false,
         address,
         bio,
@@ -34,106 +41,54 @@ export async function POST(req: Request) {
 
     if (!userObj) return getErrorResponse('User not created', 400)
 
-    const role =
-      userObj.roleId &&
-      (await prisma.role.findFirst({
-        where: {
-          id: userObj.roleId,
-        },
-        include: {
-          clientPermissions: {
-            select: {
-              menu: true,
-              sort: true,
-              path: true,
-              name: true,
-            },
-          },
-        },
-      }))
+    const host = req.headers.get('host') // localhost:3000
+    const protocol = req.headers.get('x-forwarded-proto') // http
+    const token = await getResetPasswordToken({ minute: 525600 }) // 1 year
 
-    if (!role) return getErrorResponse('Role not found', 404)
+    await prisma.user.update({
+      where: { id: userObj.id },
+      data: {
+        verificationToken: token.resetPasswordToken,
+        verificationExpire: token.resetPasswordExpire,
+      },
+    })
 
-    const routes = role.clientPermissions
+    const deviceDetector = new DeviceDetector()
+    const device = deviceDetector.parse(
+      req.headers.get('user-agent') || ''
+    ) as any
 
-    interface Route {
-      menu?: string
-      name?: string
-      path?: string
-      open?: boolean
-      sort?: number
-    }
-    interface RouteChildren extends Route {
-      children?: { menu?: string; name?: string; path?: string }[] | any
-    }
-    const formatRoutes = (routes: Route[]) => {
-      const formattedRoutes: RouteChildren[] = []
+    const {
+      client: { type: clientType, name: clientName },
+      os: { name: osName },
+      device: { type: deviceType, brand },
+    } = device
 
-      routes.forEach((route) => {
-        if (route.menu === 'hidden') return null
-        if (route.menu === 'profile') return null
+    const message = verifyTemplate({
+      url: `${protocol}://${host}/auth/verify?token=${token.resetToken}`,
+      user: userObj.name,
+      clientType,
+      clientName,
+      osName,
+      deviceType,
+      brand,
+      webName: 'eBallan',
+      validTime: '1 Year',
+      addressStreet: 'Makka Almukarrama',
+      addressCountry: 'Mogadishu - Somalia',
+    })
 
-        if (route.menu === 'normal') {
-          formattedRoutes.push({
-            name: route.name,
-            path: route.path,
-            sort: route.sort,
-          })
-        } else {
-          const found = formattedRoutes.find((r) => r.name === route.menu)
-          if (found) {
-            found.children.push({ name: route.name, path: route.path })
-          } else {
-            formattedRoutes.push({
-              name: route.menu,
-              sort: route.sort,
-              open: false,
-              children: [{ name: route.name, path: route.path }],
-            })
-          }
-        }
-      })
+    const result = await sendEmail({
+      to: userObj.email,
+      subject: 'Verify your email',
+      text: message,
+      webName: 'eBallan Team',
+    })
 
-      return formattedRoutes
-    }
-
-    const sortMenu: any = (menu: any[]) => {
-      const sortedMenu = menu.sort((a, b) => {
-        if (a.sort === b.sort) {
-          if (a.name < b.name) {
-            return -1
-          } else {
-            return 1
-          }
-        } else {
-          return a.sort - b.sort
-        }
-      })
-
-      return sortedMenu.map((m) => {
-        if (m.children) {
-          return {
-            ...m,
-            children: sortMenu(m.children),
-          }
-        } else {
-          return m
-        }
-      })
-    }
+    if (!result) return getErrorResponse('Verification email not sent', 400)
 
     return NextResponse.json({
-      id: userObj.id,
-      name: userObj.name,
-      email: userObj.email,
-      blocked: userObj.blocked,
-      confirmed: userObj.confirmed,
-      image: userObj.image,
-      role: role.type,
-      routes,
-      menu: sortMenu(formatRoutes(routes) as any[]),
-      token: await generateToken(userObj.id),
-      message: 'User has been created and logged in successfully',
+      message: `An email has been sent to ${email} with further instructions.`,
     })
   } catch ({ status = 500, message }: any) {
     return getErrorResponse(message, status)

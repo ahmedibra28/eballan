@@ -30,7 +30,7 @@ const Page = () => {
   const router = useRouter()
   const params = useSearchParams().get('next')
 
-  const { userInfo, updateUserInfo } = useUserInfoStore((state) => state)
+  const { userInfo } = useUserInfoStore((state) => state)
 
   const {
     register,
@@ -47,19 +47,20 @@ const Page = () => {
 
   useEffect(() => {
     if (postApi?.isSuccess) {
-      const { id, email, menu, routes, token, name, mobile, role, image } =
-        postApi.data
-      updateUserInfo({
-        id,
-        email,
-        menu,
-        routes,
-        token,
-        name,
-        mobile,
-        role,
-        image,
-      })
+      // const { id, email, menu, routes, token, name, mobile, role, image } =
+      //   postApi.data
+      // updateUserInfo({
+      //   id,
+      //   email,
+      //   menu,
+      //   routes,
+      //   token,
+      //   name,
+      //   mobile,
+      //   role,
+      //   image,
+      // })
+      router.push('/auth/verify')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postApi?.isSuccess])

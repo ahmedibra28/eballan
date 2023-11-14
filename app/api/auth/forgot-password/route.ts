@@ -20,7 +20,7 @@ export async function POST(req: NextApiRequestExtended) {
     if (!user)
       return getErrorResponse(`There is no user with email ${email}`, 404)
 
-    const reset = await getResetPasswordToken()
+    const reset = await getResetPasswordToken({ minute: 10 })
 
     await prisma.user.update({
       where: { id: user.id },
@@ -49,7 +49,7 @@ export async function POST(req: NextApiRequestExtended) {
       osName,
       deviceType,
       brand,
-      webName: 'Next.JS Boilerplate',
+      webName: 'eBallan',
       validTime: '10 minutes',
       addressStreet: 'Makka Almukarrama',
       addressCountry: 'Mogadishu - Somalia',
@@ -59,7 +59,7 @@ export async function POST(req: NextApiRequestExtended) {
       to: user.email,
       subject: 'Password Reset Request',
       text: message,
-      webName: 'Next.JS Boilerplate Team',
+      webName: 'eBallan Team',
     })
 
     if (result)

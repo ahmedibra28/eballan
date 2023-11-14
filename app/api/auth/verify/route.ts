@@ -1,30 +1,38 @@
-import { generateToken, getErrorResponse, matchPassword } from '@/lib/helpers'
 import { NextResponse } from 'next/server'
+import crypto from 'crypto'
+import { encryptPassword, generateToken, getErrorResponse } from '@/lib/helpers'
 import { prisma } from '@/lib/prisma.db'
 
-export async function POST(req: Request) {
+export async function POST(req: NextApiRequestExtended) {
   try {
-    const { email, password } = await req.json()
+    const { verifyToken } = await req.json()
 
-    const user = await prisma.user.findUnique({
-      where: {
-        email: email.toLowerCase(),
+    if (!verifyToken) return getErrorResponse('Invalid request', 401)
+
+    const verificationToken = crypto
+      .createHash('sha256')
+      .update(verifyToken)
+      .digest('hex')
+
+    const user =
+      verifyToken &&
+      (await prisma.user.findFirst({
+        where: {
+          verificationToken,
+          verificationExpire: { gt: Date.now() },
+        },
+      }))
+
+    if (!user) return getErrorResponse('Invalid token or expired', 401)
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        verificationToken: null,
+        verificationExpire: null,
+        confirmed: true,
       },
     })
-
-    if (!user) return getErrorResponse('Invalid email or password', 401)
-
-    const match = await matchPassword({
-      enteredPassword: password,
-      password: user.password,
-    })
-
-    if (!match) return getErrorResponse('Invalid email or password', 401)
-
-    if (user.blocked) return getErrorResponse('User is blocked', 401)
-
-    if (!user.confirmed)
-      return getErrorResponse('User is not confirmed or verified', 401)
 
     const role =
       user.roleId &&
@@ -125,7 +133,7 @@ export async function POST(req: Request) {
       routes,
       menu: sortMenu(formatRoutes(routes) as any[]),
       token: await generateToken(user.id),
-      message: 'User has been logged in successfully',
+      message: 'User has been verified and logged in successfully',
     })
   } catch ({ status = 500, message }: any) {
     return getErrorResponse(message, status)
