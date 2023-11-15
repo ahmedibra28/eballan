@@ -410,7 +410,7 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
         <View style={styles.section}>
           <View style={styles.flex}>
             <Text>Payment reference:</Text>
-            <Text style={styles.bold}>{data?.phone}</Text>
+            <Text style={styles.bold}>{data?.paymentPhone}</Text>
           </View>
           <View style={styles.flex}>
             <Text>Payment method:</Text>

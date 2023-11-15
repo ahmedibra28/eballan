@@ -8,8 +8,9 @@ interface Props {
 }
 
 const Meta = ({
-  title = 'Full-Stack Developer In Somalia | Ahmed Ibrahim',
-  description = `I'm a Full Stack Developer with 9+ years of experience in designing and developing user interfaces, testing, debugging, and training staff within modern technologies. Proven ability in optimizing web functionalities that improve data retrieval and workflow efficiencies.
+  title = 'eBallan Booking',
+  description = `
+    eBallan is an online booking system for flights.
   `,
   image: outsideImage = 'https://ahmedibra.com/logo.png',
   asPath = '/',
@@ -45,8 +46,7 @@ const Meta = ({
       description: description ? description : description,
     },
     keywords: [
-      `${keyword} Ahmed Ibrahim, Ahmed Ibrahim Samow, Next.js, Web & Mobile Development, App Development, Design Agency, Web Design, eCommerce, Websites, Web Solutions, Business Growth, Software Development, Custom Software Development, Custom Web Design, Somalia, Somali Web Design, Somali Web Development, SEO Optimization, Marketing,
-    Branding, USSD, EVC Plus`,
+      `${keyword} eballan,eballan.com, https://eballan.com, , next.js, next-ts, typescript, next-typescript, e-ballan, eBallan`,
     ],
     authors: [
       {

@@ -177,8 +177,11 @@ model Reservation {
   adult         Int
   child         Int
   infant        Int
-  phone         String
+  paymentPhone  String @default("770022200")
   paymentMethod String
+
+  contactPhone String @default("770022200")
+  contactEmail String @default("info@ahmedibra.com")
 
   dealerCode String?
 

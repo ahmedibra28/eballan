@@ -238,8 +238,10 @@ export type IInsertToDB = {
   adult: number
   child: number
   infant: number
-  phone: string
+  paymentPhone: string
   paymentMethod: string
+  contactPhone: string
+  contactEmail: string
   reservationId: number
   pnrNumber: string
   status: string
@@ -255,8 +257,10 @@ export type IPdf = {
   adult: number
   child: number
   infant: number
-  phone: string
+  paymentPhone: string
   paymentMethod: string
+  contactPhone: string
+  contactEmail: string
   flightId: string
   flight: {
     id: string
@@ -311,6 +315,7 @@ export type IPdf = {
   }[]
   createdAt?: Date
   createdById?: string
+  dealerCode?: string
   createdBy?: {
     id: string
     name: string

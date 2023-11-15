@@ -1,5 +1,5 @@
 'use client'
-import useInterval from '@/hooks/useInterval'
+// import useInterval from '@/hooks/useInterval'
 import useUserInfoStore from '@/zustand/userStore'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -13,7 +13,7 @@ const Navigation = () => {
     useUserInfoStore.getState().logout()
   }
 
-  useInterval()
+  // useInterval()
 
   return (
     <div className='flex-none text-white'>

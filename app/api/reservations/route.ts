@@ -18,15 +18,6 @@ export async function GET(req: NextApiRequestExtended) {
     const createdAt = searchParams.get('createdAt')
     const queryStatus = searchParams.get('status')
 
-    console.log({
-      airline,
-      departureCity,
-      arrivalCity,
-      agency,
-      createdAt,
-      queryStatus,
-    })
-
     const query =
       departureCity || airline || arrivalCity || agency || createdAt
         ? {
@@ -76,8 +67,15 @@ export async function GET(req: NextApiRequestExtended) {
                 }),
               },
             ],
+            ...(req.user.role !== 'SUPER_ADMIN' && {
+              createdBy: { id: req.user.id },
+            }),
           }
-        : {}
+        : {
+            ...(req.user.role !== 'SUPER_ADMIN' && {
+              createdBy: { id: req.user.id },
+            }),
+          }
 
     const page = parseInt(searchParams.get('page') as string) || 1
     const pageSize = parseInt(searchParams.get('limit') as string) || 25
@@ -106,6 +104,11 @@ export async function GET(req: NextApiRequestExtended) {
             select: {
               name: true,
               image: true,
+              role: {
+                select: {
+                  type: true,
+                },
+              },
             },
           },
         },
