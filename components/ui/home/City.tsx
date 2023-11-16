@@ -18,7 +18,7 @@ export default function City() {
       {photos.map((photo, i) => (
         <div
           key={i}
-          className='w-[48%] md:w-[31%] lg:w-[24%] mx-auto card bg-base-100 shadow-xl'
+          className='w-[48%] md:w-[31%] lg:w-[24%] mx-auto card bg-my-primary text-white shadow-xl'
         >
           <figure>
             <Image

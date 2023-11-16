@@ -9,29 +9,27 @@ const Footer = () => {
     { image: '/partners/2.png' },
     { image: '/partners/3.png' },
     { image: '/partners/4.png' },
+    { image: '/partners/5.png' },
   ]
 
   return (
     <>
-      <div className='mt-20 bg-white p-12 '>
+      <div className='mt-20 p-12 '>
         <div className='flex flex-row flex-wrap justify-between items-center max-w-7xl mx-auto gap-5'>
           {partners.map((partner) => (
-            <div
-              className='w-[46%] md:w-[30%] lg:w-[23%] mx-auto'
-              key={partner.image}
-            >
+            <div className='w-8 md:w-24 mx-auto' key={partner.image}>
               <Image
                 src={partner.image}
                 width={500}
                 height={500}
-                className='w-28 h-28 object-cover mx-auto hover:scale-150 duration-1000'
+                className='w-auto h-auto lg:w-28 lg:h-28 object-cover mx-auto hover:scale-150 duration-1000'
                 alt='Shoes'
               />
             </div>
           ))}
         </div>
       </div>
-      <div className='bg-my-primary -mb-4 mt-12 p-12 text-white '>
+      <div className='bg-my-primary -mb-4 mt-12 p-12 text-white text-xs md:text-lg'>
         <div className='mx-auto text-center'>
           <Link href='/privacy-policy' className='text-light'>
             Privacy Policy

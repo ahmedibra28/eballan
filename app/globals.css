@@ -2,10 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://db.onlinewebfonts.com/c/63cf8985576a4aaa66f7c13c94dba716?family=Kollektif');
+@font-face {
+  font-family: 'Kollektif';
+  src: url('/fonts/Kollektif.ttf') format('truetype');
+  /* src: url('/fonts/Kollektif-BoldItalic.ttf') format('truetype'); */
+  /* src: url('/fonts/Kollektif-Italic.ttf') format('truetype'); */
+}
 
 body {
-  /* font-family: 'Kollektif', sans-serif !important; */
-  font-style: normal !important;
+  font-family: 'Kollektif', sans-serif;
+  font-style: normal;
   background-color: #f3f4f6;
 }

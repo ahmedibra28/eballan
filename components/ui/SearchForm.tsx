@@ -207,40 +207,28 @@ export default function SearchForm({ source }: { source?: string }) {
   )
 
   return (
-    <div className='bg-white/70 min-h-60 w-full p-2s md:p-8 max-w-7xl rounded-xl'>
+    <div className='bg-white/70 min-h-60 w-full md:p-8 pt-2 max-w-7xl rounded-xl'>
       {error && <Message variant='error' value={error} />}
-      <div className='mx-auto text-center'>
-        <div className='md:btn-group mx-auto'>
+      <div className='mx-auto p-2'>
+        <div className='flex flex-row justify-between md:justify-start gap-x-2'>
           <button
             disabled
-            className='btn bg-my-primary hover:bg-my-primary text-white  px-5 md:px-10 w-[50%] md:w-auto'
+            className='btn bg-my-primary hover:bg-my-primary text-white  px-5 md:px-10 w-[48%] md:w-auto'
           >
             ONE WAY <FaCircleCheck />
           </button>
           <button
             disabled
-            className='btn bg-my-primary hover:bg-my-primary text-white  px-5 md:px-10 w-[50%] md:w-auto'
+            className='btn bg-my-primary hover:bg-my-primary text-white  px-5 md:px-10 w-[48%] md:w-auto'
           >
             ECONOMIC <FaCircleCheck />
           </button>
-
-          <details className='dropdown m-auto md:ml-5 w-full mx-auto'>
-            <summary
-              style={{
-                borderRadius: '0.65rem',
-              }}
-              className='btn bg-my-primary border border-my-primary hover:bg-my-primary text-white px-10 w-full md:w-auto mt-3 md:m-auto'
-            >
-              {adult + child + infant} <FaUsers />
-            </summary>
-            {menu}
-          </details>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(submitHandler)}>
-        <div className='flex flex-row flex-wrap md:flex-nowrap justify-between my-10  gap-x-1 gap-y-5 md:gap-x-2'>
-          <div className='w-[38%] md:w-[40%] lg:w-[25%] mx-auto'>
+      <form onSubmit={handleSubmit(submitHandler)} className='p-2'>
+        <div className='flex flex-row flex-wrap md:flex-nowrap justify-between py-5 gap-x-0.5 gap-y-5 md:gap-x-2'>
+          <div className='w-[40%] md:w-full mx-auto'>
             <Autocomplete
               register={register}
               className='border-none h-16 rounded-xl'
@@ -275,15 +263,17 @@ export default function SearchForm({ source }: { source?: string }) {
             />
           </div>
 
-          <button
-            onClick={swap}
-            type='button'
-            className='btn bg-white h-16 w-16 text-my-primary mt-auto mx-auto rounded-full'
-          >
-            <FaRotate />
-          </button>
+          <div className='w-auto mx-auto'>
+            <button
+              onClick={swap}
+              type='button'
+              className='btn bg-white h-16 w-16 text-my-primary mt-auto mx-auto'
+            >
+              <FaRotate />
+            </button>
+          </div>
 
-          <div className='w-[38%] md:w-[40%] lg:w-[25%] mx-auto'>
+          <div className='w-[40%] md:w-full mx-auto'>
             <Autocomplete
               register={register}
               className='border-none h-16 rounded-xl'
@@ -315,26 +305,8 @@ export default function SearchForm({ source }: { source?: string }) {
               )}
             />
           </div>
-          <div className='w-[58%] md:w-[28%] lg:w-[25%] mx-auto hidden'>
-            <InputText
-              register={register}
-              errors={errors}
-              name='fromId'
-              isRequired={false}
-              className='hidden'
-            />
-          </div>
-          <div className='w-[58%] md:w-[28%] lg:w-[25%] mx-auto hidden'>
-            <InputText
-              register={register}
-              errors={errors}
-              name='toId'
-              isRequired={false}
-              className='hidden'
-            />
-          </div>
 
-          <div className='w-[58%] md:w-[28%] lg:w-[25%] mx-auto'>
+          <div className='w-[72%] md:w-full mx-auto'>
             <InputDate
               register={register}
               errors={errors}
@@ -346,7 +318,23 @@ export default function SearchForm({ source }: { source?: string }) {
             />
           </div>
 
-          <div className='w-[39%] md:w-[28%] lg:w-[20%] mt-auto mx-auto'>
+          <div className='w-auto mx-auto'>
+            <details className='dropdown w-22 mx-auto'>
+              <summary
+                style={{
+                  borderRadius: '0.65rem',
+                }}
+                className='btn btn-lg bg-my-primary border border-my-primary hover:bg-my-primary text-white w-full md:w-auto md:m-auto'
+              >
+                <div className='flex flex-row gap-x-4'>
+                  <span> {adult + child + infant}</span> <FaUsers />
+                </div>
+              </summary>
+              {menu}
+            </details>
+          </div>
+
+          <div className='w-full mt-auto mx-auto'>
             <CustomSubmitButton
               isLoading={isPending || false}
               label='Search'
@@ -356,6 +344,26 @@ export default function SearchForm({ source }: { source?: string }) {
               iconLeft={<FaMagnifyingGlassArrowRight className='text-lg' />}
             />
           </div>
+        </div>
+
+        {/* Hidden inputs */}
+        <div className='w-full mx-auto hidden'>
+          <InputText
+            register={register}
+            errors={errors}
+            name='fromId'
+            isRequired={false}
+            className='hidden'
+          />
+        </div>
+        <div className='w-full mx-auto hidden'>
+          <InputText
+            register={register}
+            errors={errors}
+            name='toId'
+            isRequired={false}
+            className='hidden'
+          />
         </div>
       </form>
     </div>

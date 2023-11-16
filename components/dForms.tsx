@@ -1,7 +1,7 @@
 'use client'
 
 import classNames from 'classnames'
-import { memo, useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 
 export interface DynamicFormProps {
   register: any
@@ -103,7 +103,7 @@ const Autocomplete = (props: DynamicFormProps) => {
         {items?.length > 0 && (
           <div className='dropdown-content bg-base-200 top-14 z-10 max-h-96 overflow-auto flex-col rounded-md'>
             <ul
-              className='menu menu-compact '
+              className='menu menu-compact open'
               // use ref to calculate the width of parent
               style={{ width: ref.current?.clientWidth }}
             >
