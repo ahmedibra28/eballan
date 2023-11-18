@@ -4,11 +4,13 @@ import DateTime from '@/lib/dateTime'
 import { IPdf } from '@/types'
 import {
   FaCircleCheck,
+  FaCircleInfo,
   FaCircleXmark,
   FaEllipsis,
   FaTrash,
 } from 'react-icons/fa6'
 import React from 'react'
+import Link from 'next/link'
 
 type Column = {
   isLoading: boolean
@@ -129,8 +131,17 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
           </label>
           <ul
             tabIndex={0}
-            className='dropdown-content menu p-2 bg-white rounded-tl-box rounded-tr-box rounded-bl-box w-28 border border-gray-200 shadow'
+            className='dropdown-content menu p-2 bg-white rounded-tl-box rounded-tr-box rounded-bl-box w-auto border border-gray-200 shadow'
           >
+            <li className='h-10 w-auto'>
+              <Link
+                className='btn-primary justify-start text-white'
+                href={`/reservations/${original.id}?reservationId=${original.reservationId}&pnrNumber=${original.pnrNumber}`}
+              >
+                <FaCircleInfo />
+                Details
+              </Link>
+            </li>
             <li className='h-10 w-auto'>
               <ButtonCircle
                 isLoading={isLoading}

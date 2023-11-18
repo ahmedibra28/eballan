@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import { FaBars, FaMarsAndVenus } from 'react-icons/fa6'
 
 const Navigation = () => {
   const { userInfo } = useUserInfoStore((state) => state)
@@ -17,13 +18,35 @@ const Navigation = () => {
 
   return (
     <div className='flex-none text-white'>
-      <ul className='menu menu-horizontal px-1'>
+      <ul className='menu menu-horizontal px-1 hidden md:block'>
         {!userInfo.id && (
           <li>
             <Link href='/auth/login'>Login</Link>
           </li>
         )}
       </ul>
+      {!userInfo.id && (
+        <div
+          suppressHydrationWarning={true}
+          className='dropdown dropdown-end md:hidden'
+        >
+          <label tabIndex={0} className='btn btn-ghost btn-circle avatar'>
+            <div className='flex justify-center items-center'>
+              <FaBars className='text-2xl' />
+            </div>
+          </label>
+          <ul
+            tabIndex={0}
+            className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-my-primary rounded-box w-52'
+          >
+            <li>
+              <li>
+                <Link href='/auth/login'>Login</Link>
+              </li>
+            </li>
+          </ul>
+        </div>
+      )}
       {userInfo.id && (
         <div suppressHydrationWarning={true} className='dropdown dropdown-end'>
           <label tabIndex={0} className='btn btn-ghost btn-circle avatar'>
@@ -52,7 +75,7 @@ const Navigation = () => {
 
             <li>
               <button onClick={() => handleLogout()}>
-                <Link href='/auth/login'>Logout</Link>
+                <Link href='#'>Logout</Link>
               </button>
             </li>
           </ul>
