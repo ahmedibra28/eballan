@@ -310,7 +310,7 @@ export default function Page() {
                 key={item?.id}
                 className='w-full md:w-[48%] bg-white card-body'
               >
-                <h4 className='font-bold uppercase'>
+                <h4 className='font-bold uppercase text-my-primary'>
                   Adult {index + 1} Details
                 </h4>
                 <hr />
@@ -413,7 +413,7 @@ export default function Page() {
             <hr className='my-4' />
 
             <div className='w-full bg-gray-100 p-2 mb-5'>
-              <strong>From</strong>
+              <strong className='text-my-primary'>From</strong>
               <p>
                 {flight?.flight?.fromCityName} ({flight?.flight?.fromCityCode})
               </p>
@@ -425,7 +425,7 @@ export default function Page() {
               </p>
             </div>
             <div className='w-full bg-gray-100 p-2 mb-5'>
-              <strong>Duration</strong>
+              <strong className='text-my-primary'>Duration</strong>
               <p>
                 {getHoursBetween(
                   DateTime(flight?.flight?.departureDate).format('hh:mm'),
@@ -434,7 +434,7 @@ export default function Page() {
               </p>
             </div>
             <div className='w-full bg-gray-100 p-2 mb-5'>
-              <strong>To</strong>
+              <strong className='text-my-primary'>To</strong>
               <p>
                 {flight?.flight?.toCityName} ({flight?.flight?.toCityCode})
               </p>
@@ -449,7 +449,7 @@ export default function Page() {
 
           <hr className='mb-5' />
           <div className='w-full bg-gray-100 p-2'>
-            <strong>Pricing</strong>
+            <strong className='text-my-primary'>Amount</strong>
             <p>
               {Number(flight?.adult || 0) +
                 Number(flight?.child || 0) +

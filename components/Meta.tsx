@@ -8,7 +8,7 @@ interface Props {
 }
 
 const Meta = ({
-  title = 'eBallan Booking',
+  title = 'eBallan.com',
   description = `
     eBallan is an online booking system for flights.
   `,

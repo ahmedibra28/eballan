@@ -153,10 +153,12 @@ export default function Page() {
 
         <div className='card shadow-sm rounded-2 border-0'>
           <div className='card-body'>
-            <h3 className='uppercase font-bold'>Order Summary</h3>
+            <h3 className='uppercase font-bold text-my-primary'>
+              Order Summary
+            </h3>
 
             <div className='w-full p-2'>
-              <strong>Pricing</strong>
+              <strong>Amount</strong>
               <p>
                 {Number(flight?.adult || 0) +
                   Number(flight?.child || 0) +

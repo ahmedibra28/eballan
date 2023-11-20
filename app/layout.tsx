@@ -19,7 +19,7 @@ export const metadata = {
 }
 
 const nav = () => (
-  <div className='navbar bg-my-primary z-50'>
+  <div className='navbar bg-my-primary z-50 mb-0 md:mb-4'>
     <div className='flex-1'>
       <Bars />
       <Link href='/' className='btn btn-ghost w-auto normal-case text-xl'>
@@ -44,9 +44,14 @@ export default function RootLayout({
         <Providers>
           {nav()}
           <div className='min-h-[91vh]'>
-            <Sidebar>
+            <div className='flex md:hidden'>
+              <Sidebar>
+                <main>{children}</main>
+              </Sidebar>
+            </div>
+            <div className='hidden md:block'>
               <main>{children}</main>
-            </Sidebar>
+            </div>
           </div>
           {/* <Footer /> */}
           <Footer />

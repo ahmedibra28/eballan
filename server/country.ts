@@ -11,7 +11,11 @@ export default async function country() {
     const { data } = await axios.get(
       `${BASE_URL}/saacid/ReservationApi/api/countries`
     )
-    return data as ICountry[]
+
+    const filteredData = data?.filter(
+      (item: ICountry) => item.name?.toLowerCase() !== 'somaliland'
+    )
+    return filteredData as ICountry[]
   } catch (error: any) {
     throw new Error(`Error fetching countries: ${error?.message}`)
   }

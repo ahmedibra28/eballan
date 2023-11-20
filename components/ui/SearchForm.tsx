@@ -307,7 +307,7 @@ export default function SearchForm({ source }: { source?: string }) {
             />
           </div>
 
-          <div className='w-[72%] md:w-full mx-auto'>
+          <div className='w-[71%] md:w-full mr-auto'>
             <InputDate
               register={register}
               errors={errors}
@@ -315,11 +315,11 @@ export default function SearchForm({ source }: { source?: string }) {
               hasLabel={false}
               name='date'
               placeholder='Enter date'
-              className='min-w-[97%] md:w-full p-[11px] outline-none h-16 rounded-xl'
+              className='bg-white  p-3 h-[61px] input min-w-[97%] md:w-full rounded-xl outline-none'
             />
           </div>
 
-          <div className='w-auto mx-auto'>
+          <div className='w-[25%] ml-auto'>
             <details className='dropdown dropdown-end w-22 mx-auto'>
               <summary
                 style={{
@@ -335,7 +335,7 @@ export default function SearchForm({ source }: { source?: string }) {
             </details>
           </div>
 
-          <div className='w-full mt-auto mx-auto'>
+          <div className='w-full mx-auto'>
             <CustomSubmitButton
               isLoading={isPending || false}
               label='Search'

@@ -17,6 +17,9 @@ export async function POST(req: Request) {
     if (password !== confirmPassword)
       return getErrorResponse('Password does not match', 400)
 
+    if (mobile?.length! === 9)
+      return getErrorResponse('Invalid mobile number', 400)
+
     const user =
       email &&
       (await prisma.user.findFirst({

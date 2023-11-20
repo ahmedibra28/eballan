@@ -15,6 +15,8 @@ import useUserInfoStore from '@/zustand/userStore'
 import useApi from '@/hooks/useApi'
 import FormContainer from '@/components/FormContainer'
 import Message from '@/components/Message'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 type FormData = {
   name?: string
@@ -29,6 +31,8 @@ type FormData = {
 const Page = () => {
   const router = useRouter()
   const params = useSearchParams().get('next')
+  const [phoneNumber, setPhoneNumber] = React.useState('')
+  const [error, setError] = React.useState<string | null>(null)
 
   const { userInfo } = useUserInfoStore((state) => state)
 
@@ -71,12 +75,22 @@ const Page = () => {
   }, [router, userInfo.id])
 
   const submitHandler = async (data: FormData) => {
+    if (!phoneNumber || phoneNumber?.length < 12) {
+      setError('Please enter a valid phone number')
+      setTimeout(() => {
+        setError(null)
+      }, 5000)
+      return null
+    }
+    data.mobile = phoneNumber
+
     postApi?.mutateAsync(data)
   }
 
   return (
-    <FormContainer title='Sign Up' margin='mt-44 mb-24'>
+    <FormContainer title='Sign Up' margin='mt-52 mb-24'>
       {postApi?.isError && <Message variant='error' value={postApi?.error} />}
+      {error && <Message variant='error' value={error} />}
 
       <form onSubmit={handleSubmit(submitHandler)}>
         <InputText
@@ -101,14 +115,23 @@ const Page = () => {
           name='address'
           placeholder='Address'
         />
-
+        {/* 
         <InputTel
           register={register}
           errors={errors}
           label='Mobile'
           name='mobile'
-          placeholder='615301507'
-        />
+          placeholder='61xxxxxxx'
+        /> */}
+        <div className='w-full mt-auto' style={{ zIndex: -0 }}>
+          <label htmlFor='phone'>Phone</label>
+          <PhoneInput
+            country={'so'}
+            value={phoneNumber}
+            onChange={(phone) => setPhoneNumber(phone)}
+            inputStyle={{ width: '100%', height: '48px' }}
+          />
+        </div>
 
         <InputTextArea
           register={register}

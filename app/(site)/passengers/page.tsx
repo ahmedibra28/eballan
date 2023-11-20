@@ -301,13 +301,10 @@ export default function Page() {
           </div>
         </div>
 
-        <div className='p-3 mt-4 d-flex justify-content-end align-items-center'>
-          {/* <button className="btn btn-primary rounded-pill">
-          <FaUserPlus className="mb-1" /> Add another passenger
-        </button> */}
+        <div className='p-3 mt-4 text-end'>
           <button
             type='submit'
-            className='btn btn-warning rounded-pill text-light'
+            className='btn btn-warning rounded-pill text-light float-end ml-auto'
           >
             Continue <FaArrowRight className='mb-1' />
           </button>

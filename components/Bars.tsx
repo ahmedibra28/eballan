@@ -9,7 +9,7 @@ export default function Bars() {
   return (
     <label
       htmlFor='my-drawer-2'
-      className='btn btn-ghost drawer-button lg:hidden'
+      className='btn btn-ghost drawer-button md:hidden'
     >
       <FaBars className='text-2xl text-white' />
     </label>

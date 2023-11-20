@@ -154,7 +154,7 @@ export default function Page() {
             <hr className='my-4' />
 
             <div className='w-full bg-gray-100 p-2 mb-2'>
-              <strong>From</strong>
+              <strong className='text-my-primary'>From</strong>
               <p>
                 {reservationData?.flight?.fromCityName} (
                 {reservationData?.flight?.fromCityCode})
@@ -167,7 +167,7 @@ export default function Page() {
               </p>
             </div>
             <div className='w-full bg-gray-100 p-2 mb-2'>
-              <strong>Duration</strong>
+              <strong className='text-my-primary'>Duration</strong>
               <p>
                 {getHoursBetween(
                   DateTime(reservationData?.flight?.departureDate).format(
@@ -178,7 +178,7 @@ export default function Page() {
               </p>
             </div>
             <div className='w-full bg-gray-100 p-2 mb-2'>
-              <strong>To</strong>
+              <strong className='text-my-primary'>To</strong>
               <p>
                 {reservationData?.flight?.toCityName} (
                 {reservationData?.flight?.toCityCode})
@@ -222,7 +222,7 @@ export default function Page() {
           </div>
 
           <div className='w-full bg-gray-100 p-2 mb-2'>
-            <strong>Pricing</strong>
+            <strong className='text-my-primary'>Amount</strong>
             <p>
               {Number(reservationData?.adult || 0) +
                 Number(reservationData?.child || 0) +

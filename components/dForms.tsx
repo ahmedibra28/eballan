@@ -157,9 +157,7 @@ const Autocomplete = (props: DynamicFormProps) => {
         )}
 
         {errors && errors[name] && (
-          <span className='text-secondary text-sm mt-1'>
-            {errors[name].message}
-          </span>
+          <span className='text-red-500 text-sm'>{errors[name].message}</span>
         )}
       </div>
     </>
@@ -194,9 +192,7 @@ export const InputText = (args: DynamicFormProps) => {
         className='input rounded-none border border-gray-300 w-full'
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -227,9 +223,7 @@ export const InputTel = (args: DynamicFormProps) => {
         className='input rounded-none border border-gray-300 w-full'
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -262,9 +256,7 @@ export const InputTextArea = (args: DynamicFormProps) => {
         className='textarea rounded-none border border-gray-300 w-full'
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -300,9 +292,7 @@ export const InputNumber = (args: DynamicFormProps) => {
         max={max}
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -340,9 +330,7 @@ export const InputEmail = (args: DynamicFormProps) => {
         className='input rounded-none border border-gray-300 w-full'
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -388,9 +376,7 @@ export const InputPassword = (args: DynamicFormProps) => {
         className='input rounded-none border border-gray-300 w-full'
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -435,9 +421,7 @@ export const DynamicInputSelect = (args: DynamicFormProps) => {
           ))}
       </select>
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -477,9 +461,7 @@ export const StaticInputSelect = (args: DynamicFormProps) => {
           ))}
       </select>
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -507,9 +489,7 @@ export const InputCheckBox = (args: DynamicFormProps) => {
         <span className='label-text ml-2'>{label}</span>
       </label>
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -545,9 +525,7 @@ export const InputMultipleCheckBox = (args: DynamicFormProps) => {
           ))}
       </div>
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -587,9 +565,7 @@ export const InputFile = (args: DynamicFormProps) => {
         }
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -621,9 +597,7 @@ export const InputDate = (args: DynamicFormProps) => {
         className={className}
       />
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -665,9 +639,7 @@ export const InputAutoCompleteSelect = (args: DynamicFormProps) => {
       </datalist>
 
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
@@ -707,9 +679,7 @@ export const DynamicInputSelectNumber = (args: DynamicFormProps) => {
         ))}
       </select>
       {errors && errors[name] && (
-        <span className='text-secondary text-sm mt-1'>
-          {errors[name].message}
-        </span>
+        <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
     </div>
   )
