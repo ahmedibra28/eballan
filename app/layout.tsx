@@ -4,10 +4,10 @@ import './globals.css'
 import Navigation from '@/components/Navigation'
 import Providers from '@/lib/provider'
 import Sidebar from '@/components/Sidebar'
-import { FaBars } from 'react-icons/fa6'
 import Link from 'next/link'
 import Image from 'next/image'
 import Footer from '@/components/Footer'
+import Bars from '@/components/Bars'
 
 // const roboto = Roboto({
 //   subsets: ['latin'],
@@ -21,12 +21,7 @@ export const metadata = {
 const nav = () => (
   <div className='navbar bg-my-primary z-50'>
     <div className='flex-1'>
-      <label
-        htmlFor='my-drawer-2'
-        className='btn btn-ghost drawer-button lg:hidden'
-      >
-        <FaBars className='text-2xl' />
-      </label>
+      <Bars />
       <Link href='/' className='btn btn-ghost w-auto normal-case text-xl'>
         <Image src={'/logo.png'} width={150} height={40} alt='logo' />
       </Link>

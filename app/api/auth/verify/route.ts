@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { encryptPassword, generateToken, getErrorResponse } from '@/lib/helpers'
+import { generateToken, getErrorResponse } from '@/lib/helpers'
 import { prisma } from '@/lib/prisma.db'
 
 export async function POST(req: NextApiRequestExtended) {

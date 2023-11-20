@@ -22,7 +22,7 @@ export const sendEmail = (options: {
     from: `${options?.webName} <${process.env.SMTP_USER}>`,
     to: options.to,
     subject: options.subject,
-    // html: options.text,
+    ...(options.text && { html: options.text }),
     ...(options.attachments && {
       attachments: [
         {

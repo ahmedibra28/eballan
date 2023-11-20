@@ -24,6 +24,7 @@ import { ICity, ISearchFlight } from '@/types'
 import Message from '../Message'
 import flight from '@/server/flight'
 import useFlightsStore from '@/zustand/useFlightsStore'
+import DateTime from '@/lib/dateTime'
 
 export default function SearchForm({ source }: { source?: string }) {
   const [valueF, setValueF] = React.useState<string | null>('')
@@ -83,7 +84,7 @@ export default function SearchForm({ source }: { source?: string }) {
     setValue('to', to)
     setValue('fromId', fromId)
     setValue('toId', toId)
-    setValue('date', date)
+    setValue('date', date || DateTime().format('YYYY-MM-DD'))
     setAdult(adult)
     setChild(child)
     setInfant(infant)
@@ -148,7 +149,7 @@ export default function SearchForm({ source }: { source?: string }) {
   }
 
   const menu = (
-    <ul className='menus dropdown-content z-[1] bg-base-200 w-full md:w-64 rounded-box text-sm'>
+    <ul className='menus dropdown-content z-[1] bg-base-200 w-44 md:w-64 rounded-box text-xs md:text-sm'>
       <li className='flex justify-between items-center p-2'>
         <span> Adults (Over 11)</span>
         <div className='flex flex-row justify-between items-center'>
@@ -314,12 +315,12 @@ export default function SearchForm({ source }: { source?: string }) {
               hasLabel={false}
               name='date'
               placeholder='Enter date'
-              className='w-full p-[11px] outline-none h-16 rounded-xl'
+              className='min-w-[97%] md:w-full p-[11px] outline-none h-16 rounded-xl'
             />
           </div>
 
           <div className='w-auto mx-auto'>
-            <details className='dropdown w-22 mx-auto'>
+            <details className='dropdown dropdown-end w-22 mx-auto'>
               <summary
                 style={{
                   borderRadius: '0.65rem',

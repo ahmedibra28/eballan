@@ -34,6 +34,7 @@ export default function Page() {
   const { passenger, updatePassenger } = usePassengerStore((state) => state)
   const { flight } = useFlightStore((state) => state)
   const { userInfo } = useUserInfoStore((state) => state)
+  const [tempPType, setTempPType] = React.useState([])
 
   React.useEffect(() => {
     if (!passenger || !flight) return router.back()
@@ -118,6 +119,15 @@ export default function Page() {
     setValue('sex', item?.sex)
     setValue('passengerType', item?.passengerType)
     setValue('passengerTitle', Number(item?.passengerTitle))
+
+    const newData = passengerTitles?.filter((item: any) =>
+      watch('passengerType') === 'Adult'
+        ? item.description === 'MR' || item.description === 'MRS'
+        : watch('passengerType') === 'Infant'
+        ? item.description === 'INF'
+        : item.description === 'CHD'
+    )
+    setTempPType(newData as any)
   }
 
   const modal = 'editPassengerModal'
@@ -170,21 +180,17 @@ export default function Page() {
   const form = [
     <div key={0} className='flex flex-wrap justify-between'>
       <div className='w-full md:w-[48%]'>
-        <DynamicInputSelect
-          register={register}
-          errors={errors}
-          name={`passengerTitle`}
-          label='Passenger Title'
-          value='description'
-          placeholder='Select passenger title'
-          data={passengerTitles?.filter((item: any) =>
-            watch('passengerType') === 'Adult'
-              ? item.description === 'MR' || item.description === 'MRS'
-              : watch('passengerType') === 'Infant'
-              ? item.description === 'INF'
-              : item.description === 'CHD'
-          )}
-        />
+        {tempPType?.length > 0 && (
+          <DynamicInputSelect
+            register={register}
+            errors={errors}
+            name={`passengerTitle`}
+            label='Passenger Title'
+            value='description'
+            placeholder='Select passenger title'
+            data={tempPType}
+          />
+        )}
       </div>
       <div className='w-full md:w-[48%]'>
         <InputText
@@ -272,6 +278,7 @@ export default function Page() {
           label='Date of Birth'
           name={`dob`}
           placeholder='Enter date of birth'
+          className='min-w-[95%] input rounded-none border border-gray-300 w-full'
         />
       </div>
     </div>,

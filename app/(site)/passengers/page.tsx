@@ -81,6 +81,13 @@ export default function Page() {
   }, [])
 
   const submitHandler = (data: any) => {
+    if (!phoneNumber || phoneNumber?.length < 12) {
+      setError('Please enter a valid phone number')
+      setTimeout(() => {
+        setError(null)
+      }, 5000)
+      return null
+    }
     data.phone = phoneNumber
     const reformatData = (types: string[]) => {
       const reformattedData = {}
@@ -234,13 +241,14 @@ export default function Page() {
             data={[{ name: 'Male' }, { name: 'Female' }]}
           />
         </div>
-        <div className='w-[48%] md:w-[24%] lg:w-[15%]'>
+        <div className='w-[48%] md:w-[24%] lg:w-[16%]'>
           <InputDate
             register={register}
             errors={errors}
             label='Date of Birth'
             name={`dob${passengerType}${number}`}
             placeholder='Enter date of birth'
+            className='min-w-[95%] input rounded-none border border-gray-300 w-full'
           />
         </div>
       </div>

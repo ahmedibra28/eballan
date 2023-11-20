@@ -3,7 +3,7 @@
 import // useCreateInvoice as CreateInvoice,
 // useVerifyInvoice as VerifyInvoice,
 '@/hooks/useEDahabPayment'
-// import { useEVCPayment as EVCPayment } from '@/hooks/useEVCPayment'
+import { useEVCPayment as EVCPayment } from '@/hooks/useEVCPayment'
 import DateTime from '@/lib/dateTime'
 import { getEnvVariable } from '@/lib/helpers'
 import { IPassenger, IFlight, IInsertToDB } from '@/types'
@@ -47,7 +47,7 @@ export default async function book({
     if (totalPrice < 1) throw new Error('Invalid amount')
 
     // Edahab Implementation
-    // if (payment.paymentMethod === 'somtel' && status === 'invoice') {
+    // if (payment.paymentMethod?.toLowerCase() === 'somtel' && status === 'invoice') {
     //   const createInvoice = await CreateInvoice(
     //     payment.phone,
     //     Number(totalPrice)
@@ -60,7 +60,7 @@ export default async function book({
     //   return { message: `success`, link }
     // }
 
-    // if (payment.paymentMethod === 'somtel' && status === 'verify' && link) {
+    // if (payment.paymentMethod?.toLowerCase() === 'somtel' && status === 'verify' && link) {
     //   const invoiceId = link.split('invoiceId=')[1]
     //   const verifyInvoice = await VerifyInvoice(Number(invoiceId))
 
@@ -72,25 +72,26 @@ export default async function book({
 
     // handle EVC payment
     if (
-      payment.paymentMethod === 'hormuud' ||
-      payment.paymentMethod === 'somnet'
+      payment.paymentMethod?.toLowerCase() === 'hormuud' ||
+      payment.paymentMethod?.toLowerCase() === 'somnet'
     ) {
-      // const MERCHANT_U_ID = getEnvVariable('MERCHANT_U_ID')
-      // const API_USER_ID = getEnvVariable('API_USER_ID')
-      // const API_KEY = getEnvVariable('API_KEY')
-      // const MERCHANT_ACCOUNT_NO = getEnvVariable('MERCHANT_ACCOUNT_NO')
-      // if (phone !== '770022200') {
-      // const paymentInfo = await EVCPayment({
-      //   merchantUId: MERCHANT_U_ID,
-      //   apiUserId: API_USER_ID,
-      //   apiKey: API_KEY,
-      //   customerMobileNumber: `252${payment.phone}`,
-      //   description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
-      //   amount: totalPrice,
-      //   withdrawTo: 'MERCHANT',
-      //   withdrawNumber: MERCHANT_ACCOUNT_NO,
-      // })
-      // if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
+      const MERCHANT_U_ID = getEnvVariable('MERCHANT_U_ID')
+      const API_USER_ID = getEnvVariable('API_USER_ID')
+      const API_KEY = getEnvVariable('API_KEY')
+      const MERCHANT_ACCOUNT_NO = getEnvVariable('MERCHANT_ACCOUNT_NO')
+
+      // if (payment.phone !== '770022200') {
+      const paymentInfo = await EVCPayment({
+        merchantUId: MERCHANT_U_ID,
+        apiUserId: API_USER_ID,
+        apiKey: API_KEY,
+        customerMobileNumber: `252${payment.phone}`,
+        description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
+        amount: totalPrice,
+        withdrawTo: 'MERCHANT',
+        withdrawNumber: MERCHANT_ACCOUNT_NO,
+      })
+      if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
     }
 
     let readyToBook = {
@@ -212,23 +213,23 @@ export default async function book({
       },
     })
 
-    // const { data } = await axios.post(
-    //   `${BASE_URL}/${airline?.api}/ReservationApi/api/bookings/AddConfirmBooking`,
-    //   readyToBook,
-    //   {
-    //     headers: {
-    //       Authorization: `Bearer ${airline?.accessToken}`,
-    //       uuid: uuidv4(),
-    //       scheme: 'https',
-    //       platform: 1,
-    //     },
-    //   }
-    // )
+    const { data } = await axios.post(
+      `${BASE_URL}/${airline?.api}/ReservationApi/api/bookings/AddConfirmBooking`,
+      readyToBook,
+      {
+        headers: {
+          Authorization: `Bearer ${airline?.accessToken}`,
+          uuid: uuidv4(),
+          scheme: 'https',
+          platform: 1,
+        },
+      }
+    )
 
-    const data = {
-      pnrNumber: Math.random().toString(36).substring(2, 9)?.toString(),
-      reservationId: Number(Math.random().toString().substring(2, 7)),
-    }
+    // const data = {
+    //   pnrNumber: Math.random().toString(36).substring(2, 9)?.toString(),
+    //   reservationId: Number(Math.random().toString().substring(2, 7)),
+    // }
 
     let forDatabase = {
       passengers: [

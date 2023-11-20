@@ -18,7 +18,21 @@ const Navigation = () => {
 
   return (
     <div className='flex-none text-white'>
-      <ul className='menu menu-horizontal px-1 hidden md:block'>
+      <ul className='menu menu-horizontal px-1 hidden md:flex'>
+        <li>
+          <details>
+            <summary>Ticket</summary>
+            <ul className='bg-my-primary w-36 z-10 rounded'>
+              <li>
+                <a>My Ticket</a>
+              </li>
+              <li>
+                <a>Cancel Ticket</a>
+              </li>
+            </ul>
+          </details>
+        </li>
+
         {!userInfo.id && (
           <li>
             <Link href='/auth/login'>Login</Link>
@@ -37,12 +51,23 @@ const Navigation = () => {
           </label>
           <ul
             tabIndex={0}
-            className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-my-primary rounded-box w-52'
+            className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-my-primary rounded w-52'
           >
             <li>
-              <li>
-                <Link href='/auth/login'>Login</Link>
-              </li>
+              <details>
+                <summary>Ticket</summary>
+                <ul className='bg-my-primary w-36 z-10'>
+                  <li>
+                    <a>My Ticket</a>
+                  </li>
+                  <li>
+                    <a>Cancel Ticket</a>
+                  </li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <Link href='/auth/login'>Login</Link>
             </li>
           </ul>
         </div>

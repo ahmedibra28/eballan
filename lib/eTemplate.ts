@@ -183,7 +183,7 @@ export const eTemplate = ({
                         text-shadow: 0 1px 0 white;
                       "
                     >
-                      ${webName}
+                      <img src="https://eballan.com/ticket-logo.jpg" style="width: 150px; height: 40px"><img>
                     </a>
                   </td>
                 </tr>

@@ -92,10 +92,10 @@ export default function Page() {
   }, [paymentMethod])
 
   const payments = [
-    { name: 'Hormuud', image: '/payments/hormuud.png' },
-    { name: 'Somtel', image: '/payments/somtel.png' },
-    { name: 'Somnet', image: '/payments/somnet.png' },
-    { name: 'Mastercard', image: '/payments/mastercard.png' },
+    { name: 'Hormuud', image: '/payments/hormuud.png', disabled: false },
+    { name: 'Somtel', image: '/payments/somtel.png', disabled: true },
+    { name: 'Somnet', image: '/payments/somnet.png', disabled: false },
+    { name: 'Mastercard', image: '/payments/mastercard.png', disabled: true },
   ]
 
   const handleBook = () => {
@@ -132,6 +132,7 @@ export default function Page() {
           {payments?.map((item) => (
             <button
               key={item.name}
+              disabled={item.disabled}
               onClick={() => setPaymentMethod(item.name)}
               className={`btn ${
                 paymentMethod === item.name ? 'btn-primary' : 'bg-white'
@@ -187,15 +188,17 @@ export default function Page() {
               />
             </div>
 
-            <div className='mb-3'>
-              <input
-                onChange={(e) => setDealerCode(e.target.value)}
-                value={dealerCode!}
-                type='text'
-                className='input border border-3 border-warning rounded-none w-full focus:outline-none'
-                placeholder={`Enter your dealer code`}
-              />
-            </div>
+            {userInfo?.role === 'AGENCY' && (
+              <div className='mb-3'>
+                <input
+                  onChange={(e) => setDealerCode(e.target.value)}
+                  value={dealerCode!}
+                  type='text'
+                  className='input border border-3 border-warning rounded-none w-full focus:outline-none'
+                  placeholder={`Enter your dealer code`}
+                />
+              </div>
+            )}
 
             <div className='flex justify-between mt-4'>
               <button
