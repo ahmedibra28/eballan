@@ -1,15 +1,18 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
-import Head from 'next/head'
-import useApi from '@/hooks/useApi'
 import Link from 'next/link'
 import { InputEmail, InputTel, InputText } from '@/components/dForms'
 import Message from '@/components/Message'
 import { useRouter } from 'next/navigation'
+import cancelReservation from '@/server/cancel-reservation'
 
 const Cancellation = () => {
+  const [error, setError] = React.useState<string | null>(null)
+  const [success, setSuccess] = React.useState<string | null>(null)
+  const [isPending, startTransition] = React.useTransition()
+
   const router = useRouter()
   const [step, setStep] = React.useState(1)
 
@@ -20,25 +23,36 @@ const Cancellation = () => {
     formState: { errors },
   } = useForm()
 
-  const postApi = useApi({
-    key: ['reservation'],
-    method: 'POST',
-    url: `reservations/cancellation`,
-  })?.post
+  const submitHandler = (data: {
+    reservationId?: string
+    email?: string
+    phone?: string
+  }) => {
+    if (data.reservationId && data.email && data.phone) {
+      startTransition(async () => {
+        cancelReservation({
+          reservationId: Number(data.reservationId),
+          phone: data.phone!,
+          email: data.email!,
+        })
+          .then((data) => {
+            setSuccess(data.message)
+            reset()
+            setStep(4)
 
-  useEffect(() => {
-    if (postApi?.isSuccess) {
-      reset()
-      setStep(4)
-      setTimeout(() => {
-        router.push('/')
-      }, 3000)
+            setTimeout(() => {
+              setSuccess(null)
+              router.push(`/`)
+            }, 5000)
+          })
+          .catch((error) => {
+            setError(String(error))
+            setTimeout(() => {
+              setError(null)
+            }, 5000)
+          })
+      })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postApi?.isSuccess])
-
-  const submitHandler = (data: { reservationId?: string }) => {
-    postApi?.mutateAsync(data)
   }
 
   const stepOne = () => {
@@ -57,13 +71,13 @@ const Cancellation = () => {
 
         <button
           type='button'
-          className='btn btn-primary form-control mt-3'
-          disabled={postApi?.isPending}
+          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          disabled={isPending}
           onClick={() => {
             setStep(2)
           }}
         >
-          {postApi?.isPending ? (
+          {isPending ? (
             <span className='spinner-border spinner-border-sm' />
           ) : (
             'Next'
@@ -97,13 +111,13 @@ const Cancellation = () => {
 
         <button
           type='button'
-          className='btn btn-primary form-control mt-3'
-          disabled={postApi?.isPending}
+          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          disabled={isPending}
           onClick={() => {
             setStep(3)
           }}
         >
-          {postApi?.isPending ? (
+          {isPending ? (
             <span className='spinner-border spinner-border-sm' />
           ) : (
             'Next'
@@ -118,7 +132,7 @@ const Cancellation = () => {
       <>
         <h6 className='fw-bold text-uppercase text-center'>Step 3 / 3</h6>
         <hr />
-        <h6 className='fw-bold'>Refund Policy</h6>
+        <h6 className='font-bold mb-2'>Refund Policy</h6>
         <p>1.1 Change booking fee will charge $10 </p>
         <p>1.2 Cancellation fee $10 </p>
         <p>1.3 No show $30 </p>
@@ -132,16 +146,21 @@ const Cancellation = () => {
           cancelled or changed
         </p>
         <p>
-          <Link href='/privacy-policy?active=refund-policy'> read more...</Link>
+          <Link href='/privacy-policy?active=refund-policy' className='link'>
+            {' '}
+            read more...
+          </Link>
         </p>
 
         <button
           type='submit'
-          className='btn btn-primary form-control mt-3'
-          disabled={postApi?.isPending}
+          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          disabled={isPending}
         >
-          {postApi?.isPending ? (
-            <span className='spinner-border spinner-border-sm' />
+          {isPending ? (
+            <>
+              <span className='spinner-border spinner-border-sm' /> Loading...{' '}
+            </>
           ) : (
             'Confirm'
           )}
@@ -153,12 +172,12 @@ const Cancellation = () => {
   const stepFour = () => {
     return (
       <>
-        <h1>Success</h1>
+        <h1 className='text-center'>Successfully Canceled</h1>
 
         <Link
           href={'/'}
           type='button'
-          className='btn btn-primary form-control mt-3'
+          className='btn btn-primary form-control mt-3 w-44 mx-auto'
         >
           Go To Home
         </Link>
@@ -167,36 +186,22 @@ const Cancellation = () => {
   }
 
   return (
-    <div className='w-full md:w-1/2 lg:w-1/3 mx-auto'>
-      <div className='col-lg-6 col-md-10 col-12 mx-auto'>
-        <Head>
-          <title>Reservation Cancellation</title>
-          <meta
-            property='og:title'
-            content='Reservation Cancellation'
-            key='title'
-          />
-        </Head>
-        <h3 className='fw-light font-monospace text-center mb-5'>
-          Reservation Cancellation
-        </h3>
-        {postApi?.isSuccess && (
-          <Message
-            variant='success'
-            value='Reservation Cancellation Successful.'
-          />
-        )}
-        {postApi?.isError && <Message variant='error' value={postApi?.error} />}
+    <div className='w-full md:w-1/2 lg:w-[40%] mx-auto bg-white card-body'>
+      {error && <Message variant='error' value={error} />}
+      {success && <Message variant='success' value={success} />}
 
-        <hr />
+      <h3 className='fw-light font-monospace text-center mb-5'>
+        Reservation Cancellation
+      </h3>
 
-        <form onSubmit={handleSubmit(submitHandler)}>
-          {step === 1 && stepOne()}
-          {step === 2 && stepTwo()}
-          {step === 3 && stepThree()}
-          {step === 4 && stepFour()}
-        </form>
-      </div>
+      <hr />
+
+      <form onSubmit={handleSubmit(submitHandler)}>
+        {step === 1 && stepOne()}
+        {step === 2 && stepTwo()}
+        {step === 3 && stepThree()}
+        {step === 4 && stepFour()}
+      </form>
     </div>
   )
 }

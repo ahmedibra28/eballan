@@ -90,11 +90,14 @@ export default function Page() {
             text: `Reservation Confirmation - ${reservationData?.pnrNumber} - ${reservationData?.reservationId}`,
             base64: base64data,
           })
-            .then(() =>
+            .then(() => {
               setSuccess(
                 `Reservation pdf sent to ${reservationData?.contactEmail}`
               )
-            )
+              setTimeout(() => {
+                setSuccess('')
+              }, 5000)
+            })
             .catch((err) => {
               setError(err?.message)
               setTimeout(() => {

@@ -1,13 +1,9 @@
 import Meta from '@/components/Meta'
 import './globals.css'
 // import { Roboto } from 'next/font/google'
-import Navigation from '@/components/Navigation'
 import Providers from '@/lib/provider'
-import Sidebar from '@/components/Sidebar'
-import Link from 'next/link'
-import Image from 'next/image'
 import Footer from '@/components/Footer'
-import Bars from '@/components/Bars'
+import ContentSwitcher from '@/components/ContentSwitcher'
 
 // const roboto = Roboto({
 //   subsets: ['latin'],
@@ -17,18 +13,6 @@ import Bars from '@/components/Bars'
 export const metadata = {
   ...Meta({}),
 }
-
-const nav = () => (
-  <div className='navbar bg-my-primary z-50 mb-0 md:mb-4'>
-    <div className='flex-1'>
-      <Bars />
-      <Link href='/' className='btn btn-ghost w-auto normal-case text-xl'>
-        <Image src={'/logo.png'} width={150} height={40} alt='logo' />
-      </Link>
-    </div>
-    <Navigation />
-  </div>
-)
 
 export default function RootLayout({
   children,
@@ -42,17 +26,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <Providers>
-          {nav()}
-          <div className='min-h-[91vh]'>
-            <div className='flex md:hidden'>
-              <Sidebar>
-                <main>{children}</main>
-              </Sidebar>
-            </div>
-            <div className='hidden md:block'>
-              <main>{children}</main>
-            </div>
-          </div>
+          <ContentSwitcher>{children}</ContentSwitcher>
           {/* <Footer /> */}
           <Footer />
         </Providers>
