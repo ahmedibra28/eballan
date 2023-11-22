@@ -20,7 +20,7 @@ const Search = ({
   return (
     <form onSubmit={searchHandler}>
       <div className='form-control'>
-        <label className='input-group'>
+        <label className='input-group flex flex-row'>
           <input
             className='input rounded-none border border-gray-300 w-full focus:outline-none'
             type={type}
@@ -29,8 +29,10 @@ const Search = ({
             onChange={(e) => setQ(e.target.value)}
             value={q}
           />
-          {/* <span>BTC</span> */}
-          <button type='submit' className='btn btn-outline-secondary'>
+          <button
+            type='submit'
+            className='btn btn-outline btn-ghost rounded-none border border-l-0 border-gray-300'
+          >
             <FaMagnifyingGlass />
           </button>
         </label>

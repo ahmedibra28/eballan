@@ -13,12 +13,12 @@ export default function Steps({ current = 0 }: { current: number }) {
       <li
         className={`text-gray-500 step ${current >= 1 ? 'step-primary' : ''}`}
       >
-        Passenger details
+        Passenger
       </li>
       <li
         className={`text-gray-500 step ${current >= 2 ? 'step-primary' : ''}`}
       >
-        Trip summary
+        Summary
       </li>
       <li
         className={`text-gray-500 step ${current >= 3 ? 'step-primary' : ''}`}

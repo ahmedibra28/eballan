@@ -36,63 +36,16 @@ const FormView = ({
     //   aria-labelledby={`${modal}Label`}
     //   aria-hidden='true'
     // >
-    //   <div className={`modal-dialog ${modalSize}`}>
-    //     <div className='modal-content modal-background'>
-    //       <div className='modal-header'>
-    //         <h3 className='modal-title ' id={`${modal}Label`}>
-    //           {edit ? `Edit ${label}` : `Post ${label}`}
-    //         </h3>
-    //         <button
-    //           type='button'
-    //           className='btn-close'
-    //           data-bs-dismiss='modal'
-    //           aria-label='Close'
-    //           onClick={formCleanHandler}
-    //         ></button>
-    //       </div>
-    //       <div className='modal-body'>
-    //         <form onSubmit={handleSubmit(submitHandler)}>
-    //           <div className='row'>{form}</div>
 
-    //           <div className='modal-footer'>
-    //             <button
-    //               type='button'
-    //               className='btn btn-secondary'
-    //               data-bs-dismiss='modal'
-    //               onClick={formCleanHandler}
-    //             >
-    //               <>
-    //                 <FaCircleXmark className='mb-1' /> Close
-    //               </>
-    //             </button>
-    //             <button
-    //               type='submit'
-    //               className='btn btn-primary '
-    //               disabled={isLoadingPost || isLoadingUpdate}
-    //             >
-    //               {isLoadingPost || isLoadingUpdate ? (
-    //                 <span className='spinner-border spinner-border-sm' />
-    //               ) : (
-    //                 <>
-    //                   <FaPaperPlane className='mb-1' /> Submit
-    //                 </>
-    //               )}
-    //             </button>
-    //           </div>
-    //         </form>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
     <dialog id={modal} className='modal'>
       <form
         onSubmit={handleSubmit(submitHandler)}
         method='dialog'
         className={`modal-box w-11/12 ${modalSize}`}
       >
-        <h3 className='font-bold text-2xl'>{label}</h3>
+        <div className='divider text-2xl uppercase'>{label}</div>
 
-        <div className='row'>{form}</div>
+        <div>{form}</div>
 
         <div className='modal-action'>
           <button

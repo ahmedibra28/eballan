@@ -28,7 +28,7 @@ export default async function cancelReservation({
           reservationId,
           contactPhone: phone,
           contactEmail: email,
-          //   status: 'BOOKED',
+          status: 'BOOKED',
         },
         include: {
           flight: {

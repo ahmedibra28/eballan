@@ -1,8 +1,8 @@
 'use client'
+import ComboboxCountryEdit from '@/components/ComboboxCountryEdit'
 import FormView from '@/components/FormView'
 import Message from '@/components/Message'
 import {
-  Autocomplete,
   DynamicInputSelect,
   InputDate,
   InputText,
@@ -25,16 +25,94 @@ export default function Page() {
   const router = useRouter()
 
   const [error, setError] = React.useState<string | null>(null)
-  const [valueC, setValueC] = React.useState<string | null>(null)
   const [passengerTitles, setPassengerTitles] = React.useState<
     IPassengerTitle[]
   >([])
   const [countries, setCountries] = React.useState<ICountry[]>([])
+  const [countrySelected, setCountrySelected] = React.useState<ICountry | null>(
+    null
+  )
+  const [countryError, setCountryError] = React.useState<string | null>(null)
 
   const { passenger, updatePassenger } = usePassengerStore((state) => state)
   const { flight } = useFlightStore((state) => state)
   const { userInfo } = useUserInfoStore((state) => state)
   const [tempPType, setTempPType] = React.useState([])
+
+  // const flight = {
+  //   prices: [
+  //     {
+  //       passenger: 'Adult',
+  //       commission: 20,
+  //       fare: 130,
+  //       baggageWeight: 25,
+  //       handCarryWeight: 7,
+  //       totalPrice: 150,
+  //     },
+  //     {
+  //       passenger: 'Child',
+  //       commission: 10,
+  //       fare: 100,
+  //       baggageWeight: 25,
+  //       handCarryWeight: 7,
+  //       totalPrice: 0,
+  //     },
+  //     {
+  //       passenger: 'Infant',
+  //       commission: 0,
+  //       fare: 20,
+  //       baggageWeight: 25,
+  //       handCarryWeight: 7,
+  //       totalPrice: 0,
+  //     },
+  //   ],
+  //   flight: {
+  //     segmentNumber: 1,
+  //     ticketTypeId: 1,
+  //     flightRouteId: 5014,
+  //     flightScheduleId: 3606,
+  //     departureDate: '2023-12-06 08:00:00',
+  //     arrivalDate: '2023-12-06 09:00:00',
+  //     fromCityName: 'Mogadishu',
+  //     toCityName: 'Kismayo',
+  //     fromAirportName: 'Aden Adde International Airport ',
+  //     toAirportName: 'Kismayo Airport',
+  //     fromCityCode: 'MGQ',
+  //     toCityCode: 'KMU',
+  //     fromCountryName: 'SOMALIA',
+  //     toCountryName: 'SOMALIA',
+  //     fromCountryId: 196,
+  //     toCountryId: 196,
+  //     fromCountryIsoCode3: 'SOM',
+  //     toCountryIsoCode3: 'SOM',
+  //     adultNumberOfSeatsAvailable: 60,
+  //     childNumberOfSeatsAvailable: 60,
+  //   },
+  //   airline: {
+  //     key: 'jubbaairways',
+  //     name: 'Jubba Airways',
+  //     logo: 'https://reservations.jubbaairways.so/assets/images/logos/logo_full.png',
+  //   },
+  //   adult: 1,
+  //   child: 0,
+  //   infant: 0,
+  // }
+
+  // const passenger = {
+  //   adult: [
+  //     {
+  //       passengerTitle: '1',
+  //       firstName: 'Ahmed',
+  //       secondName: 'Samow',
+  //       lastName: 'Jama',
+  //       country: 'SOMALIA',
+  //       sex: 'Male',
+  //       dob: '2023-12-06',
+  //       id: '53f6e8f6-2fcb-42b8-ab69-c3573f800312',
+  //     },
+  //   ],
+  //   contact: { email: 'ahmaat19@gmail.com', phone: '252615301507' },
+  // }
 
   React.useEffect(() => {
     if (!passenger || !flight) return router.back()
@@ -109,8 +187,22 @@ export default function Page() {
 
   const editHandler = (item: any) => {
     setValue('id', item?.id)
+    // setValue('country', item?.country)
     setValue('country', item?.country)
-    setValue('countryId', item?.countryId)
+
+    setCountrySelected(
+      countries?.find(
+        (x) => x.name?.toLowerCase() === item.country?.toLowerCase()
+      ) || null
+    )
+
+    setValue(
+      'countryId',
+      countries?.find(
+        (x) => x.name?.toLowerCase() === item?.country?.toLowerCase()
+      )?.id || ''
+    )
+
     setValue('dob', item?.dob)
     setValue('firstName', item?.firstName)
     setValue('lastName', item?.lastName)
@@ -136,9 +228,13 @@ export default function Page() {
     reset()
     // @ts-ignore
     window[modal].close()
+    setCountrySelected(null)
   }
 
   const submitHandler = (data: any) => {
+    data.country = countrySelected?.name
+    data.countryId = countrySelected?.id
+
     let previousPassengers = passenger as any
     const updatedPassenger = data
 
@@ -221,7 +317,16 @@ export default function Page() {
       </div>
 
       <div className='w-full md:w-[48%]'>
-        <Autocomplete
+        <ComboboxCountryEdit
+          countries={countries}
+          selected={countrySelected!}
+          setSelected={setCountrySelected}
+          countryError={countryError}
+          placeholder='Country'
+          name='country'
+        />
+
+        {/* <Autocomplete
           register={register}
           className='w-full input border border-gray-300'
           errors={errors}
@@ -257,8 +362,8 @@ export default function Page() {
             name={`countryId`}
             isRequired={false}
             className='hidden'
-          />
-        </div>
+          /> 
+        </div>*/}
       </div>
 
       <div className='w-full md:w-[48%]'>
@@ -469,7 +574,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className='text-end my-5'>
+      <div className='text-end m-5'>
         <div className='btn-group'>
           {!userInfo?.token && (
             <>

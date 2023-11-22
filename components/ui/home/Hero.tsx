@@ -20,7 +20,7 @@ export default function Hero() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
-        className='-m-4  md:-my-4 md:-mx-0 flex flex-col justify-center items-center'
+        className='sm:-mx-4 lg:mx-0 md:-mt-4 lg:mt-0 flex flex-col justify-center items-center'
       >
         <h1
           className={`text-3xl md:text-4xl text-center lg:text-7xl font-thin text-white mb-5 duration-1000 ${indie_flower.className}`}

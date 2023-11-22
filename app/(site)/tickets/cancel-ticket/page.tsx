@@ -106,7 +106,7 @@ const Cancellation = () => {
           errors={errors}
           label='Phone'
           name='phone'
-          placeholder='Enter phone'
+          placeholder='Enter phone (with country code)'
         />
 
         <button

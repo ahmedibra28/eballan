@@ -2,7 +2,6 @@
 
 import Message from '@/components/Message'
 import {
-  Autocomplete,
   DynamicInputSelect,
   InputDate,
   InputEmail,
@@ -23,6 +22,7 @@ import 'react-phone-input-2/lib/style.css'
 import useNumberToArray from '@/hooks/useNumberToArray'
 import usePassengerStore from '@/zustand/usePassengerStore'
 import { useRouter } from 'next/navigation'
+import ComboboxCountry from '@/components/ComboboxCountry'
 
 export default function Page() {
   const router = useRouter()
@@ -34,7 +34,6 @@ export default function Page() {
 
   const [countries, setCountries] = React.useState<ICountry[]>([])
   const [phoneNumber, setPhoneNumber] = React.useState('')
-  const [valueC, setValueC] = React.useState<string | null>(null)
 
   const { flight } = useFlightStore((state) => state)
   const { updatePassenger } = usePassengerStore((state) => state)
@@ -47,7 +46,6 @@ export default function Page() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({})
 
@@ -191,44 +189,14 @@ export default function Page() {
         </div>
 
         <div className='w-full md:w-[48%] lg:w-[32%]'>
-          <Autocomplete
+          <ComboboxCountry
+            countries={countries}
+            placeholder='Country'
             register={register}
-            className='w-full input border border-gray-300'
             errors={errors}
             label='Country'
             name={`country${passengerType}${number}`}
-            // @ts-ignore
-            items={countries?.filter((item) =>
-              item?.name?.toLowerCase()?.includes(valueC?.toLowerCase()!)
-            )}
-            item='name'
-            hasLabel={true}
-            placeholder='Country'
-            dropdownValue='country'
-            // value={valueC!}
-            onChange={setValueC}
-            setValue={setValue}
-            customFormat={(item: ICountry) => (
-              <div className='flex flex-col justify-start items-start'>
-                <div>{item?.name}</div>
-                <div>
-                  <span className='text-xs'>
-                    {item?.name} ({item?.isoCode})
-                  </span>
-                </div>
-                <hr />
-              </div>
-            )}
           />
-          <div className='hidden'>
-            <InputText
-              register={register}
-              errors={errors}
-              name={`countryId${passengerType}${number}`}
-              isRequired={false}
-              className='hidden'
-            />
-          </div>
         </div>
 
         <div className='w-[48%] md:w-[24%] lg:w-[15%]'>
@@ -278,26 +246,30 @@ export default function Page() {
           <div className='w-full'>
             <h6 className='font-bold uppercase'>Contact Details</h6>
           </div>
-          <div
-            className='w-full md:w-[48%] lg:w-[48%] mt-auto'
-            style={{ zIndex: -0 }}
-          >
-            <label htmlFor='phone'>Phone</label>
-            <PhoneInput
-              country={'so'}
-              value={phoneNumber}
-              onChange={(phone) => setPhoneNumber(phone)}
-              inputStyle={{ width: '100%', height: '48px' }}
-            />
-          </div>
-          <div className='w-full md:w-[48%] lg:w-[48%]'>
-            <InputEmail
-              register={register}
-              errors={errors}
-              label='Email (To receive eTicket)'
-              name='email'
-              placeholder='Enter email'
-            />
+          <div className='flex flex-row justify-between items-start w-full gap-x-2'>
+            <div
+              className='w-full md:w-[48%] lg:w-[48%] mt-2'
+              style={{ zIndex: -0 }}
+            >
+              <label htmlFor='phone'>Phone</label>
+              <div className='mt-2'>
+                <PhoneInput
+                  country={'so'}
+                  value={phoneNumber}
+                  onChange={(phone) => setPhoneNumber(phone)}
+                  inputStyle={{ width: '100%', height: '48px' }}
+                />
+              </div>
+            </div>
+            <div className='w-full md:w-[48%] lg:w-[48%]'>
+              <InputEmail
+                register={register}
+                errors={errors}
+                label='Email'
+                name='email'
+                placeholder='Enter email'
+              />
+            </div>
           </div>
         </div>
 

@@ -176,8 +176,8 @@ export default function Page() {
               </p>
             </div>
 
-            <div className='input-group mb-3'>
-              <span className='bg-warning border border-3 border-warning rounded-none'>
+            <div className='input-group mb-3 flex flex-row justify-start bg-warning'>
+              <span className='bg-warning border border-3 border-warning rounded-none m-auto my-auto mx-3'>
                 <FaPhone className='text-light' />
               </span>
               <input

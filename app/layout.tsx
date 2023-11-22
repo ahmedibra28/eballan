@@ -21,6 +21,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' style={{ background: '#f3f4f6' }}>
+      <head>
+        <meta charSet='utf-8' />
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1, user-scalable=no'
+        />
+      </head>
       <body
         // className={roboto.className}
         suppressHydrationWarning={true}

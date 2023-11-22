@@ -88,7 +88,7 @@ const Page = () => {
   }
 
   return (
-    <FormContainer title='Sign Up' margin='mt-52 mb-24'>
+    <FormContainer title='Sign Up' margin='mt-52s mb-24s'>
       {postApi?.isError && <Message variant='error' value={postApi?.error} />}
       {error && <Message variant='error' value={error} />}
 

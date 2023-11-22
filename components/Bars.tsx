@@ -8,7 +8,7 @@ export default function Bars() {
   if (!userInfo.token) return <></>
   return (
     <label
-      htmlFor='my-drawer-2'
+      htmlFor='my-drawer-2 z-50'
       className='btn btn-ghost drawer-button md:hidden'
     >
       <FaBars className='text-2xl text-white' />

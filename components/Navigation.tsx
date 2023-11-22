@@ -25,22 +25,25 @@ const Navigation = () => {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
-  const handleToggle = (item: any) => {
-    const newMenu = menu.map((x: any) => {
-      if (x.name === item.name) {
-        return { ...x, open: !x.open }
-      }
-      return { ...x, open: false }
-    })
-    setMenu(newMenu)
-  }
+  // const handleToggle = (item: any) => {
+  //   const newMenu = menu.map((x: any) => {
+  //     if (x.name === item.name) {
+  //       return { ...x, open: !x.open }
+  //     }
+  //     return { ...x, open: false }
+  //   })
+  //   setMenu(newMenu)
+  // }
 
   const sharedNav = (
     <>
       <li>
         <details>
           <summary>Bookings</summary>
-          <ul className='bg-my-primary w-36 z-10 rounded'>
+          <ul
+            className='bg-my-primary w-36 rounded'
+            style={{ zIndex: 9999999 }}
+          >
             <li>
               <Link href='/tickets/my-ticket'>My Ticket</Link>
             </li>
@@ -73,21 +76,9 @@ const Navigation = () => {
         </label>
         <ul
           tabIndex={0}
-          className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-my-primary rounded w-52'
+          className='mt-3 z-50 p-2 shadow menu menu-sm dropdown-content bg-my-primary rounded w-52'
         >
-          <li>
-            <details>
-              <summary>Bookings</summary>
-              <ul className='bg-my-primary w-36 z-10'>
-                <li>
-                  <Link href='/tickets/my-ticket'>My Ticket</Link>
-                </li>
-                <li>
-                  <Link href='/tickets/cancel-ticket'>Cancel Ticket</Link>
-                </li>
-              </ul>
-            </details>
-          </li>
+          {sharedNav}
           <li>
             <Link href='/auth/login'>Login</Link>
           </li>

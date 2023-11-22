@@ -23,11 +23,6 @@ const Meta = ({
     : `https://ahmedibra.com/logo.png`
 
   return {
-    // viewport: {
-    //   width: 'device-width',
-    //   initialScale: 1,
-    //   maximumScale: 1,
-    // },
     title: title ? title : title,
     description: description ? description : description,
     image: image,

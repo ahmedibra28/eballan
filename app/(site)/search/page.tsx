@@ -12,6 +12,12 @@ export default function Page() {
 
   const { flights } = useFlightsStore((state) => state)
   const { updateFlight } = useFlightStore((state) => state)
+  const [isPending, setIsPending] = React.useState(true)
+  React.useEffect(() => {
+    setTimeout(() => {
+      setIsPending(false)
+    }, 4000)
+  }, [])
 
   function getHoursBetween(startTime: string, endTime: string): string {
     const start = new Date(`2022-01-01T${startTime}Z`)
@@ -31,13 +37,19 @@ export default function Page() {
 
   return (
     <div className='max-w-7xl mx-auto'>
-      <div className='-mx-4 md:mx-auto bg-gray-500 rounded-xl'>
+      <div className='md:mx-auto bg-gray-500 rounded-xl'>
         <SearchForm />
       </div>
 
       {flights?.length > 0 && (
         <div className='divider'>
           We have found {flights?.length || 0} flights
+        </div>
+      )}
+
+      {flights?.length === 0 && !isPending && (
+        <div className='divider text-red-500'>
+          Sorry, we could not find any flights
         </div>
       )}
 

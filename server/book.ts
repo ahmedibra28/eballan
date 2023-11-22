@@ -6,7 +6,7 @@ import // useCreateInvoice as CreateInvoice,
 import { useEVCPayment as EVCPayment } from '@/hooks/useEVCPayment'
 import DateTime from '@/lib/dateTime'
 import { getEnvVariable } from '@/lib/helpers'
-import { IPassenger, IFlight, IInsertToDB } from '@/types'
+import { IPassenger, IFlight, IInsertToDB, ICountry } from '@/types'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { prisma } from '@/lib/prisma.db'
@@ -71,28 +71,32 @@ export default async function book({
     // }
 
     // handle EVC payment
-    if (
-      payment.paymentMethod?.toLowerCase() === 'hormuud' ||
-      payment.paymentMethod?.toLowerCase() === 'somnet'
-    ) {
-      const MERCHANT_U_ID = getEnvVariable('MERCHANT_U_ID')
-      const API_USER_ID = getEnvVariable('API_USER_ID')
-      const API_KEY = getEnvVariable('API_KEY')
-      const MERCHANT_ACCOUNT_NO = getEnvVariable('MERCHANT_ACCOUNT_NO')
+    // if (
+    //   payment.paymentMethod?.toLowerCase() === 'hormuud' ||
+    //   payment.paymentMethod?.toLowerCase() === 'somnet'
+    // ) {
+    //   const MERCHANT_U_ID = getEnvVariable('MERCHANT_U_ID')
+    //   const API_USER_ID = getEnvVariable('API_USER_ID')
+    //   const API_KEY = getEnvVariable('API_KEY')
+    //   const MERCHANT_ACCOUNT_NO = getEnvVariable('MERCHANT_ACCOUNT_NO')
 
-      // if (payment.phone !== '770022200') {
-      const paymentInfo = await EVCPayment({
-        merchantUId: MERCHANT_U_ID,
-        apiUserId: API_USER_ID,
-        apiKey: API_KEY,
-        customerMobileNumber: `252${payment.phone}`,
-        description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
-        amount: totalPrice,
-        withdrawTo: 'MERCHANT',
-        withdrawNumber: MERCHANT_ACCOUNT_NO,
-      })
-      if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
-    }
+    //   // if (payment.phone !== '770022200') {
+    //   const paymentInfo = await EVCPayment({
+    //     merchantUId: MERCHANT_U_ID,
+    //     apiUserId: API_USER_ID,
+    //     apiKey: API_KEY,
+    //     customerMobileNumber: `252${payment.phone}`,
+    //     description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
+    //     amount: totalPrice,
+    //     withdrawTo: 'MERCHANT',
+    //     withdrawNumber: MERCHANT_ACCOUNT_NO,
+    //   })
+    //   if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
+    // }
+
+    const { data: countries } = await axios.get(
+      `${BASE_URL}/saacid/ReservationApi/api/countries`
+    )
 
     let readyToBook = {
       bookingTypeId: 1,
@@ -105,7 +109,11 @@ export default async function book({
             lastName: item.lastName,
             passportNo: '',
             dob: DateTime(item.dob).format(),
-            countryId: item?.countryId,
+            countryId:
+              countries?.find(
+                (x: ICountry) =>
+                  x?.name?.toLowerCase() === item?.country?.toLowerCase()
+              )?.id || 196,
             passengerTypeId: 1, // Adult
             passengerTitleId: item.passengerTitle,
             reservationDetails: [
@@ -125,7 +133,11 @@ export default async function book({
             lastName: item.lastName,
             passportNo: '',
             dob: DateTime(item.dob).format(),
-            countryId: item?.countryId,
+            countryId:
+              countries?.find(
+                (x: ICountry) =>
+                  x?.name?.toLowerCase() === item?.country?.toLowerCase()
+              )?.id || 196,
             passengerTypeId: 2, // Child
             passengerTitleId: item.passengerTitle,
             reservationDetails: [
@@ -144,7 +156,11 @@ export default async function book({
             lastName: item.lastName,
             passportNo: '',
             dob: DateTime(item.dob).format(),
-            countryId: item?.countryId,
+            countryId:
+              countries?.find(
+                (x: ICountry) =>
+                  x?.name?.toLowerCase() === item?.country?.toLowerCase()
+              )?.id || 196,
             passengerTypeId: 3, // Infant
             passengerTitleId: item.passengerTitle,
             reservationDetails: [
@@ -237,18 +253,33 @@ export default async function book({
           ...passenger?.adult?.map((item) => ({
             ...item,
             passengerType: 'Adult',
+            countryId:
+              countries?.find(
+                (x: ICountry) =>
+                  x?.name?.toLowerCase() === item?.country?.toLowerCase()
+              )?.id || 196,
           })),
         },
         passenger?.child?.length > 0 && {
           ...passenger?.child?.map((item) => ({
             ...item,
             passengerType: 'Child',
+            countryId:
+              countries?.find(
+                (x: ICountry) =>
+                  x?.name?.toLowerCase() === item?.country?.toLowerCase()
+              )?.id || 196,
           })),
         },
         passenger?.infant?.length > 0 && {
           ...passenger?.infant?.map((item) => ({
             ...item,
             passengerType: 'Infant',
+            countryId:
+              countries?.find(
+                (x: ICountry) =>
+                  x?.name?.toLowerCase() === item?.country?.toLowerCase()
+              )?.id || 196,
           })),
         },
       ],
