@@ -2,6 +2,7 @@ import React from 'react'
 import SearchForm from '../SearchForm'
 
 import { Indie_Flower } from 'next/font/google'
+// import AD from './Ad'
 
 const indie_flower = Indie_Flower({
   subsets: ['latin'],
@@ -22,6 +23,10 @@ export default function Hero() {
         }}
         className='sm:-mx-4 lg:mx-0 md:-mt-4 lg:mt-0 flex flex-col justify-center items-center'
       >
+        {/* <div className='absolute top-[37px] sm:top-[55px] lg:top-[40px] 2xl:top-[64px] left-0 right-0 w-full mx-auto flex justify-center'>
+          <AD />
+        </div> */}
+
         <h1
           className={`text-3xl md:text-4xl text-center lg:text-7xl font-thin text-white mb-5 duration-1000 ${indie_flower.className}`}
         >

@@ -46,6 +46,7 @@ export default function Page() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({})
 
@@ -217,6 +218,7 @@ export default function Page() {
             name={`dob${passengerType}${number}`}
             placeholder='Enter date of birth'
             className='min-w-[95%] input rounded-none border border-gray-300 w-full'
+            value={watch()[`dob${passengerType}${number}`]}
           />
         </div>
       </div>
@@ -276,9 +278,9 @@ export default function Page() {
         <div className='p-3 mt-4 text-end'>
           <button
             type='submit'
-            className='btn btn-warning rounded-pill text-light float-end ml-auto'
+            className='btn bg-my-secondary text-white hover:text-black hover:bg-my-secondary rounded-pill text-light float-end ml-auto w-44'
           >
-            Continue <FaArrowRight className='mb-1' />
+            Continue <FaArrowRight className='' />
           </button>
         </div>
       </form>

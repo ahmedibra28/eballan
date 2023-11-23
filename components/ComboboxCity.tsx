@@ -46,8 +46,8 @@ export default function ComboboxCity({
     <Combobox value={selected} onChange={setSelected}>
       <div className='relative z-20'>
         <div className='relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-my-primary flex flex-row items-center px-2 border input h-16'>
-          {name === 'from' && <FaPlaneDeparture />}
-          {name === 'to' && <FaPlaneArrival />}
+          {name === 'from' && <FaPlaneDeparture className='text-my-primary' />}
+          {name === 'to' && <FaPlaneArrival className='text-my-primary' />}
 
           <Combobox.Input
             autoComplete='off'

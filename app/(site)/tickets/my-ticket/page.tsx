@@ -305,7 +305,7 @@ const Ticket = () => {
       {error && <Message variant='error' value={error} />}
       {success && <Message variant='success' value={success} />}
 
-      <h3 className='font-bold text-center mb-5'>
+      <h3 className='font-bold text-center mb-5 text-my-primary'>
         Get Your Reservation Tickets
       </h3>
 

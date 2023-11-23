@@ -254,6 +254,23 @@ const Profile = () => {
               </div>
             )}
             <div className='flex justify-start flex-wrap flex-col w-full gap-2'>
+              <p className='text-xs ml-3'>
+                <ol className='list-decimal'>
+                  <li>
+                    eBallan.com reserves the authority to terminate your account
+                    access at any given time.
+                  </li>
+                  <li>
+                    A 20% commission will be allocated to the dealer staff. This
+                    commission will be deducted from the agency&apos;s total
+                    commission.
+                  </li>
+                </ol>
+              </p>
+              <Link href='/terms-of-use' className='text-sm underline'>
+                <span>Terms of use</span>
+              </Link>
+
               <div className='w-full'>
                 <InputCheckBox
                   isRequired={false}
@@ -263,9 +280,6 @@ const Profile = () => {
                   name='policyConfirmed'
                 />
               </div>
-              <Link href='/terms-of-use' className='text-sm underline'>
-                <span>Terms of use</span>
-              </Link>
             </div>
 
             <div className='flex justify-start flex-wrap flex-row w-full gap-2'>

@@ -159,7 +159,7 @@ const Cancellation = () => {
         >
           {isPending ? (
             <>
-              <span className='spinner-border spinner-border-sm' /> Loading...{' '}
+              <span className='spinner-border spinner-border-sm' /> Loading...
             </>
           ) : (
             'Confirm'
@@ -190,7 +190,7 @@ const Cancellation = () => {
       {error && <Message variant='error' value={error} />}
       {success && <Message variant='success' value={success} />}
 
-      <h3 className='fw-light font-monospace text-center mb-5'>
+      <h3 className='font-bold font-monospace text-center mb-5 text-my-primary'>
         Reservation Cancellation
       </h3>
 

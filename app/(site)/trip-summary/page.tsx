@@ -384,6 +384,7 @@ export default function Page() {
           name={`dob`}
           placeholder='Enter date of birth'
           className='min-w-[95%] input rounded-none border border-gray-300 w-full'
+          value={watch().dob}
         />
       </div>
     </div>,
@@ -406,7 +407,7 @@ export default function Page() {
         modalSize='max-w-xl'
       />
 
-      <h2 className='font-bold uppercase mb-2'>Trip Summary</h2>
+      <h2 className='font-bold uppercase mb-2 ml-2'>Trip Summary</h2>
       <div className='flex flex-row flex-wrap justify-between gap-2'>
         <div className='w-full lg:w-[65%]'>
           <div className='flex flex-row flex-wrap justify-between gap-2'>
@@ -580,14 +581,17 @@ export default function Page() {
             <>
               <Link
                 href={`/auth/login?next=/trip-summary`}
-                className='btn bg-my-primary text-white'
+                className='btn bg-my-primary text-white hover:text-black hover:bg-my-primary'
               >
                 Login
               </Link>
               <button className='btn btn-ghost'> OR </button>
             </>
           )}
-          <Link href={'/payment'} className='btn bg-my-secondary text-white'>
+          <Link
+            href={'/payment'}
+            className='btn bg-my-secondary text-white hover:text-black hover:bg-my-secondary'
+          >
             Continue {!userInfo?.token && <span>as guest</span>}
           </Link>
         </div>

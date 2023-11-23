@@ -109,6 +109,7 @@ export default function SearchForm({ source }: { source?: string }) {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({})
 
@@ -284,6 +285,7 @@ export default function SearchForm({ source }: { source?: string }) {
               name='date'
               placeholder='Enter date'
               className='bg-white  p-3 h-16 input min-w-[97%] md:w-full rounded-xl outline-none'
+              value={watch().date}
             />
           </div>
 

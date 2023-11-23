@@ -581,7 +581,18 @@ export const InputDate = (args: DynamicFormProps) => {
     isRequired = true,
     hasLabel = true,
     className = 'input rounded-none border border-gray-300 w-full',
+    value,
   } = args
+
+  React.useEffect(() => {
+    const inputDate = document.querySelector('input[type="date"]')
+
+    if (inputDate && !value) {
+      inputDate.classList.add('mobile')
+    } else {
+      inputDate?.classList.remove('mobile')
+    }
+  }, [value])
 
   return (
     <div className='form-control w-full'>

@@ -180,7 +180,7 @@ export default function Page() {
                 {isPending
                   ? 'Loading...'
                   : paymentLink
-                  ? 'Verify Payment After You Pay'
+                  ? 'Verify Payment'
                   : 'Pay Now'}
               </button>
             </div>

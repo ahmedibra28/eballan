@@ -14,3 +14,16 @@ body {
   font-style: normal;
   background-color: #f3f4f6;
 }
+
+@media (max-width: 767px) {
+  input[type='date'].mobile::before {
+    content: 'Enter date';
+    position: absolute;
+  }
+}
+
+@media (min-width: 768px) {
+  input[type='date'].mobile::before {
+    content: '';
+  }
+}
