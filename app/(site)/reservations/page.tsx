@@ -70,10 +70,10 @@ const Page = () => {
     confirmAlert(Confirm(() => deleteApi?.mutateAsync(id)))
   }
 
-  const name = 'Reservations List'
+  const name = 'Reservations Lists'
 
   return (
-    <>
+    <div className='max-w-7xl mx-auto'>
       {deleteApi?.isSuccess && (
         <Message variant='success' value={deleteApi?.data?.message} />
       )}
@@ -167,7 +167,7 @@ const Page = () => {
       ) : getApi?.isError ? (
         <Message variant='error' value={getApi?.error} />
       ) : (
-        <div className='overflow-x-auto max-w-sm md:max-w-full bg-white p-3 mt-2'>
+        <div className='overflow-x-auto bg-white p-3 mt-2'>
           <h1 className='font-light text-2xl text-center'>
             {name}
             <sup> [{getApi?.data?.total}] </sup>
@@ -187,7 +187,7 @@ const Page = () => {
           />
         </div>
       )}
-    </>
+    </div>
   )
 }
 

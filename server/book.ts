@@ -1,8 +1,9 @@
 'use server'
 
-import // useCreateInvoice as CreateInvoice,
-// useVerifyInvoice as VerifyInvoice,
-'@/hooks/useEDahabPayment'
+import {
+  useCreateInvoice as CreateInvoice,
+  useVerifyInvoice as VerifyInvoice,
+} from '@/hooks/useEDahabPayment'
 import { useEVCPayment as EVCPayment } from '@/hooks/useEVCPayment'
 import DateTime from '@/lib/dateTime'
 import { getEnvVariable } from '@/lib/helpers'
@@ -15,9 +16,10 @@ export default async function book({
   passenger,
   flight,
   payment,
-  //  link,
+  link,
   createdById,
   dealerCode,
+  status,
 }: {
   passenger: IPassenger
   flight: IFlight
@@ -25,6 +27,7 @@ export default async function book({
   link?: string
   createdById?: string
   dealerCode?: string
+  status?: 'invoice' | 'verify'
 }) {
   try {
     const BASE_URL = getEnvVariable('BASE_URL')
@@ -47,28 +50,35 @@ export default async function book({
     if (totalPrice < 1) throw new Error('Invalid amount')
 
     // Edahab Implementation
-    // if (payment.paymentMethod?.toLowerCase() === 'somtel' && status === 'invoice') {
-    //   const createInvoice = await CreateInvoice(
-    //     payment.phone,
-    //     Number(totalPrice)
-    //   )
-    //   if (createInvoice?.StatusCode !== 0)
-    //     throw new Error(createInvoice?.StatusDescription)
+    if (
+      payment.paymentMethod?.toLowerCase() === 'somtel' &&
+      status === 'invoice'
+    ) {
+      const createInvoice = await CreateInvoice(
+        payment.phone,
+        Number(totalPrice)
+      )
+      if (createInvoice?.StatusCode !== 0)
+        throw new Error(createInvoice?.StatusDescription)
 
-    //   const link = `https://edahab.net/api/payment?invoiceId=${createInvoice.InvoiceId}`
+      const link = `https://edahab.net/api/payment?invoiceId=${createInvoice.InvoiceId}`
 
-    //   return { message: `success`, link }
-    // }
+      return { message: `success`, link }
+    }
 
-    // if (payment.paymentMethod?.toLowerCase() === 'somtel' && status === 'verify' && link) {
-    //   const invoiceId = link.split('invoiceId=')[1]
-    //   const verifyInvoice = await VerifyInvoice(Number(invoiceId))
+    if (
+      payment.paymentMethod?.toLowerCase() === 'somtel' &&
+      status === 'verify' &&
+      link
+    ) {
+      const invoiceId = link?.split('invoiceId=')[1]
+      const verifyInvoice = await VerifyInvoice(Number(invoiceId))
 
-    //   if (verifyInvoice?.InvoiceStatus !== 'Paid')
-    //     throw new Error(
-    //       `Please pay ${verifyInvoice?.InvoiceStatus?.toLowerCase()} invoice first`
-    //     )
-    // }
+      if (verifyInvoice?.InvoiceStatus !== 'Paid')
+        throw new Error(
+          `Please pay ${verifyInvoice?.InvoiceStatus?.toLowerCase()} invoice first`
+        )
+    }
 
     // handle EVC payment
     if (

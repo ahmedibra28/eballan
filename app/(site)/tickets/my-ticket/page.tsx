@@ -11,6 +11,7 @@ import PdfGenerator from '@/components/pdf/page'
 import DateTime from '@/lib/dateTime'
 import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6'
 import send from '@/server/send'
+import FormContainer from '@/components/FormContainer'
 
 const Ticket = () => {
   const [error, setError] = React.useState<string | null>(null)
@@ -61,7 +62,7 @@ const Ticket = () => {
 
   const stepOne = () => {
     return (
-      <div className='w-full md:w-1/2 lg:w-[40%] mx-auto bg-white card-body'>
+      <div className='max-w-md shadow-md mx-auto card-body'>
         <h6 className='fw-bold text-uppercase text-center'>Step 1 / 2</h6>
         <hr />
 
@@ -160,7 +161,7 @@ const Ticket = () => {
 
   const stepTwo = () => {
     return (
-      <div className='max-w-7xl mx-auto card-body bg-white'>
+      <div>
         <h6 className='fw-bold text-uppercase text-center'>Step 2 / 2</h6>
 
         <div className='divider'>
@@ -300,7 +301,7 @@ const Ticket = () => {
   }
 
   return (
-    <>
+    <div className='max-w-7xl mx-auto card-body bg-white'>
       {error && <Message variant='error' value={error} />}
       {success && <Message variant='success' value={success} />}
 
@@ -314,7 +315,7 @@ const Ticket = () => {
         {step === 1 && stepOne()}
         {step === 2 && stepTwo()}
       </form>
-    </>
+    </div>
   )
 }
 

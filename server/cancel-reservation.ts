@@ -3,10 +3,9 @@
 import { getEnvVariable } from '@/lib/helpers'
 import axios from 'axios'
 import { prisma } from '@/lib/prisma.db'
-import { IFlight } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
+import DateTime from '@/lib/dateTime'
 
-// 22947
 export default async function cancelReservation({
   reservationId,
   phone,
@@ -41,6 +40,16 @@ export default async function cancelReservation({
 
     if (!reservation)
       throw new Error('Reservation not found or already cancelled')
+
+    const departureDateTime = DateTime(
+      reservation?.flight?.departureDate
+    ).format('YYYY-MM-DD HH:mm:ss')
+
+    const hours = DateTime(departureDateTime).diff(DateTime(), 'hours')
+
+    if (hours < 24) {
+      throw new Error(`Departure date is less than 24 hours, can't cancel`)
+    }
 
     let airline = await prisma.airline.findFirst({
       where: {

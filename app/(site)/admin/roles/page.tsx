@@ -381,7 +381,7 @@ const Page = () => {
   ]
 
   return (
-    <>
+    <div className='max-w-7xl mx-auto'>
       {deleteApi?.isSuccess && (
         <Message
           variant='success'
@@ -448,7 +448,7 @@ const Page = () => {
           <TableView table={table} />
         </div>
       )}
-    </>
+    </div>
   )
 }
 

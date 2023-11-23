@@ -135,7 +135,7 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
           >
             <li className='h-10 w-auto'>
               <Link
-                className='btn-primary justify-start text-white'
+                className='btn-ghost justify-start text-whites'
                 href={`/reservations/${original.id}?reservationId=${original.reservationId}&pnrNumber=${original.pnrNumber}`}
               >
                 <FaCircleInfo />

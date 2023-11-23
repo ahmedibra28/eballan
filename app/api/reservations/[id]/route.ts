@@ -4,6 +4,7 @@ import { isAuth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma.db'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import DateTime from '@/lib/dateTime'
 
 interface Params {
   params: {
@@ -38,6 +39,19 @@ export async function DELETE(req: NextApiRequestExtended, { params }: Params) {
     if (!reservation) return getErrorResponse('Reservation not found', 404)
 
     if (reservation.status === 'BOOKED') {
+      const departureDateTime = DateTime(
+        reservation?.flight?.departureDate
+      ).format('YYYY-MM-DD HH:mm:ss')
+
+      const hours = DateTime(departureDateTime).diff(DateTime(), 'hours')
+
+      if (hours < 24) {
+        return getErrorResponse(
+          `Departure date is less than 24 hours, can't cancel`,
+          400
+        )
+      }
+
       await prisma.reservation.update({
         where: {
           id: params.id,

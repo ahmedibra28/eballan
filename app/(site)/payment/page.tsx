@@ -27,63 +27,9 @@ export default function Page() {
   const [isPending, startTransition] = useTransition()
 
   React.useEffect(() => {
-    // if (!passenger || !flight) return router.back()
+    if (!passenger || !flight) return router.back()
     // eslint-disable-next-line
   }, [])
-
-  // const handleBooking = () => {
-  //   if (paymentMethod === 'somtel' && !paymentLink) {
-  //     confirmBooking?.mutateAsync({
-  //       passengers,
-  //       flight,
-  //       contact,
-  //       payment: {
-  //         phone,
-  //         paymentMethod,
-  //         status: 'invoice',
-  //       },
-  //     })
-  //   }
-  //   if (paymentMethod === 'somtel' && paymentLink) {
-  //     confirmBooking?.mutateAsync({
-  //       passengers,
-  //       flight,
-  //       contact,
-  //       payment: {
-  //         phone,
-  //         paymentMethod,
-  //         status: 'verify',
-  //         link: paymentLink,
-  //       },
-  //     })
-  //   }
-
-  //   if (paymentMethod !== 'somtel') {
-  //     confirmBooking?.mutateAsync({
-  //       passengers,
-  //       flight,
-  //       contact,
-  //       payment: {
-  //         phone,
-  //         paymentMethod,
-  //       },
-  //     })
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   if (confirmBooking?.isSuccess) {
-  //     if (confirmBooking?.data?.link) {
-  //       window.open(confirmBooking?.data?.link, '_blank')
-  //       setPaymentLink(confirmBooking?.data?.link)
-  //     } else if (!confirmBooking?.data?.link) {
-  //       setPaymentLink('')
-  //       router.push('/success')
-  //     }
-  //   }
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [confirmBooking?.isSuccess])
 
   React.useEffect(() => {
     if (paymentMethod) {
@@ -93,7 +39,7 @@ export default function Page() {
 
   const payments = [
     { name: 'Hormuud', image: '/payments/hormuud.png', disabled: false },
-    { name: 'Somtel', image: '/payments/somtel.png', disabled: true },
+    { name: 'Somtel', image: '/payments/somtel.png', disabled: false },
     { name: 'Somnet', image: '/payments/somnet.png', disabled: false },
     { name: 'Mastercard', image: '/payments/mastercard.png', disabled: true },
   ]
@@ -106,11 +52,26 @@ export default function Page() {
         payment: { phone, paymentMethod },
         createdById: userInfo?.id,
         dealerCode: dealerCode || '',
+        ...(paymentLink && paymentMethod?.toLowerCase() === 'somtel'
+          ? {
+              status: 'verify',
+              link: paymentLink,
+            }
+          : {
+              status: 'invoice',
+              link: paymentLink,
+            }),
       })
         .then((data) => {
-          return router.push(
-            `/success?reservationId=${data.reservationId}&pnrNumber=${data.pnrNumber}`
-          )
+          if (data?.link) {
+            window.open(data?.link, '_blank')
+            setPaymentLink(data?.link)
+          } else if (!data?.link) {
+            setPaymentLink('')
+            return router.push(
+              `/success?reservationId=${data.reservationId}&pnrNumber=${data.pnrNumber}`
+            )
+          }
         })
         .catch((error) => {
           setError(String(error))
