@@ -71,28 +71,28 @@ export default async function book({
     // }
 
     // handle EVC payment
-    // if (
-    //   payment.paymentMethod?.toLowerCase() === 'hormuud' ||
-    //   payment.paymentMethod?.toLowerCase() === 'somnet'
-    // ) {
-    //   const MERCHANT_U_ID = getEnvVariable('MERCHANT_U_ID')
-    //   const API_USER_ID = getEnvVariable('API_USER_ID')
-    //   const API_KEY = getEnvVariable('API_KEY')
-    //   const MERCHANT_ACCOUNT_NO = getEnvVariable('MERCHANT_ACCOUNT_NO')
+    if (
+      payment.paymentMethod?.toLowerCase() === 'hormuud' ||
+      payment.paymentMethod?.toLowerCase() === 'somnet'
+    ) {
+      const MERCHANT_U_ID = getEnvVariable('MERCHANT_U_ID')
+      const API_USER_ID = getEnvVariable('API_USER_ID')
+      const API_KEY = getEnvVariable('API_KEY')
+      const MERCHANT_ACCOUNT_NO = getEnvVariable('MERCHANT_ACCOUNT_NO')
 
-    //   // if (payment.phone !== '770022200') {
-    //   const paymentInfo = await EVCPayment({
-    //     merchantUId: MERCHANT_U_ID,
-    //     apiUserId: API_USER_ID,
-    //     apiKey: API_KEY,
-    //     customerMobileNumber: `252${payment.phone}`,
-    //     description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
-    //     amount: totalPrice,
-    //     withdrawTo: 'MERCHANT',
-    //     withdrawNumber: MERCHANT_ACCOUNT_NO,
-    //   })
-    //   if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
-    // }
+      // if (payment.phone !== '770022200') {
+      const paymentInfo = await EVCPayment({
+        merchantUId: MERCHANT_U_ID,
+        apiUserId: API_USER_ID,
+        apiKey: API_KEY,
+        customerMobileNumber: `252${payment.phone}`,
+        description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
+        amount: totalPrice,
+        withdrawTo: 'MERCHANT',
+        withdrawNumber: MERCHANT_ACCOUNT_NO,
+      })
+      if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
+    }
 
     const { data: countries } = await axios.get(
       `${BASE_URL}/saacid/ReservationApi/api/countries`
