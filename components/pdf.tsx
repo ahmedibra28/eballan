@@ -79,99 +79,6 @@ const styles = StyleSheet.create({
   },
 })
 
-export const tempData = {
-  id: 'z-4R4uMItVkfgN-VWV2Js',
-  reservationId: 90689,
-  pnrNumber: 'AMFC05',
-  status: 'BOOKED',
-  adult: 1,
-  child: 0,
-  infant: 1,
-  phone: '615301507',
-  paymentMethod: 'hormuud',
-  flightId: 'wIu7xMdvTIzEPjPFHSr0Y',
-  flight: {
-    id: 'wIu7xMdvTIzEPjPFHSr0Y',
-    segmentNumber: 1,
-    ticketTypeId: 1,
-    flightRouteId: 6520,
-    flightScheduleId: 4637,
-    departureDate: '2023-11-29 08:30:00',
-    arrivalDate: '2023-11-29 09:45:00',
-    fromCityName: 'Mogadishu',
-    toCityName: 'Kismayo',
-    fromAirportName: 'Aden Adde International Airport ',
-    toAirportName: 'Kismayo Airport',
-    fromCityCode: 'MGQ',
-    toCityCode: 'KMU',
-    fromCountryName: 'SOMALIA',
-    toCountryName: 'SOMALIA',
-    fromCountryId: 196,
-    toCountryId: 196,
-    fromCountryIsoCode3: 'SOM',
-    toCountryIsoCode3: 'SOM',
-    adultNumberOfSeatsAvailable: 54,
-    childNumberOfSeatsAvailable: 54,
-    airlineId: 'Gg_g7AOAVu4tTZV8DfY_W',
-    airline: {
-      name: 'Maandeeq Airline',
-      logo: 'https://play-lh.googleusercontent.com/LvTFglVj7TKUmB-Z687GuF-3cNQZOTNGTOYRmwWRe1rcTOwCi28OYkasItcbRpgCeg',
-      api: 'maandeeqair',
-      id: 'Gg_g7AOAVu4tTZV8DfY_W',
-    },
-  },
-  passengers: [
-    {
-      id: 'WAzcKfwseXAQqJdKUKyvZ',
-      passengerTitle: '1',
-      firstName: 'Abukar',
-      secondName: 'Abdulahi',
-      lastName: 'Mohamed',
-      country: 'ETHIOPIA',
-      countryId: 68,
-      sex: 'Male',
-      dob: '1995-10-10',
-      passengerType: 'Adult',
-      reservationId: 'z-4R4uMItVkfgN-VWV2Js',
-    },
-    {
-      id: 'JLo4E5mCbICmNKReR1qyC',
-      passengerTitle: '4',
-      firstName: 'Ahmed',
-      secondName: 'Samow',
-      lastName: 'Mohamed',
-      country: 'SOMALIA',
-      countryId: 196,
-      sex: 'Male',
-      dob: '2023-05-05',
-      passengerType: 'Infant',
-      reservationId: 'z-4R4uMItVkfgN-VWV2Js',
-    },
-  ],
-  prices: [
-    {
-      id: '_jM9iKYh1saSfkKUPC6_3',
-      passenger: 'Adult',
-      commission: 20,
-      fare: 120,
-      baggageWeight: 25,
-      handCarryWeight: 7,
-      totalPrice: 140,
-      reservationId: 'z-4R4uMItVkfgN-VWV2Js',
-    },
-    {
-      id: 'e-NOkxUn_-aME6pKnibga',
-      passenger: 'Infant',
-      commission: 0,
-      fare: 20,
-      baggageWeight: 25,
-      handCarryWeight: 7,
-      totalPrice: 20,
-      reservationId: 'z-4R4uMItVkfgN-VWV2Js',
-    },
-  ],
-}
-
 const COLOR = {
   primary: `#5e17eb`,
   secondary: `#ffa500`,
@@ -189,9 +96,23 @@ const getTitle = (n: string) => {
   } else return ''
 }
 
-export default function PdfGenerator({ data }: { data: IPdf }) {
-  // data = tempData
+function getHoursBetween(startTime: string, endTime: string): string {
+  const start = new Date(`2022-01-01T${startTime}Z`)
+  const end = new Date(`2022-01-01T${endTime}Z`)
+  const diff = end.getTime() - start.getTime()
+  const hours = diff / (1000 * 60 * 60)
 
+  if (hours >= 1) {
+    const wholeHours = Math.floor(hours)
+    const minutes = Math.round((hours - wholeHours) * 60)
+    return `${wholeHours}:${minutes < 10 ? '0' : ''}${minutes} hour`
+  } else {
+    const minutes = Math.round(hours * 60)
+    return `${minutes} minutes`
+  }
+}
+
+export default function PdfGenerator({ data }: { data: IPdf }) {
   return (
     <Document>
       <Page size='A4' style={styles.page}>
@@ -318,6 +239,7 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                alignItems: 'center',
                 borderBottom: '1px solid black',
                 marginBottom: 10,
               }}
@@ -332,6 +254,12 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
                 Departure from
                 <Text style={styles.bold}> {data?.flight?.fromCityName} </Text>(
                 {data?.flight?.airline?.name})
+              </Text>
+              <Text>
+                {getHoursBetween(
+                  DateTime(data?.flight?.departureDate).format('hh:mm'),
+                  DateTime(data?.flight?.arrivalDate).format('hh:mm')
+                )}
               </Text>
               <Text style={styles.flex}>
                 <Image

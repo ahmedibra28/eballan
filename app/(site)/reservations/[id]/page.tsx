@@ -1,7 +1,7 @@
 'use client'
 
 import Message from '@/components/Message'
-import PdfGenerator from '@/components/pdf/page'
+import PdfGenerator from '@/components/pdf'
 import { Capitalize } from '@/lib/capitalize'
 import DateTime from '@/lib/dateTime'
 import reservation from '@/server/reservation'

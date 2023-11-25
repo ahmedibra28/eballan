@@ -1,7 +1,7 @@
 'use client'
 
 import Message from '@/components/Message'
-import PdfGenerator from '@/components/pdf/page'
+import PdfGenerator from '@/components/pdf'
 import reservation from '@/server/reservation'
 import { IPdf } from '@/types'
 import { PDFDownloadLink } from '@react-pdf/renderer'

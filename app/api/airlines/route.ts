@@ -28,6 +28,14 @@ export async function GET(req: NextApiRequestExtended) {
           ...query,
           ...(queryStatus && { status: 'ACTIVE' }),
         },
+        select: {
+          name: true,
+          api: true,
+          username: true,
+          password: true,
+          status: true,
+          createdAt: true,
+        },
         skip,
         take: pageSize,
         orderBy: { createdAt: 'desc' },
@@ -49,10 +57,7 @@ export async function GET(req: NextApiRequestExtended) {
       page,
       pages,
       total,
-      data: result?.map((item) => ({
-        ...item,
-        accessTokenExpiry: String(item.accessTokenExpiry),
-      })),
+      data: result,
     })
   } catch ({ status = 500, message }: any) {
     return getErrorResponse(message, status)
