@@ -17,7 +17,6 @@ import { ICity, ISearchFlight } from '@/types'
 import Message from '../Message'
 import flight from '@/server/flight'
 import useFlightsStore from '@/zustand/useFlightsStore'
-import DateTime from '@/lib/dateTime'
 import ComboboxCity from '../ComboboxCity'
 
 export default function SearchForm({ source }: { source?: string }) {
@@ -26,6 +25,7 @@ export default function SearchForm({ source }: { source?: string }) {
   const [infant, setInfant] = React.useState(0)
   const [error, setError] = React.useState<string | null>(null)
   const [cities, setCities] = React.useState<ICity[]>([])
+  const [first, setFirst] = React.useState(true)
 
   const [fromSelected, setFromSelected] = React.useState<ICity | null>(null)
   const [toSelected, setToSelected] = React.useState<ICity | null>(null)
@@ -90,7 +90,7 @@ export default function SearchForm({ source }: { source?: string }) {
     setFromSelected(cities?.find((x) => x.id === fromId) || null)
     setToSelected(cities?.find((x) => x.id === toId) || null)
 
-    if (source !== 'home') {
+    if (source !== 'home' && !isPending) {
       startTransition(() => {
         searchFlights({
           date,
@@ -112,6 +112,35 @@ export default function SearchForm({ source }: { source?: string }) {
     watch,
     formState: { errors },
   } = useForm({})
+
+  React.useEffect(() => {
+    if (
+      source !== 'home' &&
+      (adult || child || infant) &&
+      !first &&
+      !isPending
+    ) {
+      console.log({
+        fromId: Number(fromSelected?.id),
+        toId: Number(toSelected?.id),
+        date: watch('date'),
+        adult,
+        child,
+        infant,
+      })
+      startTransition(() => {
+        searchFlights({
+          fromId: Number(fromSelected?.id),
+          toId: Number(toSelected?.id),
+          date: watch('date'),
+          adult,
+          child,
+          infant,
+        })
+      })
+    }
+    setFirst(false)
+  }, [adult, child, infant])
 
   const submitHandler = (data: any) => {
     if (
@@ -284,7 +313,7 @@ export default function SearchForm({ source }: { source?: string }) {
               hasLabel={false}
               name='date'
               placeholder='Enter date'
-              className='bg-white  p-3 h-16 input min-w-[97%] md:w-full rounded-xl outline-none'
+              className='bg-white text-gray-800  p-3 h-16 input min-w-[97%] md:w-full rounded-xl outline-none'
               value={watch().date}
             />
           </div>

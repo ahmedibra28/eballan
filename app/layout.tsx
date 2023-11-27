@@ -1,13 +1,13 @@
 import Meta from '@/components/Meta'
 import './globals.css'
-// import { Roboto } from 'next/font/google'
+// import { Indie_Flower } from 'next/font/google'
 import Providers from '@/lib/provider'
 import Footer from '@/components/Footer'
-import ContentSwitcher from '@/components/ContentSwitcher'
+import Navigation from '@/components/Navigation'
 
-// const roboto = Roboto({
+// const indie_flower = Indie_Flower({
 //   subsets: ['latin'],
-//   weight: ['100', '300', '500', '700', '900'],
+//   weight: ['400'],
 // })
 
 export const metadata = {
@@ -29,12 +29,12 @@ export default function RootLayout({
         />
       </head>
       <body
-        // className={roboto.className}
+        // className={indie_flower.className}
         suppressHydrationWarning={true}
       >
         <Providers>
-          <ContentSwitcher>{children}</ContentSwitcher>
-          {/* <Footer /> */}
+          <Navigation />
+          {children}
           <Footer />
         </Providers>
       </body>
