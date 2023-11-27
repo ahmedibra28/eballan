@@ -37,7 +37,7 @@ export default function Page() {
 
   return (
     <div className='max-w-7xl mx-auto'>
-      <div className='md:mx-auto bg-gray-500 rounded-xl'>
+      <div className='md:mx-auto bg-my-secondary'>
         <SearchForm />
       </div>
 

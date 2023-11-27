@@ -118,10 +118,11 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
       <Page size='A4' style={styles.page}>
         <View
           style={{
-            width: 181,
+            width: '100%',
             height: 42,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
           <Image
@@ -130,6 +131,16 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
             // @ts-ignore
             alt='default'
           />
+
+          <Text
+            style={{
+              fontFamily: 'Open Sans',
+              fontWeight: 700,
+              marginRight: 12,
+            }}
+          >
+            {data?.flight?.airline?.name}
+          </Text>
         </View>
 
         <View style={styles.section}>
@@ -255,12 +266,7 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
                 <Text style={styles.bold}> {data?.flight?.fromCityName} </Text>(
                 {data?.flight?.airline?.name})
               </Text>
-              <Text>
-                {getHoursBetween(
-                  DateTime(data?.flight?.departureDate).format('hh:mm'),
-                  DateTime(data?.flight?.arrivalDate).format('hh:mm')
-                )}
-              </Text>
+              <Text>Flight Duration</Text>
               <Text style={styles.flex}>
                 <Image
                   src={window.location.origin + '/to.png'}
@@ -282,6 +288,12 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
                     'DD MMM YYYY HH:mm'
                   )}{' '}
                 </Text>
+              </Text>
+              <Text>
+                {getHoursBetween(
+                  DateTime(data?.flight?.departureDate).format('hh:mm'),
+                  DateTime(data?.flight?.arrivalDate).format('hh:mm')
+                )}
               </Text>
               <Text style={styles.flex}>
                 <Text style={styles.bold}>
@@ -336,15 +348,39 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
         </View>
 
         <View style={styles.section}>
-          <View style={styles.flex}>
+          <View
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              gap: 5,
+              marginBottom: 10,
+            }}
+          >
             <Text>Payment reference:</Text>
             <Text style={styles.bold}>{data?.paymentPhone}</Text>
           </View>
-          <View style={styles.flex}>
+          <View
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              gap: 5,
+              marginBottom: 10,
+            }}
+          >
             <Text>Payment method:</Text>
             <Text style={styles.bold}>{data?.paymentMethod}</Text>
           </View>
-          <View style={styles.flex}>
+          <View
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              gap: 5,
+              marginBottom: 10,
+            }}
+          >
             <Text>Booked:</Text>
             <Text style={styles.bold}>
               {DateTime(data?.createdAt).format('DD MMM YYYY HH:mm')}

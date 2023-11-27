@@ -140,6 +140,7 @@ export default function SearchForm({ source }: { source?: string }) {
       })
     }
     setFirst(false)
+    // eslint-disable-next-line
   }, [adult, child, infant])
 
   const submitHandler = (data: any) => {
@@ -249,7 +250,9 @@ export default function SearchForm({ source }: { source?: string }) {
 
   return (
     <div
-      className={`bg-white/70 min-h-60 w-full md:p-8 pt-2 max-w-7xl rounded-xl ${
+      className={`${
+        source === 'home' ? 'bg-white/70' : ''
+      } min-h-60 w-full md:p-8 pt-2 max-w-7xl rounded-xl ${
         source !== 'home' ? '' : ''
       }`}
     >
@@ -313,7 +316,7 @@ export default function SearchForm({ source }: { source?: string }) {
               hasLabel={false}
               name='date'
               placeholder='Enter date'
-              className='bg-white text-gray-800  p-3 h-16 input min-w-[97%] md:w-full rounded-xl outline-none'
+              className='bg-white p-3 h-16 input min-w-[80%] md:w-full rounded-xl outline-none'
               value={watch().date}
             />
           </div>

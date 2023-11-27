@@ -2,6 +2,7 @@
 
 import classNames from 'classnames'
 import React, { memo, useRef, useState } from 'react'
+import { FaCalendarPlus } from 'react-icons/fa6'
 
 export interface DynamicFormProps {
   register: any
@@ -589,6 +590,7 @@ export const InputDate = (args: DynamicFormProps) => {
 
     if (inputDate && !value) {
       inputDate.classList.add('mobile')
+      // inputDate.classList.add('text-gray-400')
     } else {
       inputDate?.classList.remove('mobile')
     }
@@ -601,12 +603,28 @@ export const InputDate = (args: DynamicFormProps) => {
           {label}
         </label>
       )}
-      <input
-        {...register(name, isRequired && { required: `${label} is required` })}
-        type='date'
-        placeholder={placeholder}
-        className={className}
-      />
+      <div
+        className={`${
+          name !== 'date' ? '' : 'bg-white'
+        } rounded-lg flex flex-row items-center`}
+      >
+        <div
+          className={`m-2 flex lg:hidden ${
+            name !== 'date' ? 'hidden' : 'flex'
+          }`}
+        >
+          <FaCalendarPlus className='text-my-primary' />
+        </div>
+        <input
+          {...register(
+            name,
+            isRequired && { required: `${label} is required` }
+          )}
+          type='date'
+          placeholder={placeholder}
+          className={`${className} ${value ? '' : 'text-gray-400'}`}
+        />
+      </div>
       {errors && errors[name] && (
         <span className='text-red-500 text-sm'>{errors[name].message}</span>
       )}
