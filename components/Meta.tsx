@@ -12,22 +12,22 @@ const Meta = ({
   description = `
     eBallan is an online booking system for flights.
   `,
-  image: outsideImage = 'https://ahmedibra.com/logo.png',
+  image: outsideImage = 'https://eballan.com/logo.png',
   asPath = '/',
   author = 'Ahmed Ibrahim',
-  keyword = 'Ahmed',
+  keyword = 'eBallan,flight booking,flight reservation',
 }: Props) => {
-  const url = `https://ahmedibra.com${asPath}`
+  const url = `https://eballan.com${asPath}`
   const image = outsideImage
-    ? `https://ahmedibra.com${outsideImage}`
-    : `https://ahmedibra.com/logo.png`
+    ? `https://eballan.com${outsideImage}`
+    : `https://eballan.com/logo.png`
 
   return {
     title: title ? title : title,
     description: description ? description : description,
     image: image,
 
-    metadataBase: new URL('https://ahmedibra.com'),
+    metadataBase: new URL('https://eballan.com'),
     alternates: {
       canonical: url,
       languages: {
@@ -46,7 +46,7 @@ const Meta = ({
     authors: [
       {
         name: author ? author : author,
-        url: 'https://ahmedibra.com',
+        url: 'https://eballan.com',
       },
     ],
     publisher: author ? author : author,

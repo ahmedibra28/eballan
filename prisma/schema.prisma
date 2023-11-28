@@ -181,7 +181,7 @@ model Reservation {
   paymentMethod String
 
   contactPhone String @default("770022200")
-  contactEmail String @default("info@ahmedibra.com")
+  contactEmail String @default("info@eballan.com")
 
   dealerCode String?
 
