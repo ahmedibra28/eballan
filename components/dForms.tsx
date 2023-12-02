@@ -609,7 +609,7 @@ export const InputDate = (args: DynamicFormProps) => {
         } rounded-lg flex flex-row items-center`}
       >
         <div
-          className={`m-2 flex lg:hidden ${
+          className={`ml-2 flex lg:hidden ${
             name !== 'date' ? 'hidden' : 'flex'
           }`}
         >
@@ -716,7 +716,7 @@ export const DynamicInputSelectNumber = (args: DynamicFormProps) => {
 
 export const CustomSubmitButton = ({
   type = 'submit',
-  classStyle = 'btn btn-primary opacity-1 rounded-none mt-5 w-full',
+  classStyle = 'btn btn-primary bg-my-primary opacity-1 rounded-none mt-5 w-full',
   isLoading = false,
   label = 'Submit',
   spinner = 'loading loading-spinner',

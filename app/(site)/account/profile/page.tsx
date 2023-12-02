@@ -77,17 +77,23 @@ const Profile = () => {
     setValue('address', !getApi?.isPending ? getApi?.data?.address : '')
     setValue('mobile', !getApi?.isPending ? getApi?.data?.mobile : '')
     setValue('bio', !getApi?.isPending ? getApi?.data?.bio : '')
-    setValue('company', !getApi?.isPending ? getApi?.data?.company : '')
-    setValue('bankName', !getApi?.isPending ? getApi?.data?.bankName : '')
-    setValue('bankAccount', !getApi?.isPending ? getApi?.data?.bankAccount : '')
-    setValue(
-      'policyConfirmed',
-      !getApi?.isPending ? getApi?.data?.policyConfirmed : ''
-    )
-    setFileLink(!getApi?.isPending ? [getApi?.data?.image] : [])
-    setFileLinkDocument(
-      !getApi?.isPending ? [getApi?.data?.verificationDocument] : []
-    )
+    if (userInfo.role === 'AGENCY') {
+      setValue('company', !getApi?.isPending ? getApi?.data?.company : '')
+      setValue('bankName', !getApi?.isPending ? getApi?.data?.bankName : '')
+      setValue(
+        'bankAccount',
+        !getApi?.isPending ? getApi?.data?.bankAccount : ''
+      )
+      setValue(
+        'policyConfirmed',
+        !getApi?.isPending ? getApi?.data?.policyConfirmed : ''
+      )
+      setFileLink(!getApi?.isPending ? [getApi?.data?.image] : [])
+      setFileLinkDocument(
+        !getApi?.isPending ? [getApi?.data?.verificationDocument] : []
+      )
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getApi?.isPending, setValue])
 
@@ -179,6 +185,7 @@ const Profile = () => {
                     label='Company Name'
                     name='company'
                     placeholder='Company name'
+                    isRequired={false}
                   />
                 </div>
                 <div className='w-full md:w-[48%] lg:w-[32%]'>
@@ -236,51 +243,54 @@ const Profile = () => {
             </div>
 
             {userInfo?.role === 'AGENCY' && (
-              <div className='w-full md:w-[48%] lg:w-[32%]'>
-                <Upload
-                  label='Verification Document'
-                  setFileLink={setFileLinkDocument}
-                  fileLink={fileLinkDocument}
-                  fileType='document'
-                />
+              <>
+                <div className='w-full md:w-[48%] lg:w-[32%]'>
+                  <Upload
+                    label='Verification Document'
+                    setFileLink={setFileLinkDocument}
+                    fileLink={fileLinkDocument}
+                    fileType='document'
+                  />
 
-                {fileLinkDocument.length > 0 && (
+                  {fileLinkDocument.length > 0 && (
+                    <div className='w-full'>
+                      <a className='underline' href={fileLinkDocument?.[0]}>
+                        Verification Document
+                      </a>
+                    </div>
+                  )}
+                </div>
+
+                <div className='flex justify-start flex-wrap flex-col w-full gap-2'>
+                  <p className='text-xs ml-3'>
+                    <ol className='list-decimal'>
+                      <li>
+                        eBallan.com reserves the authority to terminate your
+                        account access at any given time.
+                      </li>
+                      <li>
+                        A 20% commission will be allocated to the dealer staff.
+                        This commission will be deducted from the agency&apos;s
+                        total commission.
+                      </li>
+                    </ol>
+                  </p>
+                  <Link href='/terms-of-use' className='text-sm underline'>
+                    <span>Terms of use</span>
+                  </Link>
+
                   <div className='w-full'>
-                    <a className='underline' href={fileLinkDocument?.[0]}>
-                      Verification Document
-                    </a>
+                    <InputCheckBox
+                      isRequired={false}
+                      register={register}
+                      errors={errors}
+                      label='I agree with the terms and conditions'
+                      name='policyConfirmed'
+                    />
                   </div>
-                )}
-              </div>
+                </div>
+              </>
             )}
-            <div className='flex justify-start flex-wrap flex-col w-full gap-2'>
-              <p className='text-xs ml-3'>
-                <ol className='list-decimal'>
-                  <li>
-                    eBallan.com reserves the authority to terminate your account
-                    access at any given time.
-                  </li>
-                  <li>
-                    A 20% commission will be allocated to the dealer staff. This
-                    commission will be deducted from the agency&apos;s total
-                    commission.
-                  </li>
-                </ol>
-              </p>
-              <Link href='/terms-of-use' className='text-sm underline'>
-                <span>Terms of use</span>
-              </Link>
-
-              <div className='w-full'>
-                <InputCheckBox
-                  isRequired={false}
-                  register={register}
-                  errors={errors}
-                  label='I agree with the terms and conditions'
-                  name='policyConfirmed'
-                />
-              </div>
-            </div>
 
             <div className='flex justify-start flex-wrap flex-row w-full gap-2'>
               <div className='w-full md:w-[48%] lg:w-[32%]'>
@@ -312,7 +322,7 @@ const Profile = () => {
 
           <div className='w-full md:w-[48%] lg:w-[32%]'>
             <CustomSubmitButton
-              isLoading={updateApi?.isPending}
+              isLoading={updateApi?.isPending || false}
               label='Update'
             />
           </div>

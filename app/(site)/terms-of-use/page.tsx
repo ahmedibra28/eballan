@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function page() {
   return (
-    <div className='mx-auto max-w-7xl space-y-3'>
+    <div className='mx-auto max-w-7xl space-y-3 p-2'>
       <h1 className='text-2xl font-bold'>Terms of Use</h1>
       <p>
         Effective Date: <strong>08 Aug, 2023</strong>

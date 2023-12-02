@@ -39,6 +39,17 @@ export default function Page() {
   const { updatePassenger } = usePassengerStore((state) => state)
 
   React.useEffect(() => {
+    const milliseconds = 40 * 60 * 1000 // 40 minutes
+
+    const interval = setInterval(() => {
+      router.replace('/')
+    }, milliseconds)
+
+    return () => clearInterval(interval)
+    // eslint-disable-next-line
+  }, [])
+
+  React.useEffect(() => {
     if (!flight) return router.back()
     // eslint-disable-next-line
   }, [])

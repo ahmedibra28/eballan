@@ -73,6 +73,19 @@ export default function SearchForm({ source }: { source?: string }) {
     setToError(null)
   }, [toSelected])
 
+  React.useEffect(() => {
+    const milliseconds = 40 * 60 * 1000 // 40 minutes
+
+    const interval = setInterval(() => {
+      if (source !== 'home') {
+        router.replace('/')
+      }
+    }, milliseconds)
+
+    return () => clearInterval(interval)
+    // eslint-disable-next-line
+  }, [])
+
   useEffect(() => {
     const fromId = parseInt(searchParams.get('fromId') || '0')
     const toId = parseInt(searchParams.get('toId') || '0')
