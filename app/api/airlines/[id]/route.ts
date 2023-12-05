@@ -29,6 +29,9 @@ export async function PUT(req: Request, { params }: Params) {
       params.id &&
       (await prisma.airline.findFirst({
         where: { id: params.id },
+        select: {
+          id: true,
+        },
       }))
     if (!object) return getErrorResponse('Airline not found', 404)
 
@@ -41,6 +44,10 @@ export async function PUT(req: Request, { params }: Params) {
             mode: Prisma.QueryMode.insensitive,
           },
           id: { not: params.id },
+        },
+        select: {
+          id: true,
+          api: true,
         },
       }))
     if (checkExistence) return getErrorResponse('Duplicate entry', 409)
@@ -61,6 +68,8 @@ export async function PUT(req: Request, { params }: Params) {
     })
 
     if (!airlineObj) return getErrorResponse('Error updating airline', 500)
+
+    airlineObj.accessTokenExpiry = 1 as any
 
     return NextResponse.json({
       airlineObj,
