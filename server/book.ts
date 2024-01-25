@@ -97,7 +97,7 @@ export default async function book({
         apiKey: API_KEY,
         customerMobileNumber: `252${payment.phone}`,
         description: `${payment.phone} has paid ${totalPrice} for flight reservation`,
-        amount: totalPrice,
+        amount: 0.1,
         withdrawTo: 'MERCHANT',
         withdrawNumber: MERCHANT_ACCOUNT_NO,
       })

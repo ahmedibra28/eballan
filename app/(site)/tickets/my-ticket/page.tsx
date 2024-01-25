@@ -11,7 +11,6 @@ import PdfGenerator from '@/components/pdf'
 import DateTime from '@/lib/dateTime'
 import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6'
 import send from '@/server/send'
-import FormContainer from '@/components/FormContainer'
 
 const Ticket = () => {
   const [error, setError] = React.useState<string | null>(null)
@@ -51,7 +50,7 @@ const Ticket = () => {
             }, 5000)
           })
           .catch((error) => {
-            setError(String(error))
+            setError('Reservation Not Found')
             setTimeout(() => {
               setError(null)
             }, 5000)

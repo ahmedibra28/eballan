@@ -12,13 +12,15 @@ const Meta = ({
   description = `
     eBallan is an online booking system for flights.
   `,
-  image: outsideImage = 'https://eballan.com/logo.png',
+  image: outsideImage = 'https://eballan.com/ticket-logo.jpg',
   asPath = '/',
   author = 'Ahmed Ibrahim',
   keyword = 'eBallan,flight booking,flight reservation',
 }: Props) => {
   const url = `https://eballan.com${asPath}`
-  const image = outsideImage ? outsideImage : `https://eballan.com/logo.png`
+  const image = outsideImage
+    ? outsideImage
+    : `https://eballan.com/ticket-logo.jpg`
 
   return {
     title: title ? title : title,
