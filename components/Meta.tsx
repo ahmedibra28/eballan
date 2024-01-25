@@ -18,9 +18,7 @@ const Meta = ({
   keyword = 'eBallan,flight booking,flight reservation',
 }: Props) => {
   const url = `https://eballan.com${asPath}`
-  const image = outsideImage
-    ? `https://eballan.com${outsideImage}`
-    : `https://eballan.com/logo.png`
+  const image = outsideImage ? outsideImage : `https://eballan.com/logo.png`
 
   return {
     title: title ? title : title,

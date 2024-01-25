@@ -20,7 +20,10 @@ export default async function getMyReservation({
           OR: [
             {
               ...(email && {
-                contactEmail: email,
+                contactEmail: {
+                  contains: email,
+                  mode: 'insensitive',
+                },
               }),
               ...(phone && {
                 contactPhone: phone,
@@ -46,6 +49,9 @@ export default async function getMyReservation({
           },
           passengers: true,
           prices: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
         },
       }))
 
