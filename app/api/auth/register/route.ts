@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         blocked: false,
         address,
         bio,
-        mobile: Number(mobile),
+        mobile,
         roleId: 'a75POUlJzMDmaJtz0JCxp',
         image: `https://ui-avatars.com/api/?uppercase=true&name=${name}&background=random&color=random&size=128`,
         password: await encryptPassword({ password }),
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       brand,
       webName: 'eBallan',
       validTime: '1 Year',
-      addressStreet: 'Makka Almukarrama',
+      addressStreet: 'Makka Al Mukarama Road Taleh Junction Grrand Tawer',
       addressCountry: 'Mogadishu - Somalia',
     })
 

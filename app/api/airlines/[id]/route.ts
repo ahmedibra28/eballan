@@ -57,9 +57,9 @@ export async function PUT(req: Request, { params }: Params) {
       data: {
         name,
         api: api?.trim(),
-        adultCommission: Number(adultCommission),
-        childCommission: Number(childCommission),
-        infantCommission: Number(infantCommission),
+        adultCommission: parseFloat(adultCommission),
+        childCommission: parseFloat(childCommission),
+        infantCommission: parseFloat(infantCommission),
         logo,
         username,
         password,

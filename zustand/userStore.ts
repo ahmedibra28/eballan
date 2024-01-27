@@ -7,7 +7,7 @@ export type UserInfo = {
   email: string
   token: null
   role: string
-  mobile: number
+  mobile: string
   routes: any[]
   menu: any[]
   image?: string
@@ -28,7 +28,7 @@ const useUserInfoStore = create(
         email: '',
         token: null,
         role: '',
-        mobile: 0,
+        mobile: '',
         routes: [],
         menu: [],
         image: '',
@@ -50,7 +50,7 @@ const useUserInfoStore = create(
             email: '',
             token: null,
             role: '',
-            mobile: 0,
+            mobile: '',
             routes: [],
             menu: [],
             image: '',

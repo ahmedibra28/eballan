@@ -185,15 +185,6 @@ export default function Page() {
           <InputText
             register={register}
             errors={errors}
-            label='Second Name'
-            name={`secondName${passengerType}${number}`}
-            placeholder='Enter second name'
-          />
-        </div>
-        <div className='w-full md:w-[48%] lg:w-[32%]'>
-          <InputText
-            register={register}
-            errors={errors}
             label='Last Name'
             name={`lastName${passengerType}${number}`}
             placeholder='Enter last name'
@@ -211,7 +202,7 @@ export default function Page() {
           />
         </div>
 
-        <div className='w-[48%] md:w-[24%] lg:w-[15%] mx-auto'>
+        <div className='w-full md:w-[48%] lg:w-[32%]'>
           <StaticInputSelect
             register={register}
             errors={errors}
@@ -221,14 +212,14 @@ export default function Page() {
             data={[{ name: 'Male' }, { name: 'Female' }]}
           />
         </div>
-        <div className='w-[48%] md:w-[24%] lg:w-[16%] mx-auto'>
+        <div className='w-full md:w-[48%] lg:w-[32%]'>
           <InputDate
             register={register}
             errors={errors}
             label='Date of Birth'
             name={`dob${passengerType}${number}`}
             placeholder='Enter date of birth'
-            className='min-w-[80%] input rounded-none border border-gray-300 w-[90%] mx-auto md:me-auto'
+            className='input rounded-none border border-gray-300 w-full mx-auto md:me-auto'
             value={watch()[`dob${passengerType}${number}`]}
           />
         </div>

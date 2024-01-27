@@ -53,7 +53,7 @@ export async function PUT(req: NextApiRequestExtended, { params }: Params) {
       data: {
         ...(password && { password: await encryptPassword({ password }) }),
         name: name || object.name,
-        mobile: Number(mobile) || Number(object.mobile),
+        mobile: mobile || object.mobile,
         address: address || object.address,
         image: image || object.image,
         bio: bio || object.bio,

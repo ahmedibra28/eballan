@@ -12,7 +12,7 @@ model User {
   email               String  @unique
   name                String
   image               String?
-  mobile              Int?
+  mobile              String?
   address             String?
   bio                 String?
   password            String
@@ -88,9 +88,9 @@ model Airline {
   id                String  @id @default(dbgenerated("nanoid()")) @db.VarChar(21)
   name              String
   api               String  @unique
-  adultCommission   Int
-  childCommission   Int
-  infantCommission  Int
+  adultCommission   Float
+  childCommission   Float
+  infantCommission  Float
   logo              String
   username          String
   password          String
@@ -112,7 +112,6 @@ model Passenger {
   id             String       @id @default(dbgenerated("nanoid()")) @db.VarChar(21)
   passengerTitle String
   firstName      String
-  secondName     String
   lastName       String
   country        String
   countryId      Int

@@ -134,8 +134,7 @@ export default function Page() {
                     <th>{i + 1}</th>
                     <th>{p.passengerType}</th>
                     <td>
-                      {getTitle(p.passengerTitle)} {p.firstName} {p.secondName}{' '}
-                      {p.lastName}
+                      {getTitle(p.passengerTitle)} {p.firstName} {p.lastName}
                     </td>
                     <td>{DateTime(p.dob).format('DD MMM YYYY')}</td>
                     <td>{Capitalize(p.country)}</td>

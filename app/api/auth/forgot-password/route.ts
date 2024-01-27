@@ -51,7 +51,7 @@ export async function POST(req: NextApiRequestExtended) {
       brand,
       webName: 'eBallan',
       validTime: '10 minutes',
-      addressStreet: 'Makka Almukarrama',
+      addressStreet: 'Makka Al Mukarama Road Taleh Junction Grrand Tawer',
       addressCountry: 'Mogadishu - Somalia',
     })
 

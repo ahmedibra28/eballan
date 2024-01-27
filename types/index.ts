@@ -3,7 +3,7 @@ export interface IUser {
   email: string
   name: string
   image?: string | null
-  mobile?: number | null
+  mobile?: string | null
   address?: string | null
   bio?: string | null
   password: string
@@ -155,7 +155,6 @@ export interface IPassenger {
   adult: {
     passengerTitle: string
     firstName: string
-    secondName: string
     lastName: string
     country: string
     countryId: number
@@ -166,7 +165,6 @@ export interface IPassenger {
   child: {
     passengerTitle: string
     firstName: string
-    secondName: string
     lastName: string
     country: string
     countryId: number
@@ -177,7 +175,6 @@ export interface IPassenger {
   infant: {
     passengerTitle: string
     firstName: string
-    secondName: string
     lastName: string
     country: string
     countryId: number
@@ -195,7 +192,6 @@ export type IInsertToDB = {
   passengers: {
     passengerTitle: string
     firstName: string
-    secondName: string
     lastName: string
     country: string
     countryId: number
@@ -296,7 +292,6 @@ export type IPdf = {
     id: string
     passengerTitle: string
     firstName: string
-    secondName: string
     lastName: string
     country: string
     countryId: number

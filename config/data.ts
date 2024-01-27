@@ -27,7 +27,7 @@ const users = {
   password: '123456',
   confirmed: true,
   blocked: false,
-  mobile: 615301507,
+  mobile: '615301507',
   address: 'Mogadishu',
   image: 'https://github.com/ahmedibra28.png',
   bio: 'Full Stack Developer',
@@ -35,7 +35,7 @@ const users = {
 
 const profile = {
   id: 'hMXCyzI2MLXNI6tQ-sU0i',
-  mobile: 615301507,
+  mobile: '615301507',
   address: 'Mogadishu',
   image: 'https://github.com/ahmedibra28.png',
   bio: 'Full Stack Developer',

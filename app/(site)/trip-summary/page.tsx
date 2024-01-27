@@ -39,81 +39,6 @@ export default function Page() {
   const { userInfo } = useUserInfoStore((state) => state)
   const [tempPType, setTempPType] = React.useState([])
 
-  // const flight = {
-  //   prices: [
-  //     {
-  //       passenger: 'Adult',
-  //       commission: 20,
-  //       fare: 130,
-  //       baggageWeight: 25,
-  //       handCarryWeight: 7,
-  //       totalPrice: 150,
-  //     },
-  //     {
-  //       passenger: 'Child',
-  //       commission: 10,
-  //       fare: 100,
-  //       baggageWeight: 25,
-  //       handCarryWeight: 7,
-  //       totalPrice: 0,
-  //     },
-  //     {
-  //       passenger: 'Infant',
-  //       commission: 0,
-  //       fare: 20,
-  //       baggageWeight: 25,
-  //       handCarryWeight: 7,
-  //       totalPrice: 0,
-  //     },
-  //   ],
-  //   flight: {
-  //     segmentNumber: 1,
-  //     ticketTypeId: 1,
-  //     flightRouteId: 5014,
-  //     flightScheduleId: 3606,
-  //     departureDate: '2023-12-06 08:00:00',
-  //     arrivalDate: '2023-12-06 09:00:00',
-  //     fromCityName: 'Mogadishu',
-  //     toCityName: 'Kismayo',
-  //     fromAirportName: 'Aden Adde International Airport ',
-  //     toAirportName: 'Kismayo Airport',
-  //     fromCityCode: 'MGQ',
-  //     toCityCode: 'KMU',
-  //     fromCountryName: 'SOMALIA',
-  //     toCountryName: 'SOMALIA',
-  //     fromCountryId: 196,
-  //     toCountryId: 196,
-  //     fromCountryIsoCode3: 'SOM',
-  //     toCountryIsoCode3: 'SOM',
-  //     adultNumberOfSeatsAvailable: 60,
-  //     childNumberOfSeatsAvailable: 60,
-  //   },
-  //   airline: {
-  //     key: 'jubbaairways',
-  //     name: 'Jubba Airways',
-  //     logo: 'https://reservations.jubbaairways.so/assets/images/logos/logo_full.png',
-  //   },
-  //   adult: 1,
-  //   child: 0,
-  //   infant: 0,
-  // }
-
-  // const passenger = {
-  //   adult: [
-  //     {
-  //       passengerTitle: '1',
-  //       firstName: 'Ahmed',
-  //       secondName: 'Samow',
-  //       lastName: 'Jama',
-  //       country: 'SOMALIA',
-  //       sex: 'Male',
-  //       dob: '2023-12-06',
-  //       id: '53f6e8f6-2fcb-42b8-ab69-c3573f800312',
-  //     },
-  //   ],
-  //   contact: { email: 'ahmaat19@gmail.com', phone: '252615301507' },
-  // }
-
   React.useEffect(() => {
     const milliseconds = 40 * 60 * 1000 // 40 minutes
 
@@ -217,7 +142,6 @@ export default function Page() {
     setValue('dob', item?.dob)
     setValue('firstName', item?.firstName)
     setValue('lastName', item?.lastName)
-    setValue('secondName', item?.secondName)
     setValue('passengerTitle', item?.passengerTitle)
     setValue('sex', item?.sex)
     setValue('passengerType', item?.passengerType)
@@ -308,15 +232,7 @@ export default function Page() {
           placeholder='Enter first name'
         />
       </div>
-      <div className='w-full md:w-[48%]'>
-        <InputText
-          register={register}
-          errors={errors}
-          label='Second Name'
-          name={`secondName`}
-          placeholder='Enter second name'
-        />
-      </div>
+
       <div className='w-full md:w-[48%]'>
         <InputText
           register={register}
@@ -433,7 +349,7 @@ export default function Page() {
                 <hr />
                 <p>
                   {getTitle(item?.passengerTitle)} {item?.firstName}{' '}
-                  {item?.secondName} {item?.lastName}
+                  {item?.lastName}
                 </p>
                 <p>{item?.sex}</p>
                 <p>{item?.country}</p>
@@ -465,7 +381,7 @@ export default function Page() {
                 <hr />
                 <p>
                   {getTitle(item?.passengerTitle)} {item?.firstName}{' '}
-                  {item?.secondName} {item?.lastName}
+                  {item?.lastName}
                 </p>
                 <p>{item?.sex}</p>
                 <p>{item?.country}</p>
@@ -497,7 +413,7 @@ export default function Page() {
                 <hr />
                 <p>
                   {getTitle(item?.passengerTitle)} {item?.firstName}{' '}
-                  {item?.secondName} {item?.lastName}
+                  {item?.lastName}
                 </p>
                 <p>{item?.sex}</p>
                 <p>{item?.country}</p>

@@ -30,6 +30,8 @@ export default async function flight({
     })
     if (airlines?.length < 1) throw new Error(`No active airlines`)
 
+    const internationals = [20] // Nairobi
+
     const oneWayBody = {
       departureDate: date?.slice(0, 10),
       arrivalDate: '',
@@ -53,6 +55,63 @@ export default async function flight({
             },
           }
         )
+
+        // Internationals
+        if (
+          internationals.includes(Number(oneWayBody.toCityId)) &&
+          item.adultCommission % 1 !== 0
+        ) {
+          item.adultCommission = Number(
+            item.adultCommission.toString().split('.')[1]
+          )
+        }
+
+        if (
+          internationals.includes(Number(oneWayBody.toCityId)) &&
+          item.childCommission % 1 !== 0
+        ) {
+          item.childCommission = Number(
+            item.childCommission.toString().split('.')[1]
+          )
+        }
+
+        if (
+          internationals.includes(Number(oneWayBody.toCityId)) &&
+          item.infantCommission % 1 !== 0
+        ) {
+          item.infantCommission = Number(
+            item.infantCommission.toString().split('.')[1]
+          )
+        }
+
+        // Local
+        if (
+          !internationals.includes(Number(oneWayBody.toCityId)) &&
+          item.adultCommission % 1 !== 0
+        ) {
+          item.adultCommission = Number(
+            item.adultCommission.toString().split('.')[0]
+          )
+        }
+
+        if (
+          !internationals.includes(Number(oneWayBody.toCityId)) &&
+          item.childCommission % 1 !== 0
+        ) {
+          item.childCommission = Number(
+            item.childCommission.toString().split('.')[0]
+          )
+        }
+
+        if (
+          !internationals.includes(Number(oneWayBody.toCityId)) &&
+          item.infantCommission % 1 !== 0
+        ) {
+          item.infantCommission = Number(
+            item.infantCommission.toString().split('.')[0]
+          )
+        }
+
         return {
           name: item.name,
           api: item.api,

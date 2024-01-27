@@ -64,6 +64,30 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     paddingBottom: 2,
   },
+  tableCell40: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '40%',
+    border: '1px solid #bfbfbf',
+    borderTop: 'none',
+    borderBottom: 'none',
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 2,
+    paddingBottom: 2,
+  },
+  tableCell10: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '10%',
+    border: '1px solid #bfbfbf',
+    borderTop: 'none',
+    borderBottom: 'none',
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 2,
+    paddingBottom: 2,
+  },
   bold: { fontFamily: 'Open Sans', fontWeight: 700 },
   uppercase: { textTransform: 'uppercase' },
   flex: {
@@ -188,7 +212,7 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
                   Passenger Type
                 </Text>
               </View>
-              <View style={styles.tableCell}>
+              <View style={styles.tableCell40}>
                 <Text
                   style={{
                     ...styles.subheader,
@@ -210,7 +234,7 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
                   Nationality
                 </Text>
               </View>
-              <View style={styles.tableCell}>
+              <View style={styles.tableCell10}>
                 <Text
                   style={{
                     ...styles.subheader,
@@ -227,16 +251,16 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
                 <View style={styles.tableCell}>
                   <Text>{item?.passengerType}</Text>
                 </View>
-                <View style={styles.tableCell}>
+                <View style={styles.tableCell40}>
                   <Text>
                     {getTitle(item?.passengerTitle)} {item?.firstName}{' '}
-                    {item?.secondName} {item?.lastName}
+                    {item?.lastName}
                   </Text>
                 </View>
                 <View style={styles.tableCell}>
                   <Text>{item?.country}</Text>
                 </View>
-                <View style={styles.tableCell}>
+                <View style={styles.tableCell10}>
                   <Text>{item?.sex}</Text>
                 </View>
               </View>
@@ -335,7 +359,8 @@ export default function PdfGenerator({ data }: { data: IPdf }) {
         >
           <Text style={styles.bold}>Flight Info:</Text>
           <Text>
-            Rules Flight 1: Passengers must report for check in three hours
+            Rules Flight 1: Passengers must report for check in
+            <Text style={styles.bold}> three hours </Text>
             before flight departure Passengers failing to report for check in on
             time will not be accepted for travel and will forfeit their bookings
           </Text>
