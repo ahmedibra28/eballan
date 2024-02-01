@@ -10,7 +10,7 @@ const GetHelp = () => {
       <div className='space-y-5 md:text-lg text-center'>
         <div className='flex flex-row justify-center items-center gap-2'>
           <FaWhatsapp className='text-green-500' />
-          <a href='https://wa.me/+252618237779'>WhatsApp</a>
+          <a href='https://wa.me/+252621598011'>WhatsApp</a>
         </div>
 
         <div className='flex flex-row justify-center items-center gap-2'>

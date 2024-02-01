@@ -23,6 +23,17 @@ export default function Navigation() {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
 
+  if (typeof window !== 'undefined') {
+    window.addEventListener('click', function (e) {
+      document.querySelectorAll('details').forEach(function (dropdown) {
+        if (!dropdown.contains(e.target)) {
+          // Click was outside the dropdown, close it
+          dropdown.open = false
+        }
+      })
+    })
+  }
+
   const sharedNav = (
     <>
       <li>
@@ -59,7 +70,10 @@ export default function Navigation() {
               <li key={item.name}>
                 <details>
                   <summary>{capitalizeFirstLetter(item.name)}</summary>
-                  <ul className='p-2 bg-my-primary w-44 rounded'>
+                  <ul
+                    className='p-2 bg-my-primary w-44 rounded'
+                    style={{ zIndex: 9999999 }}
+                  >
                     {item.children.map((child: any, i: number) => (
                       <li key={i}>
                         <Link href={child.path}>{child.name}</Link>
@@ -154,7 +168,10 @@ export default function Navigation() {
                   {item?.children && (
                     <li key={item.name}>
                       <a>{capitalizeFirstLetter(item.name)}</a>
-                      <ul className='p-2 bg-my-primary w-44 rounded'>
+                      <ul
+                        className='p-2 bg-my-primary w-44 rounded'
+                        style={{ zIndex: 9999999 }}
+                      >
                         {item.children.map((child: any, i: number) => (
                           <li key={i}>
                             <Link href={child.path}>{child.name}</Link>
@@ -202,6 +219,7 @@ export default function Navigation() {
             <ul
               tabIndex={0}
               className='mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-my-primary rounded w-52'
+              style={{ zIndex: 9999999 }}
             >
               <li>
                 <Link href='/account/profile' className='justify-between'>

@@ -17,7 +17,7 @@ const Footer = () => {
       <div className='mt-20 p-12 '>
         <div className='flex flex-row flex-wrap justify-between items-center max-w-7xl mx-auto gap-5'>
           {partners.map((partner) => (
-            <div className='w-8 md:w-24 mx-auto' key={partner.image}>
+            <div className='w-8 md:w-28 mx-auto' key={partner.image}>
               <Image
                 src={partner.image}
                 width={500}
