@@ -26,7 +26,7 @@ export default function Navigation() {
   if (typeof window !== 'undefined') {
     window.addEventListener('click', function (e) {
       document.querySelectorAll('details').forEach(function (dropdown) {
-        if (!dropdown.contains(e.target)) {
+        if (!dropdown.contains(e.target as any)) {
           // Click was outside the dropdown, close it
           dropdown.open = false
         }
