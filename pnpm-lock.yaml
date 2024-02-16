@@ -125,6 +125,9 @@ dependencies:
   typescript:
     specifier: 5.2.2
     version: 5.2.2
+  use-mobile-detect-hook:
+    specifier: ^1.0.5
+    version: 1.0.5(react@18.2.0)
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
@@ -5179,6 +5182,15 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
       punycode: 2.3.1
+    dev: false
+
+  /use-mobile-detect-hook@1.0.5(react@18.2.0):
+    resolution: {integrity: sha512-8Uu69l2DTsPahD+j+ZefzV3IRHWcN2vbQmdlTshTnoHIS8MDvgr2IC3dgaNNpPCUbr8EhKH06c0KB3ViYNSnAQ==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: ^16.7.0-alpha.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /use-sync-external-store@1.2.0(react@18.2.0):

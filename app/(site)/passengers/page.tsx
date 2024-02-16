@@ -23,9 +23,12 @@ import useNumberToArray from '@/hooks/useNumberToArray'
 import usePassengerStore from '@/zustand/usePassengerStore'
 import { useRouter } from 'next/navigation'
 import ComboboxCountry from '@/components/ComboboxCountry'
+import useDeviceDetection from '@/hooks/useDeviceDetection'
 
 export default function Page() {
   const router = useRouter()
+
+  const device = useDeviceDetection()
 
   const [error, setError] = React.useState<string | null>(null)
   const [passengerTitles, setPassengerTitles] = React.useState<
@@ -219,7 +222,9 @@ export default function Page() {
             label='Date of Birth'
             name={`dob${passengerType}${number}`}
             placeholder='Enter date of birth'
-            className='input rounded-none border border-gray-300 w-full mx-auto md:me-auto'
+            className={` ${
+              device !== 'Desktop' ? 'min-w-[95%]' : 'w-full'
+            } md:w-full input rounded-none border border-gray-300`}
             value={watch()[`dob${passengerType}${number}`]}
           />
         </div>
