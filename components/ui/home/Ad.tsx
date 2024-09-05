@@ -5,7 +5,7 @@ const AD = () => {
   return (
     <div className='w-full mx-auto'>
       <Image
-        src='/eballan_ad.jpg'
+        src='/haboon.jpg'
         alt='Flight discount advertisement'
         className='w-[1500px] xl:w-[2000px] xl:h-[200px] h-[90px] md:h-[150px] object-contain'
         width={1000}
