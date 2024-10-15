@@ -81,7 +81,7 @@ export async function GET(req: NextApiRequestExtended) {
     const pageSize = parseInt(searchParams.get('limit') as string) || 25
     const skip = (page - 1) * pageSize
 
-    const [result, total] = await Promise.all([
+    let [result, total] = await Promise.all([
       prisma.reservation.findMany({
         where: {
           ...query,
@@ -123,6 +123,40 @@ export async function GET(req: NextApiRequestExtended) {
         },
       }),
     ])
+
+    result = result?.map((item) => {
+      const adultCommission = item?.prices?.find(
+        (p) =>
+          p.passenger === 'Adult' &&
+          Number(p.commission || 1) * Number(item?.adult || 0)
+      )
+      const childCommission = item?.prices?.find(
+        (p) =>
+          p.passenger === 'Child' &&
+          Number(p.commission || 1) * Number(item?.child || 0)
+      )
+      const infantCommission = item?.prices?.find(
+        (p) =>
+          p.passenger === 'Infant' &&
+          Number(p.commission || 1) * Number(item?.infant || 0)
+      )
+
+      const role = item?.createdBy?.role?.type === 'AGENCY'
+
+      return {
+        ...item,
+        agentCommission: !role
+          ? 0
+          : (Number(adultCommission?.commission || 0) +
+              Number(childCommission?.commission || 0) +
+              Number(infantCommission?.commission || 0)) /
+            2,
+        commission:
+          Number(adultCommission?.commission || 0) +
+          Number(childCommission?.commission || 0) +
+          Number(infantCommission?.commission || 0),
+      }
+    })
 
     const pages = Math.ceil(total / pageSize)
 

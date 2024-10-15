@@ -83,6 +83,18 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
       ),
     },
     {
+      header: 'Agency Name',
+      accessorKey: 'createdBy.name',
+      active: true,
+      cell: ({
+        row: { original },
+      }: {
+        row: {
+          original: { createdBy: { name: string } } & IPdf
+        }
+      }) => <span>{original?.createdBy?.name || '-'}</span>,
+    },
+    {
       header: 'Dealer Code',
       accessorKey: 'dealerCode',
       active: false,
@@ -109,6 +121,34 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
       ),
     },
     {
+      header: 'Agent commission',
+      accessorKey: 'agentCommission',
+      active: true,
+      cell: ({ row: { original } }: { row: { original: IPdf } }) => (
+        <span>
+          <FormatNumber
+            isCurrency={true}
+            // @ts-ignore
+            value={original?.agentCommission}
+          />
+        </span>
+      ),
+    },
+    {
+      header: 'Commission',
+      accessorKey: 'commission',
+      active: true,
+      cell: ({ row: { original } }: { row: { original: IPdf } }) => (
+        <span>
+          <FormatNumber
+            isCurrency={true}
+            // @ts-ignore
+            value={original?.commission}
+          />
+        </span>
+      ),
+    },
+    {
       header: 'Status',
       accessorKey: 'status',
       active: true,
@@ -125,24 +165,24 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
       header: 'Action',
       active: true,
       cell: ({ row: { original } }: { row: { original: IPdf } }) => (
-        <div className='dropdown dropdown-top dropdown-left z-30'>
+        <div className='z-30 dropdown dropdown-top dropdown-left'>
           <label tabIndex={0} className='cursor-pointer'>
             <FaEllipsis className='text-2xl' />
           </label>
           <ul
             tabIndex={0}
-            className='dropdown-content menu p-2 bg-white rounded-tl-box rounded-tr-box rounded-bl-box w-auto border border-gray-200 shadow'
+            className='w-auto p-2 bg-white border border-gray-200 shadow dropdown-content menu rounded-tl-box rounded-tr-box rounded-bl-box'
           >
-            <li className='h-10 w-auto'>
+            <li className='w-auto h-10'>
               <Link
-                className='btn-ghost justify-start text-whites'
+                className='justify-start btn-ghost text-whites'
                 href={`/reservations/${original.id}?reservationId=${original.reservationId}&pnrNumber=${original.pnrNumber}`}
               >
                 <FaCircleInfo />
                 Details
               </Link>
             </li>
-            <li className='h-10 w-auto'>
+            <li className='w-auto h-10'>
               <ButtonCircle
                 isLoading={isLoading}
                 label='Delete'

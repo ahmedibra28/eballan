@@ -143,6 +143,13 @@ const Page = () => {
       { title: 'Name' },
       { title: 'Email' },
       { title: 'Role', className: 'hidden md:table-cell' },
+
+      { title: 'Mobile', className: 'hidden md:table-cell' },
+      { title: 'Address', className: 'hidden md:table-cell' },
+      { title: 'Company', className: 'hidden md:table-cell' },
+      { title: 'Bank', className: 'hidden md:table-cell' },
+      { title: 'B. Acc', className: 'hidden md:table-cell' },
+
       { title: 'Confirmed', className: 'hidden md:table-cell' },
       { title: 'Blocked', className: 'hidden md:table-cell' },
       { title: 'CreatedAt', className: 'hidden md:table-cell' },
@@ -154,6 +161,26 @@ const Page = () => {
       {
         className: 'hidden md:table-cell',
         format: (item: any) => item?.role?.type,
+      },
+      {
+        className: 'hidden md:table-cell',
+        format: (item: any) => item?.mobile || '-',
+      },
+      {
+        className: 'hidden md:table-cell',
+        format: (item: any) => item?.address || '-',
+      },
+      {
+        className: 'hidden md:table-cell',
+        format: (item: any) => item?.company || '-',
+      },
+      {
+        className: 'hidden md:table-cell',
+        format: (item: any) => item?.bankName || '-',
+      },
+      {
+        className: 'hidden md:table-cell',
+        format: (item: any) => item?.bankAccount || '-',
       },
       {
         className: 'hidden md:table-cell',
@@ -179,15 +206,15 @@ const Page = () => {
       },
       {
         format: (item: any) => (
-          <div className='dropdown dropdown-top dropdown-left z-50'>
+          <div className='z-50 dropdown dropdown-top dropdown-left'>
             <label tabIndex={0} className='cursor-pointer'>
               <FaBars className='text-2xl' />
             </label>
             <ul
               tabIndex={0}
-              className='dropdown-content z-50 menu p-2 bg-white rounded-tl-box rounded-tr-box rounded-bl-box w-28 border border-gray-200 shadow'
+              className='z-50 p-2 bg-white border border-gray-200 shadow dropdown-content menu rounded-tl-box rounded-tr-box rounded-bl-box w-28'
             >
-              <li className='h-10 w-24'>
+              <li className='w-24 h-10'>
                 <ButtonCircle
                   isLoading={false}
                   label='Edit'
@@ -200,7 +227,7 @@ const Page = () => {
                   classStyle='btn-primary justify-start text-white'
                 />
               </li>
-              <li className='h-10 w-24'>
+              <li className='w-24 h-10'>
                 <ButtonCircle
                   isLoading={deleteApi?.isPending}
                   label='Delete'
@@ -276,7 +303,7 @@ const Page = () => {
           value={val}
           onChange={setVal}
           setValue={setValue}
-          className='w-full input border border-gray-300'
+          className='w-full border border-gray-300 input'
         />
       </div>
       <div key={2} className='w-full'>
@@ -324,7 +351,7 @@ const Page = () => {
   ]
 
   return (
-    <div className='max-w-7xl mx-auto'>
+    <div className='mx-auto max-w-7xl'>
       {deleteApi?.isSuccess && (
         <Message variant='success' value={deleteApi?.data?.message} />
       )}
@@ -363,14 +390,14 @@ const Page = () => {
       ) : getApi?.isError ? (
         <Message variant='error' value={getApi?.error} />
       ) : (
-        <div className='overflow-x-auto bg-white p-3 mt-2'>
-          <div className='flex items-center flex-col mb-2'>
-            <h1 className='font-light text-2xl'>
+        <div className='p-3 mt-2 overflow-x-auto bg-white'>
+          <div className='flex flex-col items-center mb-2'>
+            <h1 className='text-2xl font-light'>
               {name}
               <sup> [{table?.total}] </sup>
             </h1>
             <button
-              className='btn btn-outline btn-primary btn-sm shadow my-2 rounded-none'
+              className='my-2 rounded-none shadow btn btn-outline btn-primary btn-sm'
               // @ts-ignore
               onClick={() => window[modal].showModal()}
             >

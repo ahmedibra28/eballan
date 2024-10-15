@@ -31,6 +31,11 @@ export async function GET(req: Request) {
           confirmed: true,
           blocked: true,
           createdAt: true,
+          bankAccount: true,
+          bankName: true,
+          address: true,
+          mobile: true,
+          company: true,
           role: {
             select: {
               type: true,
