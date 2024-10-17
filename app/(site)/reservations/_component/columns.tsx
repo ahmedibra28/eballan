@@ -15,9 +15,10 @@ import Link from 'next/link'
 type Column = {
   isLoading: boolean
   deleteHandler: (item: IPdf) => void
+  role?: string
 }
 
-export const columns = ({ isLoading, deleteHandler }: Column) => {
+export const columns = ({ isLoading, deleteHandler, role }: Column) => {
   return [
     {
       header: 'Passengers',
@@ -62,7 +63,7 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
         </span>
       ),
     },
-    {
+    role !== 'AUTHENTICATED' && {
       header: 'Agency?',
       accessorKey: 'createdBy.role.type',
       active: true,
@@ -82,7 +83,7 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
         </span>
       ),
     },
-    {
+    role !== 'AUTHENTICATED' && {
       header: 'Agency Name',
       accessorKey: 'createdBy.name',
       active: true,
@@ -120,7 +121,7 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
         </span>
       ),
     },
-    {
+    role !== 'AUTHENTICATED' && {
       header: 'Agent commission',
       accessorKey: 'agentCommission',
       active: true,
@@ -134,7 +135,7 @@ export const columns = ({ isLoading, deleteHandler }: Column) => {
         </span>
       ),
     },
-    {
+    role !== 'AUTHENTICATED' && {
       header: 'Commission',
       accessorKey: 'commission',
       active: true,

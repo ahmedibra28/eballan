@@ -13,6 +13,7 @@ import Message from '@/components/Message'
 import Spinner from '@/components/Spinner'
 import RTable from '@/components/RTable'
 import { columns } from './_component/columns'
+import useUserInfoStore from '@/zustand/userStore'
 
 const Page = () => {
   const [page, setPage] = useState(1)
@@ -25,6 +26,8 @@ const Page = () => {
 
   const path = useAuthorization()
   const router = useRouter()
+
+  const { userInfo } = useUserInfoStore((state) => state)
 
   useEffect(() => {
     if (path) {
@@ -73,7 +76,7 @@ const Page = () => {
   const name = 'Reservations Lists'
 
   return (
-    <div className='max-w-7xl mx-auto'>
+    <div className='mx-auto max-w-7xl'>
       {deleteApi?.isSuccess && (
         <Message variant='success' value={deleteApi?.data?.message} />
       )}
@@ -81,17 +84,17 @@ const Page = () => {
         <Message variant='error' value={deleteApi?.error} />
       )}
 
-      <div className='bg-white p-3 mt-2'>
-        <div className='flex items-center flex-col mb-10 px-2 pb-5'>
+      <div className='p-3 mt-2 bg-white'>
+        <div className='flex flex-col items-center px-2 pb-5 mb-10'>
           <form onSubmit={searchHandler}>
             <hr className='my-2' />
-            <div className='flex flex-row flex-wrap justify-center items-center gap-2'>
+            <div className='flex flex-row flex-wrap items-center justify-center gap-2'>
               <div className='form-control w-full md:w-[48%] lg:w-[32%] mx-auto'>
                 <label className='label'>
                   <span className='label-text'>Airline</span>
                 </label>
                 <input
-                  className='input border-gray-300'
+                  className='border-gray-300 input'
                   type='text'
                   placeholder='Airline name'
                   onChange={(e) => setAirline(e.target.value)}
@@ -103,7 +106,7 @@ const Page = () => {
                   <span className='label-text'>Departure City</span>
                 </label>
                 <input
-                  className='input border-gray-300'
+                  className='border-gray-300 input'
                   type='text'
                   placeholder='Departure city name'
                   onChange={(e) => setDepartureCity(e.target.value)}
@@ -115,7 +118,7 @@ const Page = () => {
                   <span className='label-text'>Arrival City</span>
                 </label>
                 <input
-                  className='input border-gray-300'
+                  className='border-gray-300 input'
                   type='text'
                   placeholder='Arrival name'
                   onChange={(e) => setArrivalCity(e.target.value)}
@@ -127,7 +130,7 @@ const Page = () => {
                   <span className='label-text'>Agency</span>
                 </label>
                 <input
-                  className='input border-gray-300'
+                  className='border-gray-300 input'
                   type='text'
                   placeholder='Agency name'
                   onChange={(e) => setAgency(e.target.value)}
@@ -139,7 +142,7 @@ const Page = () => {
                   <span className='label-text'>Created At</span>
                 </label>
                 <input
-                  className='input border-gray-300'
+                  className='border-gray-300 input'
                   type='date'
                   placeholder='Created At'
                   onChange={(e) => setCreatedAt(e.target.value)}
@@ -167,8 +170,8 @@ const Page = () => {
       ) : getApi?.isError ? (
         <Message variant='error' value={getApi?.error} />
       ) : (
-        <div className='overflow-x-auto bg-white p-3 mt-2'>
-          <h1 className='font-light text-2xl text-center'>
+        <div className='p-3 mt-2 overflow-x-auto bg-white'>
+          <h1 className='text-2xl font-light text-center'>
             {name}
             <sup> [{getApi?.data?.total}] </sup>
           </h1>
@@ -177,6 +180,7 @@ const Page = () => {
             columns={columns({
               deleteHandler,
               isLoading: deleteApi?.isPending || false,
+              role: userInfo?.role,
             })}
             setPage={setPage}
             setLimit={setLimit}
