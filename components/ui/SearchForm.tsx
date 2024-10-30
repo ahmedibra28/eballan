@@ -39,27 +39,30 @@ export default function SearchForm({ source }: { source?: string }) {
 
   const { updateFlights } = useFlightsStore((state) => state)
   const getCities = async () => {
-    try {
-      const data = await city()
+    city()?.then((data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        return null
+      }
+
       setCities(data)
-    } catch (error) {
-      setError(String(error))
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
+    })
   }
 
   const searchFlights = async (args: ISearchFlight) => {
-    try {
-      const data = await flight(args)
+    flight(args)?.then((data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        return null
+      }
       updateFlights(data)
-    } catch (error) {
-      setError(String(error))
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
+    })
   }
 
   useEffect(() => {
@@ -198,13 +201,13 @@ export default function SearchForm({ source }: { source?: string }) {
 
   const menu = (
     <ul className='menus dropdown-content z-[1] bg-base-200 w-52 md:w-64 rounded-box text-xs md:text-sm'>
-      <li className='flex justify-between items-center p-2'>
+      <li className='flex items-center justify-between p-2'>
         <span> Adults (Over 11)</span>
-        <div className='flex flex-row justify-between items-center'>
+        <div className='flex flex-row items-center justify-between'>
           <button
             type='button'
             onClick={() => setAdult(adult > 0 ? adult - 1 : 0)}
-            className='w-6 h-6 rounded-full bg-red-500 p-2 flex items-center justify-center'
+            className='flex items-center justify-center w-6 h-6 p-2 bg-red-500 rounded-full'
           >
             <FaMinus className='text-white' />
           </button>
@@ -212,19 +215,19 @@ export default function SearchForm({ source }: { source?: string }) {
           <button
             type='button'
             onClick={() => setAdult(adult + 1)}
-            className='w-6 h-6 rounded-full bg-green-500 p-2 flex items-center justify-center'
+            className='flex items-center justify-center w-6 h-6 p-2 bg-green-500 rounded-full'
           >
             <FaPlus className='text-white' />
           </button>
         </div>
       </li>
-      <li className='flex justify-between items-center p-2'>
+      <li className='flex items-center justify-between p-2'>
         <span> Children (2 - 11)</span>
-        <div className='flex flex-row justify-between items-center'>
+        <div className='flex flex-row items-center justify-between'>
           <button
             type='button'
             onClick={() => setChild(child > 0 ? child - 1 : 0)}
-            className='w-6 h-6 rounded-full bg-red-500 p-2 flex items-center justify-center'
+            className='flex items-center justify-center w-6 h-6 p-2 bg-red-500 rounded-full'
           >
             <FaMinus className='text-white' />
           </button>
@@ -232,19 +235,19 @@ export default function SearchForm({ source }: { source?: string }) {
           <button
             type='button'
             onClick={() => setChild(child + 1)}
-            className='w-6 h-6 rounded-full bg-green-500 p-2 flex items-center justify-center'
+            className='flex items-center justify-center w-6 h-6 p-2 bg-green-500 rounded-full'
           >
             <FaPlus className='text-white' />
           </button>
         </div>
       </li>
-      <li className='flex justify-between items-center p-2'>
+      <li className='flex items-center justify-between p-2'>
         <span> Infants (Under 2)</span>
-        <div className='flex flex-row justify-between items-center'>
+        <div className='flex flex-row items-center justify-between'>
           <button
             type='button'
             onClick={() => setInfant(infant > 0 ? infant - 1 : 0)}
-            className='w-6 h-6 rounded-full bg-red-500 p-2 flex items-center justify-center'
+            className='flex items-center justify-center w-6 h-6 p-2 bg-red-500 rounded-full'
           >
             <FaMinus className='text-white' />
           </button>
@@ -252,7 +255,7 @@ export default function SearchForm({ source }: { source?: string }) {
           <button
             type='button'
             onClick={() => setInfant(infant + 1)}
-            className='w-6 h-6 rounded-full bg-green-500 p-2 flex items-center justify-center'
+            className='flex items-center justify-center w-6 h-6 p-2 bg-green-500 rounded-full'
           >
             <FaPlus className='text-white' />
           </button>
@@ -270,7 +273,7 @@ export default function SearchForm({ source }: { source?: string }) {
       }`}
     >
       {error && <Message variant='error' value={error} />}
-      <div className='mx-auto p-2'>
+      <div className='p-2 mx-auto'>
         <div className='flex flex-row justify-between md:justify-start gap-x-2'>
           <button
             disabled
@@ -304,7 +307,7 @@ export default function SearchForm({ source }: { source?: string }) {
             <button
               onClick={swap}
               type='button'
-              className='btn bg-white h-16 w-16 text-my-primary mt-auto mx-auto'
+              className='w-16 h-16 mx-auto mt-auto bg-white btn text-my-primary'
             >
               <FaRotate />
             </button>
@@ -335,12 +338,12 @@ export default function SearchForm({ source }: { source?: string }) {
           </div>
 
           <div className='w-[25%] ml-auto'>
-            <details className='dropdown dropdown-end w-22 mx-auto z-0'>
+            <details className='z-0 mx-auto dropdown dropdown-end w-22'>
               <summary
                 style={{
                   borderRadius: '0.65rem',
                 }}
-                className='btn btn-lg bg-my-primary border border-my-primary hover:bg-my-primary text-white w-full md:w-auto md:m-auto h-16'
+                className='w-full h-16 text-white border btn btn-lg bg-my-primary border-my-primary hover:bg-my-primary md:w-auto md:m-auto'
               >
                 <div className='flex flex-row gap-x-4'>
                   <span> {adult + child + infant}</span> <FaUsers />

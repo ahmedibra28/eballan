@@ -13,6 +13,6 @@ export default async function passengerType() {
     )
     return data as IPassengerType[]
   } catch (error: any) {
-    throw new Error(`Error fetching passenger types: ${error?.message}`)
+    return { error: `Error fetching passenger types: ${error?.message}` }
   }
 }

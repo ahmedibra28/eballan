@@ -38,31 +38,31 @@ const Ticket = () => {
           reservationId: Number(data.reservationId),
           phone: data.phone,
           email: data.email,
-        })
-          .then((data) => {
-            setSuccess('Reservation Found. Redirecting...')
-            reset()
-            setStep(2)
-            setData(data)
-
-            setTimeout(() => {
-              setSuccess(null)
-            }, 5000)
-          })
-          .catch((error) => {
+        }).then((data: any) => {
+          if (data?.error) {
             setError('Reservation Not Found')
             setTimeout(() => {
               setError(null)
             }, 5000)
-          })
+            return null
+          }
+          setSuccess('Reservation Found. Redirecting...')
+          reset()
+          setStep(2)
+          setData(data)
+
+          setTimeout(() => {
+            setSuccess(null)
+          }, 5000)
+        })
       })
     }
   }
 
   const stepOne = () => {
     return (
-      <div className='max-w-md shadow-md mx-auto card-body'>
-        <h6 className='fw-bold text-uppercase text-center'>Step 1 / 2</h6>
+      <div className='max-w-md mx-auto shadow-md card-body'>
+        <h6 className='text-center fw-bold text-uppercase'>Step 1 / 2</h6>
         <hr />
 
         <InputText
@@ -94,7 +94,7 @@ const Ticket = () => {
 
         <button
           type='submit'
-          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          className='mx-auto mt-3 btn btn-primary form-control w-44'
           disabled={isPending}
         >
           {isPending ? (
@@ -138,20 +138,20 @@ const Ticket = () => {
             subject: `Reservation Confirmation - ${data[0]?.pnrNumber}`,
             text: `Reservation Confirmation - ${data[0]?.pnrNumber} - ${data[0]?.reservationId}`,
             base64: base64data,
-          })
-            .then(() => {
-              setSuccess(`Reservation pdf sent to ${data[0]?.contactEmail}`)
-
-              setTimeout(() => {
-                setSuccess(null)
-              }, 5000)
-            })
-            .catch((err) => {
-              setError(err?.message)
+          }).then((res: any) => {
+            if (res?.error) {
+              setError(res?.error)
               setTimeout(() => {
                 setError(null)
               }, 5000)
-            })
+              return null
+            }
+            setSuccess(`Reservation pdf sent to ${data[0]?.contactEmail}`)
+
+            setTimeout(() => {
+              setSuccess(null)
+            }, 5000)
+          })
         })
         return base64data
       }
@@ -161,7 +161,7 @@ const Ticket = () => {
   const stepTwo = () => {
     return (
       <div>
-        <h6 className='fw-bold text-uppercase text-center'>Step 2 / 2</h6>
+        <h6 className='text-center fw-bold text-uppercase'>Step 2 / 2</h6>
 
         <div className='divider'>
           We have found {data?.length || 0} reservations
@@ -184,7 +184,7 @@ const Ticket = () => {
                 </p>
                 <hr className='my-4' />
 
-                <div className='w-full bg-gray-100 p-2 mb-2'>
+                <div className='w-full p-2 mb-2 bg-gray-100'>
                   <strong className='text-my-primary'>From</strong>
                   <p>
                     {reservationData?.flight?.fromCityName} (
@@ -197,7 +197,7 @@ const Ticket = () => {
                     )}
                   </p>
                 </div>
-                <div className='w-full bg-gray-100 p-2 mb-2'>
+                <div className='w-full p-2 mb-2 bg-gray-100'>
                   <strong className='text-my-primary'>Duration</strong>
                   <p>
                     {getHoursBetween(
@@ -210,7 +210,7 @@ const Ticket = () => {
                     )}
                   </p>
                 </div>
-                <div className='w-full bg-gray-100 p-2 mb-2'>
+                <div className='w-full p-2 mb-2 bg-gray-100'>
                   <strong className='text-my-primary'>To</strong>
                   <p>
                     {reservationData?.flight?.toCityName} (
@@ -227,8 +227,8 @@ const Ticket = () => {
 
               <hr className='mb-2' />
 
-              <div className='w-full bg-gray-100 p-2'>
-                <p className='text-sm flex flex-col'>
+              <div className='w-full p-2 bg-gray-100'>
+                <p className='flex flex-col text-sm'>
                   <span className='flex flex-row items-center gap-x-2'>
                     Status:
                     {reservationData?.status === 'BOOKED' ? (
@@ -239,7 +239,7 @@ const Ticket = () => {
                   </span>
                   <span>
                     Created At:
-                    <span className='text-my-primary ml-1'>
+                    <span className='ml-1 text-my-primary'>
                       {DateTime(reservationData?.createdAt).format(
                         'DD MMM YYYY HH:mm'
                       )}
@@ -254,7 +254,7 @@ const Ticket = () => {
                 </p>
               </div>
 
-              <div className='w-full bg-gray-100 p-2 mb-2'>
+              <div className='w-full p-2 mb-2 bg-gray-100'>
                 <strong className='text-my-primary'>Amount</strong>
                 <p>
                   {Number(reservationData?.adult || 0) +
@@ -300,11 +300,11 @@ const Ticket = () => {
   }
 
   return (
-    <div className='max-w-7xl mx-auto card-body bg-white'>
+    <div className='mx-auto bg-white max-w-7xl card-body'>
       {error && <Message variant='error' value={error} />}
       {success && <Message variant='success' value={success} />}
 
-      <h3 className='font-bold text-center mb-5 text-my-primary'>
+      <h3 className='mb-5 font-bold text-center text-my-primary'>
         Get Your Reservation Tickets
       </h3>
 

@@ -84,27 +84,30 @@ export default function Page() {
   }
 
   const getPassengerTitles = async () => {
-    try {
-      const data = await passengerTitle()
-      setPassengerTitles(data)
-    } catch (error) {
-      setError(String(error))
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
+    passengerTitle().then(async (data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        return null
+      } else {
+        setPassengerTitles(data)
+      }
+    })
   }
 
   const getCountries = async () => {
-    try {
-      const data = await country()
-      setCountries(data)
-    } catch (error) {
-      setError(String(error))
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
+    country().then(async (data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+      } else {
+        setCountries(data)
+      }
+    })
   }
 
   React.useEffect(() => {
@@ -255,7 +258,7 @@ export default function Page() {
 
         {/* <Autocomplete
           register={register}
-          className='w-full input border border-gray-300'
+          className='w-full border border-gray-300 input'
           errors={errors}
           label='Country'
           name={`country`}
@@ -271,7 +274,7 @@ export default function Page() {
           onChange={setValueC}
           setValue={setValue}
           customFormat={(item: ICountry) => (
-            <div className='flex flex-col justify-start items-start'>
+            <div className='flex flex-col items-start justify-start'>
               <div>{item?.name}</div>
               <div>
                 <span className='text-xs'>
@@ -318,7 +321,7 @@ export default function Page() {
   ]
 
   return (
-    <div className='max-w-7xl mx-auto'>
+    <div className='mx-auto max-w-7xl'>
       <Steps current={2} />
       {error && <Message variant='error' value={error} />}
 
@@ -334,7 +337,7 @@ export default function Page() {
         modalSize='max-w-xl'
       />
 
-      <h2 className='font-bold uppercase mb-2 ml-2'>Trip Summary</h2>
+      <h2 className='mb-2 ml-2 font-bold uppercase'>Trip Summary</h2>
       <div className='flex flex-row flex-wrap justify-between gap-2'>
         <div className='w-full lg:w-[65%]'>
           <div className='flex flex-row flex-wrap justify-between gap-2'>
@@ -445,7 +448,7 @@ export default function Page() {
             </p>
             <hr className='my-4' />
 
-            <div className='w-full bg-gray-100 p-2 mb-5'>
+            <div className='w-full p-2 mb-5 bg-gray-100'>
               <strong className='text-my-primary'>From</strong>
               <p>
                 {flight?.flight?.fromCityName} ({flight?.flight?.fromCityCode})
@@ -457,7 +460,7 @@ export default function Page() {
                 )}
               </p>
             </div>
-            <div className='w-full bg-gray-100 p-2 mb-5'>
+            <div className='w-full p-2 mb-5 bg-gray-100'>
               <strong className='text-my-primary'>Duration</strong>
               <p>
                 {getHoursBetween(
@@ -466,7 +469,7 @@ export default function Page() {
                 )}
               </p>
             </div>
-            <div className='w-full bg-gray-100 p-2 mb-5'>
+            <div className='w-full p-2 mb-5 bg-gray-100'>
               <strong className='text-my-primary'>To</strong>
               <p>
                 {flight?.flight?.toCityName} ({flight?.flight?.toCityCode})
@@ -481,7 +484,7 @@ export default function Page() {
           </div>
 
           <hr className='mb-5' />
-          <div className='w-full bg-gray-100 p-2'>
+          <div className='w-full p-2 bg-gray-100'>
             <strong className='text-my-primary'>Amount</strong>
             <p>
               {Number(flight?.adult || 0) +
@@ -502,13 +505,13 @@ export default function Page() {
         </div>
       </div>
 
-      <div className='text-end m-5'>
+      <div className='m-5 text-end'>
         <div className='btn-group'>
           {!userInfo?.token && (
             <>
               <Link
                 href={`/auth/login?next=/trip-summary`}
-                className='btn bg-my-primary text-white hover:text-black hover:bg-my-primary'
+                className='text-white btn bg-my-primary hover:text-black hover:bg-my-primary'
               >
                 Login
               </Link>
@@ -517,7 +520,7 @@ export default function Page() {
           )}
           <Link
             href={'/payment'}
-            className='btn bg-my-secondary text-white hover:text-black hover:bg-my-secondary'
+            className='text-white btn bg-my-secondary hover:text-black hover:bg-my-secondary'
           >
             Continue {!userInfo?.token && <span>as guest</span>}
           </Link>

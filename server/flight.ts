@@ -28,7 +28,7 @@ export default async function flight({
         status: 'ACTIVE',
       },
     })
-    if (airlines?.length < 1) throw new Error(`No active airlines`)
+    if (airlines?.length < 1) return { error: 'No active airlines' }
 
     const internationals = [20] // Nairobi
 
@@ -222,6 +222,6 @@ export default async function flight({
       )
     return results
   } catch (error: any) {
-    throw new Error(`Error fetching flights: ${error?.message}`)
+    return { error: `Error fetching flights: ${error?.message}` }
   }
 }

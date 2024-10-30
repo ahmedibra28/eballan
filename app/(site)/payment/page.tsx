@@ -72,33 +72,34 @@ export default function Page() {
               status: 'invoice',
               link: paymentLink,
             }),
-      })
-        .then((data) => {
-          if (data?.link) {
-            window.open(data?.link, '_blank')
-            setPaymentLink(data?.link)
-          } else if (!data?.link) {
-            setPaymentLink('')
-            return router.push(
-              `/success?reservationId=${data.reservationId}&pnrNumber=${data.pnrNumber}`
-            )
-          }
-        })
-        .catch((error) => {
-          setError(String(error))
+      }).then((data) => {
+        if (data?.error) {
+          setError(String(data?.error))
           setTimeout(() => {
             setError(null)
           }, 5000)
-        })
+          return null
+        }
+
+        if (data?.link) {
+          window.open(data?.link, '_blank')
+          setPaymentLink(data?.link)
+        } else if (!data?.link) {
+          setPaymentLink('')
+          return router.push(
+            `/success?reservationId=${data.reservationId}&pnrNumber=${data.pnrNumber}`
+          )
+        }
+      })
     })
   }
   return (
-    <div className='max-w-7xl mx-auto'>
+    <div className='mx-auto max-w-7xl'>
       <Steps current={3} />
       {error && <Message variant='error' value={error} />}
 
       <div className='w-full md:w-[70%] lg:w-[50%] card-body bg-white mx-auto'>
-        <h3 className='uppercase font-bold'>Choose payment method</h3>
+        <h3 className='font-bold uppercase'>Choose payment method</h3>
 
         <div className='flex flex-row flex-wrap gap-4'>
           {payments?.map((item) => (
@@ -115,7 +116,7 @@ export default function Page() {
                 alt='payment'
                 width={500}
                 height={500}
-                className='w-12 h-12 object-contain'
+                className='object-contain w-12 h-12'
               />
               <h3 className='font-bold uppercase'>{item.name}</h3>
             </button>
@@ -123,9 +124,9 @@ export default function Page() {
         </div>
         <hr className='my-5' />
 
-        <div className='card shadow-sm rounded-2 border-0'>
+        <div className='border-0 shadow-sm card rounded-2'>
           <div className='card-body'>
-            <h3 className='uppercase font-bold text-my-primary'>
+            <h3 className='font-bold uppercase text-my-primary'>
               Order Summary
             </h3>
 
@@ -148,8 +149,8 @@ export default function Page() {
               </p>
             </div>
 
-            <div className='input-group mb-3 flex flex-row justify-start bg-warning'>
-              <span className='bg-warning border border-3 border-warning rounded-none m-auto my-auto mx-3'>
+            <div className='flex flex-row justify-start mb-3 input-group bg-warning'>
+              <span className='m-auto mx-3 my-auto border rounded-none bg-warning border-3 border-warning'>
                 <FaPhone className='text-light' />
               </span>
               <input
@@ -157,7 +158,7 @@ export default function Page() {
                 value={phone}
                 disabled={Boolean(!paymentMethod)}
                 type='number'
-                className='input border border-3 border-warning rounded-none w-full focus:outline-none'
+                className='w-full border rounded-none input border-3 border-warning focus:outline-none'
                 placeholder={`Enter your payment number`}
               />
             </div>
@@ -168,7 +169,7 @@ export default function Page() {
                   onChange={(e) => setDealerCode(e.target.value)}
                   value={dealerCode!}
                   type='text'
-                  className='input border border-3 border-warning rounded-none w-full focus:outline-none'
+                  className='w-full border rounded-none input border-3 border-warning focus:outline-none'
                   placeholder={`Enter your dealer code`}
                 />
               </div>
@@ -177,7 +178,7 @@ export default function Page() {
             <div className='flex justify-between mt-4'>
               <button
                 onClick={() => router.back()}
-                className='btn btn-outline btn-error rounded-xl px-8'
+                className='px-8 btn btn-outline btn-error rounded-xl'
               >
                 Cancel
               </button>
@@ -185,7 +186,7 @@ export default function Page() {
                 disabled={
                   Boolean(!phone) || Boolean(isPending) || !paymentMethod
                 }
-                className='btn btn-primary rounded-xl px-8'
+                className='px-8 btn btn-primary rounded-xl'
                 onClick={handleBook}
               >
                 {isPending

@@ -26,21 +26,22 @@ export default function Page() {
   const [isPending, startTransition] = React.useTransition()
 
   const getReservation = async () => {
-    try {
-      if (!pnrNumber || !reservationId) {
-        setError('Invalid pnrNumber or reservationId')
-        setTimeout(() => {
-          setError(null)
-        }, 5000)
-      }
-      const data = await reservation({ pnrNumber, reservationId })
-      setReservationData(data)
-    } catch (error) {
-      setError(String(error))
+    if (!pnrNumber || !reservationId) {
+      setError('Invalid pnrNumber or reservationId')
       setTimeout(() => {
         setError(null)
       }, 5000)
     }
+    reservation({ pnrNumber, reservationId }).then((data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        return null
+      }
+      setReservationData(data)
+    })
   }
 
   React.useEffect(() => {
@@ -89,21 +90,22 @@ export default function Page() {
             subject: `Reservation Confirmation - ${reservationData?.pnrNumber}`,
             text: `Reservation Confirmation - ${reservationData?.pnrNumber} - ${reservationData?.reservationId}`,
             base64: base64data,
-          })
-            .then(() => {
-              setSuccess(
-                `Reservation pdf sent to ${reservationData?.contactEmail}`
-              )
-              setTimeout(() => {
-                setSuccess('')
-              }, 5000)
-            })
-            .catch((err) => {
-              setError(err?.message)
+          }).then((data: any) => {
+            if (data?.error) {
+              setError(String(data?.error))
               setTimeout(() => {
                 setError(null)
               }, 5000)
-            })
+              return null
+            }
+
+            setSuccess(
+              `Reservation pdf sent to ${reservationData?.contactEmail}`
+            )
+            setTimeout(() => {
+              setSuccess('')
+            }, 5000)
+          })
         })
       }
     }
@@ -155,7 +157,7 @@ export default function Page() {
             </p>
             <hr className='my-4' />
 
-            <div className='w-full bg-gray-100 p-2 mb-2'>
+            <div className='w-full p-2 mb-2 bg-gray-100'>
               <strong className='text-my-primary'>From</strong>
               <p>
                 {reservationData?.flight?.fromCityName} (
@@ -168,7 +170,7 @@ export default function Page() {
                 )}
               </p>
             </div>
-            <div className='w-full bg-gray-100 p-2 mb-2'>
+            <div className='w-full p-2 mb-2 bg-gray-100'>
               <strong className='text-my-primary'>Duration</strong>
               <p>
                 {getHoursBetween(
@@ -179,7 +181,7 @@ export default function Page() {
                 )}
               </p>
             </div>
-            <div className='w-full bg-gray-100 p-2 mb-2'>
+            <div className='w-full p-2 mb-2 bg-gray-100'>
               <strong className='text-my-primary'>To</strong>
               <p>
                 {reservationData?.flight?.toCityName} (
@@ -196,8 +198,8 @@ export default function Page() {
 
           <hr className='mb-2' />
 
-          <div className='w-full bg-gray-100 p-2'>
-            <p className='text-sm flex flex-col'>
+          <div className='w-full p-2 bg-gray-100'>
+            <p className='flex flex-col text-sm'>
               <span className='flex flex-row items-center gap-x-2'>
                 Status:
                 {reservationData?.status === 'BOOKED' ? (
@@ -208,7 +210,7 @@ export default function Page() {
               </span>
               <span>
                 Created At:
-                <span className='text-my-primary ml-1'>
+                <span className='ml-1 text-my-primary'>
                   {DateTime(reservationData?.createdAt).format(
                     'DD MMM YYYY HH:mm'
                   )}
@@ -223,7 +225,7 @@ export default function Page() {
             </p>
           </div>
 
-          <div className='w-full bg-gray-100 p-2 mb-2'>
+          <div className='w-full p-2 mb-2 bg-gray-100'>
             <strong className='text-my-primary'>Amount</strong>
             <p>
               {Number(reservationData?.adult || 0) +

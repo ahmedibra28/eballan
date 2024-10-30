@@ -17,6 +17,6 @@ export default async function country() {
     )
     return filteredData as ICountry[]
   } catch (error: any) {
-    throw new Error(`Error fetching countries: ${error?.message}`)
+    return { error: `Error fetching countries: ${error?.message}` }
   }
 }

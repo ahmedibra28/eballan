@@ -13,6 +13,6 @@ export default async function passengerTitle() {
     )
     return data as IPassengerTitle[]
   } catch (error: any) {
-    throw new Error(`Error fetching passenger titles: ${error?.message}`)
+    return { error: `Error fetching passenger titles: ${error?.message}` }
   }
 }

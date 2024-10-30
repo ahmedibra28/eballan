@@ -28,21 +28,22 @@ export default function Page() {
   const [isPending, startTransition] = React.useTransition()
 
   const getReservation = async () => {
-    try {
-      if (!pnrNumber || !reservationId) {
-        setError('Invalid pnrNumber or reservationId')
-        setTimeout(() => {
-          setError(null)
-        }, 5000)
-      }
-      const data = await reservation({ pnrNumber, reservationId })
-      setReservationData(data)
-    } catch (error) {
-      setError(String(error))
+    if (!pnrNumber || !reservationId) {
+      setError('Invalid pnrNumber or reservationId')
       setTimeout(() => {
         setError(null)
       }, 5000)
     }
+    reservation({ pnrNumber, reservationId }).then((data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        return null
+      }
+      setReservationData(data)
+    })
   }
 
   React.useEffect(() => {
@@ -65,18 +66,19 @@ export default function Page() {
             subject: `Reservation Confirmation - ${reservationData?.pnrNumber}`,
             text: `Reservation Confirmation - ${reservationData?.pnrNumber} - ${reservationData?.reservationId}`,
             base64: base64data,
-          })
-            .then(() =>
-              setSuccess(
-                `Reservation pdf sent to ${reservationData?.contactEmail}`
-              )
-            )
-            .catch((err) => {
-              setError(err?.message)
+          }).then((res: any) => {
+            if (res?.error) {
+              setError(String(res?.error))
               setTimeout(() => {
                 setError(null)
               }, 5000)
-            })
+              return null
+            }
+
+            setSuccess(
+              `Reservation pdf sent to ${reservationData?.contactEmail}`
+            )
+          })
         })
       }
     }
@@ -89,10 +91,10 @@ export default function Page() {
 
       <div className='w-full md:w-[75%] lg:w-1/2 bg-white p-4 rounded-xl text-center space-y-3'>
         {!reservationData ? (
-          <div className='text-red-500 space-y-5 p-4'>
+          <div className='p-4 space-y-5 text-red-500'>
             <p>Your reservation does not exist</p>
 
-            <Link href={'/'} className='btn btn-error w-full'>
+            <Link href={'/'} className='w-full btn btn-error'>
               Go Back
             </Link>
           </div>
@@ -107,14 +109,14 @@ export default function Page() {
               className='w-20 h-20 mx-auto'
             />
             <h4 className='font-bold'>Your reservation has been confirmed!</h4>
-            <p className='text-gray-500 mb-10'>
+            <p className='mb-10 text-gray-500'>
               Your PNR Number: <strong>{reservationData?.pnrNumber}</strong> and
               Reservation ID:
               <strong> {reservationData?.reservationId}</strong>
             </p>
 
             <div className='py-10'>
-              <p className='text-gray-500 pb-3'>
+              <p className='pb-3 text-gray-500'>
                 You can download your reservation details here
               </p>
               <PDFDownloadLink

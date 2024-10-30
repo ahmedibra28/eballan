@@ -38,6 +38,6 @@ export default async function city() {
 
     return result
   } catch (error: any) {
-    throw new Error(`Error fetching cities: ${error?.message}`)
+    return { error: `Error fetching cities: ${error?.message}` }
   }
 }

@@ -14,6 +14,7 @@ export default async function cancelReservation({
   reservationId: number
   phone: string
   email: string
+  error?: string
 }) {
   try {
     const BASE_URL = getEnvVariable('BASE_URL')
@@ -39,7 +40,7 @@ export default async function cancelReservation({
       }))
 
     if (!reservation)
-      throw new Error('Reservation not found or already cancelled')
+      return { error: 'Reservation not found or already cancelled' }
 
     const departureDateTime = DateTime(
       reservation?.flight?.departureDate
@@ -48,7 +49,7 @@ export default async function cancelReservation({
     const hours = DateTime(departureDateTime).diff(DateTime(), 'hours')
 
     if (hours < 24) {
-      throw new Error(`Departure date is less than 24 hours, can't cancel`)
+      return { error: "Departure date is less than 24 hours, can't cancel" }
     }
 
     let airline = await prisma.airline.findFirst({
@@ -57,7 +58,7 @@ export default async function cancelReservation({
         api: `${reservation.flight?.airline?.api}`,
       },
     })
-    if (!airline) throw new Error(`No active airline`)
+    if (!airline) return { error: 'No active airline' }
 
     if ((airline?.accessTokenExpiry || 0) <= Date.now()) {
       const { data } = await axios.post(
@@ -72,7 +73,7 @@ export default async function cancelReservation({
           },
         }
       )
-      if (!data) throw new Error(`Failed to login to ${airline?.name}`)
+      if (!data) return { error: `Failed to login to ${airline?.name}` }
 
       await prisma.airline.update({
         where: { id: `${airline?.id}` },
@@ -105,7 +106,7 @@ export default async function cancelReservation({
     )
 
     if (data?.message !== 'Success') {
-      throw new Error(`Failed to cancel reservation`)
+      return { error: `Failed to cancel reservation` }
     }
 
     await prisma.reservation.update({
@@ -119,6 +120,6 @@ export default async function cancelReservation({
 
     return { message: 'Reservation cancelled' }
   } catch (error: any) {
-    throw new Error(`Error cancelling reservation: ${error?.message}`)
+    return { error: `Error cancelling reservation: ${error?.message}` }
   }
 }

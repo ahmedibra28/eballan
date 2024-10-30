@@ -56,11 +56,11 @@ export default async function getMyReservation({
       }))
 
     if (!getData || getData.length === 0) {
-      throw new Error('Reservation not found')
+      return { error: 'Reservation not found' }
     }
 
     return getData as IPdf[]
   } catch (error: any) {
-    throw new Error(error?.message)
+    return { error: error?.message }
   }
 }

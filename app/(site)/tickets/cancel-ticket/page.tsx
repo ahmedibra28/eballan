@@ -34,23 +34,23 @@ const Cancellation = () => {
           reservationId: Number(data.reservationId),
           phone: data.phone!,
           email: data.email!,
-        })
-          .then((data) => {
-            setSuccess(data.message)
-            reset()
-            setStep(4)
-
-            setTimeout(() => {
-              setSuccess(null)
-              router.push(`/`)
-            }, 5000)
-          })
-          .catch((error) => {
-            setError(String(error))
+        }).then((data: any) => {
+          if (data?.error) {
+            setError(String(data?.error))
             setTimeout(() => {
               setError(null)
             }, 5000)
-          })
+            return null
+          }
+          setSuccess(data.message)
+          reset()
+          setStep(4)
+
+          setTimeout(() => {
+            setSuccess(null)
+            router.push(`/`)
+          }, 5000)
+        })
       })
     }
   }
@@ -58,7 +58,7 @@ const Cancellation = () => {
   const stepOne = () => {
     return (
       <>
-        <h6 className='fw-bold text-uppercase text-center'>Step 1 / 3</h6>
+        <h6 className='text-center fw-bold text-uppercase'>Step 1 / 3</h6>
         <hr />
 
         <InputText
@@ -71,7 +71,7 @@ const Cancellation = () => {
 
         <button
           type='button'
-          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          className='mx-auto mt-3 btn btn-primary form-control w-44'
           disabled={isPending}
           onClick={() => {
             setStep(2)
@@ -90,7 +90,7 @@ const Cancellation = () => {
   const stepTwo = () => {
     return (
       <>
-        <h6 className='fw-bold text-uppercase text-center'>Step 2 / 3</h6>
+        <h6 className='text-center fw-bold text-uppercase'>Step 2 / 3</h6>
         <hr />
 
         <InputEmail
@@ -111,7 +111,7 @@ const Cancellation = () => {
 
         <button
           type='button'
-          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          className='mx-auto mt-3 btn btn-primary form-control w-44'
           disabled={isPending}
           onClick={() => {
             setStep(3)
@@ -130,9 +130,9 @@ const Cancellation = () => {
   const stepThree = () => {
     return (
       <>
-        <h6 className='fw-bold text-uppercase text-center'>Step 3 / 3</h6>
+        <h6 className='text-center fw-bold text-uppercase'>Step 3 / 3</h6>
         <hr />
-        <h6 className='font-bold mb-2'>Refund Policy</h6>
+        <h6 className='mb-2 font-bold'>Refund Policy</h6>
         <p>1.1 Change booking fee will charge $10 </p>
         <p>1.2 Cancellation fee $10 </p>
         <p>1.3 No show $30 </p>
@@ -154,7 +154,7 @@ const Cancellation = () => {
 
         <button
           type='submit'
-          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          className='mx-auto mt-3 btn btn-primary form-control w-44'
           disabled={isPending}
         >
           {isPending ? (
@@ -177,7 +177,7 @@ const Cancellation = () => {
         <Link
           href={'/'}
           type='button'
-          className='btn btn-primary form-control mt-3 w-44 mx-auto'
+          className='mx-auto mt-3 btn btn-primary form-control w-44'
         >
           Go To Home
         </Link>
@@ -190,7 +190,7 @@ const Cancellation = () => {
       {error && <Message variant='error' value={error} />}
       {success && <Message variant='success' value={success} />}
 
-      <h3 className='font-bold font-monospace text-center mb-5 text-my-primary'>
+      <h3 className='mb-5 font-bold text-center font-monospace text-my-primary'>
         Reservation Cancellation
       </h3>
 

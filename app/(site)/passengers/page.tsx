@@ -65,27 +65,29 @@ export default function Page() {
   } = useForm({})
 
   const getPassengerTitles = async () => {
-    try {
-      const data = await passengerTitle()
+    passengerTitle().then((data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        return null
+      }
       setPassengerTitles(data)
-    } catch (error) {
-      setError(String(error))
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
+    })
   }
 
   const getCountries = async () => {
-    try {
-      const data = await country()
+    country().then((data: any) => {
+      if (data?.error) {
+        setError(String(data?.error))
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+        return null
+      }
       setCountries(data)
-    } catch (error) {
-      setError(String(error))
-      setTimeout(() => {
-        setError(null)
-      }, 5000)
-    }
+    })
   }
 
   React.useEffect(() => {
@@ -152,7 +154,7 @@ export default function Page() {
 
   const passengerForm = (passengerType: string, number: number) => {
     return (
-      <div className='flex flex-row flex-wrap gap-2 bg-gray-200 p-3 mb-3'>
+      <div className='flex flex-row flex-wrap gap-2 p-3 mb-3 bg-gray-200'>
         <div className='w-full'>
           <h6 className='font-bold uppercase'>
             {passengerType} {number} - Info
@@ -233,7 +235,7 @@ export default function Page() {
   }
 
   return (
-    <div className='max-w-7xl mx-auto'>
+    <div className='mx-auto max-w-7xl'>
       {error && <Message variant='error' value={error} />}
       <Steps current={1} />
       <form onSubmit={handleSubmit(submitHandler)}>
@@ -251,11 +253,11 @@ export default function Page() {
           <Fragment key={i}>{passengerForm('Infant', item)}</Fragment>
         ))}
 
-        <div className='flex flex-row flex-wrap mt-4 bg-gray-200 px-3 py-5 gap-2'>
+        <div className='flex flex-row flex-wrap gap-2 px-3 py-5 mt-4 bg-gray-200'>
           <div className='w-full'>
             <h6 className='font-bold uppercase'>Contact Details</h6>
           </div>
-          <div className='flex flex-row justify-between items-start w-full gap-x-2'>
+          <div className='flex flex-row items-start justify-between w-full gap-x-2'>
             <div
               className='w-full md:w-[48%] lg:w-[48%] mt-2'
               style={{ zIndex: -0 }}
@@ -285,7 +287,7 @@ export default function Page() {
         <div className='p-3 mt-4 text-end'>
           <button
             type='submit'
-            className='btn bg-my-secondary text-white hover:text-black hover:bg-my-secondary rounded-pill text-light float-end ml-auto w-44'
+            className='ml-auto text-white btn bg-my-secondary hover:text-black hover:bg-my-secondary rounded-pill text-light float-end w-44'
           >
             Continue <FaArrowRight className='' />
           </button>

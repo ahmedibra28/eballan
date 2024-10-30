@@ -32,7 +32,7 @@ export default async function book({
   try {
     const BASE_URL = getEnvVariable('BASE_URL')
 
-    if (!payment.phone) throw new Error('Invalid phone')
+    if (!payment.phone) return { error: 'Invalid phone' }
     if (payment.phone.slice(0, 1) === '0') {
       payment.phone = payment.phone.substring(1)
     }
@@ -42,12 +42,12 @@ export default async function book({
     }
 
     if (payment.phone.length !== 9)
-      throw new Error('Phone number must be 9 digits')
+      return { error: 'Phone number must be 9 digits' }
 
     const totalPrice =
       flight?.prices?.reduce((acc, cur) => acc + cur?.totalPrice, 0) || 0
 
-    if (totalPrice < 1) throw new Error('Invalid amount')
+    if (totalPrice < 1) return { error: 'Invalid amount' }
 
     // Edahab Implementation
     if (
@@ -59,7 +59,7 @@ export default async function book({
         Number(totalPrice)
       )
       if (createInvoice?.StatusCode !== 0)
-        throw new Error(createInvoice?.StatusDescription)
+        return { error: createInvoice?.StatusDescription }
 
       const link = `https://edahab.net/api/payment?invoiceId=${createInvoice.InvoiceId}`
 
@@ -75,9 +75,9 @@ export default async function book({
       const verifyInvoice = await VerifyInvoice(Number(invoiceId))
 
       if (verifyInvoice?.InvoiceStatus !== 'Paid')
-        throw new Error(
-          `Please pay ${verifyInvoice?.InvoiceStatus?.toLowerCase()} invoice first`
-        )
+        return {
+          error: `Please pay ${verifyInvoice?.InvoiceStatus?.toLowerCase()} invoice first`,
+        }
     }
 
     // handle EVC payment
@@ -101,7 +101,8 @@ export default async function book({
         withdrawTo: 'MERCHANT',
         withdrawNumber: MERCHANT_ACCOUNT_NO,
       })
-      if (paymentInfo.responseCode !== '2001') throw new Error('Payment failed')
+      if (paymentInfo.responseCode !== '2001')
+        return { error: 'Payment failed' }
     }
 
     const { data: countries } = await axios.get(
@@ -204,7 +205,7 @@ export default async function book({
         api: `${flight.airline?.key}`,
       },
     })
-    if (!airline) throw new Error(`No active airline`)
+    if (!airline) return { error: `No active airline` }
 
     if ((airline?.accessTokenExpiry || 0) <= Date.now()) {
       const { data } = await axios.post(
@@ -219,7 +220,7 @@ export default async function book({
           },
         }
       )
-      if (!data) throw new Error(`Failed to login to ${airline?.name}`)
+      if (!data) return { error: `Failed to login to ${airline?.name}` }
 
       await prisma.airline.update({
         where: { id: `${airline?.id}` },
@@ -391,6 +392,6 @@ export default async function book({
       pnrNumber: data?.pnrNumber,
     }
   } catch (error: any) {
-    throw new Error(`Error booking reservation: ${error?.message}`)
+    return { error: `Error booking reservation: ${error?.message}` }
   }
 }

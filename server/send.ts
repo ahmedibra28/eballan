@@ -23,6 +23,6 @@ export default async function send({
       data: base64,
     })
   } catch (error: any) {
-    throw new Error(`${error?.message}`)
+    return { error: error?.message }
   }
 }
