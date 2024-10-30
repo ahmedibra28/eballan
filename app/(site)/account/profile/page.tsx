@@ -121,11 +121,11 @@ const Profile = () => {
 
       {getApi?.isPending && <Spinner />}
 
-      <div className='bg-opacity-60 max-w-4xl mx-auto bg-white p-4 md:p-8'>
-        <div className='divider text-3xl uppercase text-primary'>
+      <div className='max-w-4xl p-4 mx-auto bg-white bg-opacity-60 md:p-8'>
+        <div className='text-3xl uppercase divider text-primary'>
           {userInfo.name}
         </div>
-        <div className='text-center mb-10'>
+        <div className='mb-10 text-center'>
           <div className='badge badge-neutral'>
             <span> {userInfo.role}</span>
           </div>
@@ -133,7 +133,7 @@ const Profile = () => {
 
         <form onSubmit={handleSubmit(submitHandler)}>
           {getApi?.data?.image && (
-            <div className='avatar text-center flex justify-center'>
+            <div className='flex justify-center text-center avatar'>
               <div className='w-32 mask mask-hexagon'>
                 <Image
                   src={getApi?.data?.image}
@@ -172,7 +172,7 @@ const Profile = () => {
                 errors={errors}
                 label='Mobile'
                 name='mobile'
-                placeholder='615301507'
+                placeholder='Mobile number'
               />
             </div>
 
@@ -228,7 +228,7 @@ const Profile = () => {
               />
 
               {fileLink.length > 0 && (
-                <div className='avatar text-center flex justify-center items-end mt-2'>
+                <div className='flex items-end justify-center mt-2 text-center avatar'>
                   <div className='w-12 mask mask-squircle'>
                     <Image
                       src={fileLink?.[0]}
@@ -261,8 +261,8 @@ const Profile = () => {
                   )}
                 </div>
 
-                <div className='flex justify-start flex-wrap flex-col w-full gap-2'>
-                  <p className='text-xs ml-3'>
+                <div className='flex flex-col flex-wrap justify-start w-full gap-2'>
+                  <p className='ml-3 text-xs'>
                     <ol className='list-decimal'>
                       <li>
                         eBallan.com reserves the authority to terminate your
@@ -292,7 +292,7 @@ const Profile = () => {
               </>
             )}
 
-            <div className='flex justify-start flex-wrap flex-row w-full gap-2'>
+            <div className='flex flex-row flex-wrap justify-start w-full gap-2'>
               <div className='w-full md:w-[48%] lg:w-[32%]'>
                 <InputPassword
                   register={register}
