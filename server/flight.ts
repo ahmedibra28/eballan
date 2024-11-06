@@ -58,7 +58,8 @@ export default async function flight({
 
         // Internationals
         if (
-          internationals.includes(Number(oneWayBody.toCityId)) &&
+          (internationals.includes(Number(oneWayBody.toCityId)) ||
+            internationals.includes(Number(oneWayBody.fromCityId))) &&
           item.adultCommission % 1 !== 0
         ) {
           item.adultCommission = Number(
@@ -67,7 +68,8 @@ export default async function flight({
         }
 
         if (
-          internationals.includes(Number(oneWayBody.toCityId)) &&
+          (internationals.includes(Number(oneWayBody.toCityId)) ||
+            internationals.includes(Number(oneWayBody.fromCityId))) &&
           item.childCommission % 1 !== 0
         ) {
           item.childCommission = Number(
@@ -76,7 +78,8 @@ export default async function flight({
         }
 
         if (
-          internationals.includes(Number(oneWayBody.toCityId)) &&
+          (internationals.includes(Number(oneWayBody.toCityId)) ||
+            internationals.includes(Number(oneWayBody.fromCityId))) &&
           item.infantCommission % 1 !== 0
         ) {
           item.infantCommission = Number(
@@ -86,7 +89,10 @@ export default async function flight({
 
         // Local
         if (
-          !internationals.includes(Number(oneWayBody.toCityId)) &&
+          !(
+            internationals.includes(Number(oneWayBody.toCityId)) ||
+            internationals.includes(Number(oneWayBody.fromCityId))
+          ) &&
           item.adultCommission % 1 !== 0
         ) {
           item.adultCommission = Number(
@@ -95,7 +101,10 @@ export default async function flight({
         }
 
         if (
-          !internationals.includes(Number(oneWayBody.toCityId)) &&
+          !(
+            internationals.includes(Number(oneWayBody.toCityId)) ||
+            internationals.includes(Number(oneWayBody.fromCityId))
+          ) &&
           item.childCommission % 1 !== 0
         ) {
           item.childCommission = Number(
@@ -104,7 +113,10 @@ export default async function flight({
         }
 
         if (
-          !internationals.includes(Number(oneWayBody.toCityId)) &&
+          !(
+            internationals.includes(Number(oneWayBody.toCityId)) ||
+            internationals.includes(Number(oneWayBody.fromCityId))
+          ) &&
           item.infantCommission % 1 !== 0
         ) {
           item.infantCommission = Number(
